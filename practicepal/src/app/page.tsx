@@ -28,8 +28,8 @@ export default function Home() {
             <a href="#features" className="text-gray-600 hover:text-purple-600">Features</a>
             <a href="#pricing" className="text-gray-600 hover:text-purple-600">Pricing</a>
             <a href="#about" className="text-gray-600 hover:text-purple-600">About Us</a>
-            <Link href="/auth/signin" className="text-purple-600 border border-purple-600 px-4 py-2 rounded-full hover:bg-purple-50">Login</Link>
-            <Link href="/auth/signup" className="bg-purple-600 text-white px-4 py-2 rounded-full hover:bg-purple-700">Sign Up</Link>
+            <Link href="/auth/login" className="text-purple-600 border border-purple-600 px-4 py-2 rounded-full hover:bg-purple-50">Login</Link>
+            <Link href="/auth/register" className="bg-purple-600 text-white px-4 py-2 rounded-full hover:bg-purple-700">Sign Up</Link>
           </nav>
         </div>
       </header>

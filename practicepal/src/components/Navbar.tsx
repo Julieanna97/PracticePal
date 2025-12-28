@@ -1,27 +1,27 @@
-// components/Navbar.tsx (or src/components/Navbar.tsx)
+// src/components/Navbar.tsx
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
 
 const nav = [
-  { href: "/", label: "Home" },
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/plans", label: "Plans" },
-  { href: "/sessions/new", label: "Log Session" },
-  { href: "/stats", label: "Stats" },
-  { href: "/account", label: "Account" },
+  { href: "/dashboard", label: "Dashboard", protected: true },
+  { href: "/plans", label: "Plans", protected: true },
+  { href: "/sessions/new", label: "Log Session", protected: true },
+  { href: "/stats", label: "Stats", protected: true },
+  { href: "/account", label: "Account", protected: true },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
-  const isLandingPage = pathname === "/";
+  const { data: session, status } = useSession();
 
-  if (isLandingPage) {
-    // Landing page navbar (embedded in the page design)
-    return null;
-  }
+  // Keep landing page clean (no navbar on "/")
+  if (pathname === "/") return null;
 
-  // App navbar for other pages - matching landing page style
+  const isAuthed = !!session?.user;
+
   return (
     <header className="bg-white/80 backdrop-blur-sm border-b border-purple-100">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -33,36 +33,56 @@ export default function Navbar() {
           <span className="text-xl font-semibold text-gray-800">PracticePal</span>
         </Link>
 
-        {/* Navigation */}
         <nav className="flex items-center space-x-6">
-          {nav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`text-sm font-medium transition-colors ${
-                pathname === item.href
-                  ? "text-purple-600"
-                  : "text-gray-600 hover:text-purple-600"
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-          
-          {/* User Actions */}
+          {/* Protected links only when logged in */}
+          {nav
+            .filter((item) => (item.protected ? isAuthed : true))
+            .map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`text-sm font-medium transition-colors ${
+                  pathname === item.href
+                    ? "text-purple-600"
+                    : "text-gray-600 hover:text-purple-600"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+
+          {/* Right-side buttons */}
           <div className="flex items-center space-x-3 ml-4">
-            <Link
-              href="/auth/signin"
-              className="text-purple-600 border border-purple-600 px-4 py-2 rounded-full text-sm hover:bg-purple-50"
-            >
-              Login
-            </Link>
-            <Link
-              href="/auth/signup"
-              className="bg-purple-600 text-white px-4 py-2 rounded-full text-sm hover:bg-purple-700"
-            >
-              Sign Up
-            </Link>
+            {status === "loading" ? (
+              <div className="text-sm text-gray-500">Loading…</div>
+            ) : isAuthed ? (
+              <>
+                <span className="hidden sm:inline text-sm text-gray-600">
+                  {session.user?.name ?? session.user?.email}
+                </span>
+                <button
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                  className="text-purple-600 border border-purple-600 px-4 py-2 rounded-full text-sm hover:bg-purple-50"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/auth/login"
+                  className="text-purple-600 border border-purple-600 px-4 py-2 rounded-full text-sm hover:bg-purple-50"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/auth/register"
+                  className="bg-purple-600 text-white px-4 py-2 rounded-full text-sm hover:bg-purple-700"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
         </nav>
       </div>

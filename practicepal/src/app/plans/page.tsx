@@ -1,10 +1,14 @@
-// app/plans/page.tsx
-export default async function PlansPage() {
-  const res = await fetch("http://localhost:3000/api/plans", {
-    cache: "no-store",
-  });
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
+import { connectToDB } from "@/lib/mongodb";
+import { PracticePlan } from "@/models/PracticePlan";
 
-  const plans = await res.json();
+export default async function PlansPage() {
+  const session = await getServerSession(authOptions);
+  const userId = (session?.user as any)?.id;
+
+  await connectToDB();
+  const plans = await PracticePlan.find({ userId }).sort({ createdAt: -1 }).lean();
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-8 bg-gray-50 min-h-screen">
