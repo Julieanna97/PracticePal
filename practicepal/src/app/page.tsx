@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import LandingFooter from "@/components/LandingFooter";
+import { PracticePalLogo } from "@/components/PracticePalLogo";
 
 
 export default function Home() {
@@ -63,10 +64,7 @@ export default function Home() {
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-purple-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <a href="#top" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-lg">P</span>
-            </div>
-            <span className="text-2xl font-bold text-gray-800">PracticePal</span>
+            <PracticePalLogo size="md" />
           </a>
 
           <nav className="hidden md:flex items-center space-x-8">

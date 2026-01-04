@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { connectToDB } from "@/lib/mongodb";
@@ -6,6 +8,10 @@ import { PracticePlan } from "@/models/PracticePlan";
 export default async function PlansPage() {
   const session = await getServerSession(authOptions);
   const userId = (session?.user as any)?.id;
+
+  if (!userId) {
+    redirect("/auth/login");
+  }
 
   await connectToDB();
   const plans = await PracticePlan.find({ userId }).sort({ createdAt: -1 }).lean();
@@ -17,20 +23,25 @@ export default async function PlansPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-semibold text-gray-900">Practice Plans</h1>
-            <p className="mt-2 text-gray-600">
-              Create and manage your practice plans
-            </p>
+            <p className="mt-2 text-gray-600">Create and manage your practice plans</p>
           </div>
-          <button className="rounded-lg bg-purple-600 px-4 py-2 text-white hover:bg-purple-700">
+
+          <Link
+            href="/plans/new"
+            className="rounded-lg bg-purple-600 px-4 py-2 text-white hover:bg-purple-700"
+          >
             New Plan
-          </button>
+          </Link>
         </div>
 
         {/* Plans List */}
         {plans.length > 0 ? (
           <div className="space-y-4">
             {plans.map((p: any) => (
-              <div key={p._id} className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+              <div
+                key={p._id}
+                className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
+              >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <h3 className="font-medium text-gray-900">{p.title}</h3>
@@ -41,6 +52,7 @@ export default async function PlansPage() {
                       <p className="mt-2 text-sm text-gray-500">{p.goalDescription}</p>
                     )}
                   </div>
+
                   <div className="flex space-x-2">
                     <button className="rounded px-3 py-1 text-xs text-gray-600 hover:bg-gray-100">
                       Edit
@@ -57,9 +69,13 @@ export default async function PlansPage() {
           <div className="rounded-lg border border-gray-200 bg-white p-12 text-center shadow-sm">
             <h3 className="text-lg font-medium text-gray-900">No plans yet</h3>
             <p className="mt-2 text-gray-600">Create your first practice plan to get started</p>
-            <button className="mt-4 rounded-lg bg-purple-600 px-4 py-2 text-white hover:bg-purple-700">
+
+            <Link
+              href="/plans/new"
+              className="mt-4 inline-block rounded-lg bg-purple-600 px-4 py-2 text-white hover:bg-purple-700"
+            >
               Create Plan
-            </button>
+            </Link>
           </div>
         )}
       </div>
