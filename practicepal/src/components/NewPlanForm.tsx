@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { z } from "zod";
 
-const INSTRUMENT_OPTIONS = [
+export const INSTRUMENT_OPTIONS = [
   "Singing",
   "Piano",
   "Guitar",
@@ -20,33 +20,46 @@ const INSTRUMENT_OPTIONS = [
   "Other",
 ] as const;
 
-const planSchema = z.object({
-  title: z.string().min(2, "Title must be at least 2 characters").max(80, "Title is too long"),
-  instrumentOrSkill: z.enum(INSTRUMENT_OPTIONS, {
-    errorMap: () => ({ message: "Please choose an instrument or skill" }),
-  }),
-  customInstrumentOrSkill: z
-    .string()
-    .max(80, "Custom instrument/skill is too long")
-    .optional(),
-  weeklyTargetMinutes: z
-    .number({ invalid_type_error: "Weekly target must be a number" })
-    .int("Weekly target must be a whole number")
-    .min(10, "Weekly target must be at least 10 minutes")
-    .max(20000, "Weekly target is too high"),
-  goalDescription: z.string().max(500, "Description is too long").optional(),
-}).superRefine((val, ctx) => {
-  if (val.instrumentOrSkill === "Other") {
-    const custom = (val.customInstrumentOrSkill ?? "").trim();
-    if (custom.length < 2) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["customInstrumentOrSkill"],
-        message: "Please type your instrument/skill (at least 2 characters)",
-      });
+const planSchema = z
+  .object({
+    title: z
+      .string()
+      .min(2, "Title must be at least 2 characters")
+      .max(80, "Title is too long"),
+
+    // ✅ Compatible across Zod versions: no errorMap, use refine instead
+    instrumentOrSkill: z
+      .string()
+      .min(1, "Please choose an instrument or skill")
+      .refine((val) => (INSTRUMENT_OPTIONS as readonly string[]).includes(val), {
+        message: "Please choose an instrument or skill",
+      }),
+
+    customInstrumentOrSkill: z
+      .string()
+      .max(80, "Custom instrument/skill is too long")
+      .optional(),
+
+    weeklyTargetMinutes: z
+      .number({ invalid_type_error: "Weekly target must be a number" })
+      .int("Weekly target must be a whole number")
+      .min(10, "Weekly target must be at least 10 minutes")
+      .max(20000, "Weekly target is too high"),
+
+    goalDescription: z.string().max(500, "Description is too long").optional(),
+  })
+  .superRefine((val, ctx) => {
+    if (val.instrumentOrSkill === "Other") {
+      const custom = (val.customInstrumentOrSkill ?? "").trim();
+      if (custom.length < 2) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["customInstrumentOrSkill"],
+          message: "Please type your instrument/skill (at least 2 characters)",
+        });
+      }
     }
-  }
-});
+  });
 
 type FormState = {
   title: string;
@@ -87,7 +100,7 @@ export default function NewPlanForm() {
   function validate(): boolean {
     const result = planSchema.safeParse({
       title: form.title.trim(),
-      instrumentOrSkill: form.instrumentOrSkill,
+      instrumentOrSkill: form.instrumentOrSkill, // string in schema (works)
       customInstrumentOrSkill: form.customInstrumentOrSkill.trim() || undefined,
       weeklyTargetMinutes: parsedWeeklyMinutes,
       goalDescription: form.goalDescription.trim() ? form.goalDescription.trim() : undefined,
