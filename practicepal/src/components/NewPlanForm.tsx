@@ -22,37 +22,46 @@ export const INSTRUMENT_OPTIONS = [
 
 const planSchema = z
   .object({
-    title: z.string().min(2, "Title must be at least 2 characters").max(80, "Title is too long"),
-
-    instrumentOrSkill: z
+    title: z
       .string()
-      .min(1, "Please choose an instrument or skill")
-      .refine((val) => (INSTRUMENT_OPTIONS as readonly string[]).includes(val), {
-        message: "Please choose an instrument or skill",
-      }),
+      .min(2, { message: "Title must be at least 2 characters" })
+      .max(80, { message: "Title is too long" }),
 
-    customInstrumentOrSkill: z.string().max(80, "Custom instrument/skill is too long").optional(),
+    instrumentOrSkill: z.enum(INSTRUMENT_OPTIONS, {
+      message: "Please choose an instrument or skill",
+    }),
 
+    customInstrumentOrSkill: z
+      .string()
+      .max(80, { message: "Custom instrument/skill is too long" })
+      .optional(),
+
+    // ✅ Zod v4: use coerce for inputs that come in as strings
     weeklyTargetMinutes: z
-      .number({ invalid_type_error: "Weekly target must be a number" })
-      .int("Weekly target must be a whole number")
-      .min(10, "Weekly target must be at least 10 minutes")
-      .max(20000, "Weekly target is too high"),
+      .coerce
+      .number({ message: "Weekly target must be a number" })
+      .int({ message: "Weekly target must be a whole number" })
+      .min(10, { message: "Weekly target must be at least 10 minutes" })
+      .max(20000, { message: "Weekly target is too high" }),
 
-    goalDescription: z.string().max(500, "Description is too long").optional(),
+    goalDescription: z
+      .string()
+      .max(500, { message: "Description is too long" })
+      .optional(),
   })
   .superRefine((val, ctx) => {
     if (val.instrumentOrSkill === "Other") {
       const custom = (val.customInstrumentOrSkill ?? "").trim();
       if (custom.length < 2) {
         ctx.addIssue({
-          code: "custom",
+          code: z.ZodIssueCode.custom,
           path: ["customInstrumentOrSkill"],
           message: "Please type your instrument/skill (at least 2 characters)",
         });
       }
     }
   });
+
 
 
 type FormState = {
@@ -94,11 +103,12 @@ export default function NewPlanForm() {
   function validate(): boolean {
     const result = planSchema.safeParse({
       title: form.title.trim(),
-      instrumentOrSkill: form.instrumentOrSkill, // string in schema (works)
+      instrumentOrSkill: form.instrumentOrSkill,
       customInstrumentOrSkill: form.customInstrumentOrSkill.trim() || undefined,
-      weeklyTargetMinutes: parsedWeeklyMinutes,
+      weeklyTargetMinutes: form.weeklyTargetMinutes, // <-- keep as string, z.coerce.number handles it
       goalDescription: form.goalDescription.trim() ? form.goalDescription.trim() : undefined,
     });
+
 
     if (result.success) {
       setErrors({});
