@@ -22,12 +22,8 @@ export const INSTRUMENT_OPTIONS = [
 
 const planSchema = z
   .object({
-    title: z
-      .string()
-      .min(2, "Title must be at least 2 characters")
-      .max(80, "Title is too long"),
+    title: z.string().min(2, "Title must be at least 2 characters").max(80, "Title is too long"),
 
-    // ✅ Compatible across Zod versions: no errorMap, use refine instead
     instrumentOrSkill: z
       .string()
       .min(1, "Please choose an instrument or skill")
@@ -35,10 +31,7 @@ const planSchema = z
         message: "Please choose an instrument or skill",
       }),
 
-    customInstrumentOrSkill: z
-      .string()
-      .max(80, "Custom instrument/skill is too long")
-      .optional(),
+    customInstrumentOrSkill: z.string().max(80, "Custom instrument/skill is too long").optional(),
 
     weeklyTargetMinutes: z
       .number({ invalid_type_error: "Weekly target must be a number" })
@@ -60,6 +53,7 @@ const planSchema = z
       }
     }
   });
+
 
 type FormState = {
   title: string;
