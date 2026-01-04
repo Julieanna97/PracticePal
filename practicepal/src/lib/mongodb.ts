@@ -6,12 +6,14 @@ if (!MONGODB_URI) {
   throw new Error("Please define the MONGODB_URI environment variable in .env.local");
 }
 
+// ✅ TS now knows this is a string
+const uri: string = MONGODB_URI;
+
 type MongooseCache = {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
 };
 
-// Prevent multiple connections in dev (hot reload)
 declare global {
   // eslint-disable-next-line no-var
   var mongooseCache: MongooseCache | undefined;
@@ -27,7 +29,7 @@ export async function connectToDB() {
   if (cached!.conn) return cached!.conn;
 
   if (!cached!.promise) {
-    cached!.promise = mongoose.connect(MONGODB_URI);
+    cached!.promise = mongoose.connect(uri);
   }
 
   cached!.conn = await cached!.promise;
