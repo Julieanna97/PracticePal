@@ -8,14 +8,16 @@ import { connectToDB } from "@/lib/mongodb";
 import { User } from "@/models/User";
 import { Account } from "@/models/Account";
 
+type Role = "FREE" | "PRO" | "ADMIN";
+
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
-    maxAge: 7 * 24 * 60 * 60,   // 7 days
-    updateAge: 24 * 60 * 60,    // refresh token every 24h (if user is active)
+    maxAge: 7 * 24 * 60 * 60, // 7 days
+    updateAge: 24 * 60 * 60, // refresh token every 24h (if user is active)
   },
   jwt: {
-    maxAge: 7 * 24 * 60 * 60,   // keep JWT aligned with session maxAge
+    maxAge: 7 * 24 * 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET,
 
@@ -30,18 +32,22 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) return null;
 
         await connectToDB();
+
         const user = await User.findOne({ email: credentials.email }).lean();
         if (!user?.passwordHash) return null;
 
         const ok = await bcrypt.compare(credentials.password, user.passwordHash);
         if (!ok) return null;
 
+        const role = (user.role ?? "FREE") as Role;
+
+        // This object becomes `user` inside callbacks.jwt (typed via augmentation)
         return {
           id: String(user._id),
           email: user.email,
           name: user.name ?? user.email,
-          role: user.role ?? "FREE",
-        } as any;
+          role,
+        };
       },
     }),
 
@@ -58,9 +64,8 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async signIn({ user, account }) {
-      // For credentials, user already exists
+      // Credentials users already exist in DB
       if (!account || account.type !== "oauth") return true;
-
       if (!user.email) return false;
 
       await connectToDB();
@@ -75,32 +80,37 @@ export const authOptions: NextAuthOptions = {
         });
       }
 
-      // Link provider account → user
+      // Link provider account -> user
       await Account.findOneAndUpdate(
         { provider: account.provider, providerAccountId: account.providerAccountId },
-        { userId: String(dbUser._id), provider: account.provider, providerAccountId: account.providerAccountId },
+        {
+          userId: String(dbUser._id),
+          provider: account.provider,
+          providerAccountId: account.providerAccountId,
+        },
         { upsert: true, new: true }
       );
 
-      // Make sure NextAuth knows our DB user id
-      (user as any).id = String(dbUser._id);
-      (user as any).role = dbUser.role;
+      // Ensure `user` has our DB fields (typed via next-auth.d.ts)
+      user.id = String(dbUser._id);
+      user.role = (dbUser.role ?? "FREE") as Role;
 
       return true;
     },
 
     async jwt({ token, user }) {
+      // When user is present, it’s sign-in time
       if (user) {
-        token.userId = (user as any).id;
-        token.role = (user as any).role ?? "FREE";
+        token.id = user.id;
+        token.role = user.role ?? "FREE";
       }
       return token;
     },
 
     async session({ session, token }) {
-      if (session.user) {
-        (session.user as any).id = token.userId as string;
-        (session.user as any).role = token.role as string;
+      if (session.user && token.id) {
+        session.user.id = token.id;
+        session.user.role = token.role ?? "FREE";
       }
       return session;
     },
