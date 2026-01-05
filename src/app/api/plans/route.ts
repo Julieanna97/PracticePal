@@ -74,7 +74,7 @@ export async function POST(req: Request) {
         ? Number(weeklyTargetMinutesRaw)
         : Number(weeklyTargetMinutesRaw);
 
-    if (!title || !instrumentOrSkill || !goalDescription) {
+    if (!title || !instrumentOrSkill) {
       return NextResponse.json(
         { error: "Missing required fields: title, instrumentOrSkill, goalDescription" },
         { status: 400 }

@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Deployment
+Deployed on Vercel using the Next.js framework preset.
+Uses MongoDB Atlas in production and local MongoDB in development.
+
 ## Getting Started
 
 First, run the development server:
