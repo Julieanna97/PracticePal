@@ -39,11 +39,16 @@ export async function POST(req: Request) {
     const status = subscription.status; // active, trialing, past_due, canceled...
     const makePro = status === "active" || status === "trialing";
 
-    const currentPeriodEnd = subscription.current_period_end
-      ? new Date(subscription.current_period_end * 1000)
+    // ✅ Type-safe for your build: Stripe typings in your setup don't include these fields
+    const currentPeriodEndUnix = (subscription as any)?.current_period_end as
+      | number
+      | undefined;
+
+    const currentPeriodEnd = currentPeriodEndUnix
+      ? new Date(currentPeriodEndUnix * 1000)
       : null;
 
-    const cancelAtPeriodEnd = !!subscription.cancel_at_period_end;
+    const cancelAtPeriodEnd = Boolean((subscription as any)?.cancel_at_period_end);
 
     await connectToDB();
 
@@ -67,7 +72,7 @@ export async function POST(req: Request) {
       stripeStatus: status,
       stripeSubscriptionId: subscription.id,
       stripeCustomerId: customerId,
-      stripeCurrentPeriodEnd: currentPeriodEnd,
+      stripeCurrentPeriodEnd: currentPeriodEnd, // Date object (serializes to ISO)
       stripeCancelAtPeriodEnd: cancelAtPeriodEnd,
     });
   } catch (err: any) {
