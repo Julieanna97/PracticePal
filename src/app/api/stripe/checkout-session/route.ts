@@ -1,4 +1,3 @@
-// src/app/api/stripe/checkout-session/route.ts
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { getServerSession } from "next-auth";
@@ -31,6 +30,7 @@ export async function POST() {
         name: user.name ?? undefined,
         metadata: { userId: String(user._id) },
       });
+
       customerId = customer.id;
       user.stripeCustomerId = customerId;
       await user.save();
@@ -46,10 +46,8 @@ export async function POST() {
       mode: "subscription",
       customer: customerId,
 
-      // also store metadata on the session itself
       metadata: { userId: String(user._id) },
 
-      // ensure subscription gets metadata too (used by subscription webhooks)
       subscription_data: {
         metadata: { userId: String(user._id) },
       },
