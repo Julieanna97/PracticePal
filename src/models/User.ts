@@ -1,27 +1,27 @@
+// src/models/User.ts
 import { Schema, models, model } from "mongoose";
 
 const UserSchema = new Schema(
   {
     name: { type: String },
     email: { type: String, required: true, unique: true, index: true },
-    passwordHash: { type: String }, // only for email/password users
+    passwordHash: { type: String },
 
-    // Keep ADMIN if you use it elsewhere (authOptions type had ADMIN)
-    role: { type: String, enum: ["FREE", "PRO", "ADMIN"], default: "FREE" },
+    role: { type: String, enum: ["FREE", "PRO"], default: "FREE" },
 
-    // Stripe fields (preferred)
-    stripeCustomerId: { type: String, index: true },
-    stripeSubscriptionId: { type: String, index: true },
-    stripePriceId: { type: String },
-    stripeStatus: { type: String }, // active, trialing, past_due, canceled, etc.
+    // Stripe fields
+    stripeCustomerId: { type: String, default: null },
+    stripeSubscriptionId: { type: String, default: null },
+    stripePriceId: { type: String, default: null },
+    stripeStatus: { type: String, default: null },
 
-    // Subscription lifecycle (helps UI decide what to show)
-    stripeCurrentPeriodEnd: { type: Date },
+    // ✅ Needed for “cancel at period end”
     stripeCancelAtPeriodEnd: { type: Boolean, default: false },
+    stripeCurrentPeriodEnd: { type: Date, default: null },
 
-    // Legacy fields (your DB screenshot shows these names)
-    subscriptionId: { type: String },
-    subscriptionStatus: { type: String }, // active, trialing, canceled, etc.
+    // (Optional) legacy fields if you still have old docs
+    subscriptionId: { type: String, default: null },
+    subscriptionStatus: { type: String, default: null },
   },
   { timestamps: true }
 );

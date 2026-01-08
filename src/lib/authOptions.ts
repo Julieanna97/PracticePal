@@ -1,3 +1,4 @@
+// src/lib/authOptions.ts
 import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
@@ -13,8 +14,8 @@ type Role = "FREE" | "PRO" | "ADMIN";
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
-    maxAge: 7 * 24 * 60 * 60, // 7 days
-    updateAge: 24 * 60 * 60, // refresh token every 24h (if user is active)
+    maxAge: 7 * 24 * 60 * 60,
+    updateAge: 24 * 60 * 60,
   },
   jwt: {
     maxAge: 7 * 24 * 60 * 60,
@@ -32,7 +33,6 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) return null;
 
         await connectToDB();
-
         const user = await User.findOne({ email: credentials.email }).lean();
         if (!user?.passwordHash) return null;
 
@@ -63,7 +63,6 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async signIn({ user, account }) {
-      // Credentials users already exist in DB
       if (!account || account.type !== "oauth") return true;
       if (!user.email) return false;
 
@@ -95,43 +94,41 @@ export const authOptions: NextAuthOptions = {
     },
 
     async jwt({ token, user }) {
-      // Sign-in time
+      // At sign-in time
       if (user) {
-        token.id = user.id;
-        token.role = user.role ?? "FREE";
-        token.email = user.email ?? token.email;
+        token.id = (user as any).id;
+        token.role = (user as any).role ?? "FREE";
       }
 
-      // ✅ ALWAYS sync role from DB so webhook changes reflect without re-login
-      try {
-        await connectToDB();
+      // Always refresh role/status from DB (so webhook changes show immediately)
+      if (token?.id) {
+        try {
+          await connectToDB();
+          const dbUser = await User.findById(token.id)
+            .select({ role: 1, stripeStatus: 1, stripeSubscriptionId: 1, stripeCustomerId: 1 })
+            .lean();
 
-        // Prefer ID, fallback to email
-        let dbUser: any = null;
-
-        if ((token as any).id) {
-          dbUser = await User.findById((token as any).id).select({ role: 1 }).lean();
-        } else if (token.email) {
-          dbUser = await User.findOne({ email: token.email }).select({ role: 1 }).lean();
+          if (dbUser) {
+            token.role = (dbUser.role ?? "FREE") as Role;
+            (token as any).stripeStatus = dbUser.stripeStatus ?? null;
+            (token as any).stripeSubscriptionId = dbUser.stripeSubscriptionId ?? null;
+            (token as any).stripeCustomerId = dbUser.stripeCustomerId ?? null;
+          }
+        } catch {
+          // ignore DB errors, keep existing token values
         }
-
-        if (dbUser?.role) {
-          token.role = dbUser.role;
-        } else {
-          token.role = token.role ?? "FREE";
-        }
-      } catch {
-        // if DB is temporarily unavailable, keep existing token role
-        token.role = token.role ?? "FREE";
       }
 
       return token;
     },
 
     async session({ session, token }) {
-      if (session.user) {
-        (session.user as any).id = (token as any).id;
+      if (session.user && token?.id) {
+        (session.user as any).id = token.id;
         (session.user as any).role = (token as any).role ?? "FREE";
+        (session.user as any).stripeStatus = (token as any).stripeStatus ?? null;
+        (session.user as any).stripeSubscriptionId = (token as any).stripeSubscriptionId ?? null;
+        (session.user as any).stripeCustomerId = (token as any).stripeCustomerId ?? null;
       }
       return session;
     },

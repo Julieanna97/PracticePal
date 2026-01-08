@@ -1,3 +1,4 @@
+// src/app/api/stripe/cancel-subscription/route.ts
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
@@ -17,22 +18,38 @@ export async function POST() {
   if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   if (!user.stripeSubscriptionId) {
-    return NextResponse.json({ error: "No active subscription found." }, { status: 400 });
+    return NextResponse.json({ error: "No subscription found for this user." }, { status: 400 });
   }
 
-  // Cancel at period end (keeps access until end of paid period)
+  // Schedule cancel at period end
   const sub = await stripe.subscriptions.update(user.stripeSubscriptionId, {
     cancel_at_period_end: true,
   });
 
-  // Optional: store status locally for UI
-  user.stripeStatus = sub.status;
+  // Stripe typings can vary; read safely
+  const status = (sub as any).status as string | undefined;
+  const cancelAtPeriodEnd = !!(sub as any).cancel_at_period_end;
+  const currentPeriodEndUnix = (sub as any).current_period_end as number | undefined;
+
+  const currentPeriodEnd =
+    typeof currentPeriodEndUnix === "number"
+      ? new Date(currentPeriodEndUnix * 1000)
+      : null;
+
+  user.stripeStatus = status ?? user.stripeStatus ?? null;
+  user.stripeCancelAtPeriodEnd = cancelAtPeriodEnd;
+  user.stripeCurrentPeriodEnd = currentPeriodEnd;
+
+  // legacy (optional)
+  user.subscriptionId = sub.id;
+  user.subscriptionStatus = status ?? user.subscriptionStatus ?? null;
+
   await user.save();
 
   return NextResponse.json({
     ok: true,
-    subscriptionStatus: sub.status,
-    cancel_at_period_end: sub.cancel_at_period_end,
-    current_period_end: sub.current_period_end,
+    stripeStatus: user.stripeStatus,
+    stripeCancelAtPeriodEnd: user.stripeCancelAtPeriodEnd,
+    stripeCurrentPeriodEnd: user.stripeCurrentPeriodEnd,
   });
 }

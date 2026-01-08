@@ -10,9 +10,9 @@ type MeResponse = {
   stripeSubscriptionId: string | null;
   stripeCustomerId: string | null;
 
-  // optional if you add these later in /api/me
+  // ✅ returned by /api/me (recommended)
   stripeCancelAtPeriodEnd?: boolean | null;
-  stripeCurrentPeriodEnd?: string | null; // ISO string
+  stripeCurrentPeriodEnd?: string | null; // ISO string (or null)
 };
 
 export default function AccountPage() {
@@ -27,7 +27,6 @@ export default function AccountPage() {
   const [confirmText, setConfirmText] = useState("");
 
   const [billingLoading, setBillingLoading] = useState(false);
-  const [billingMsg, setBillingMsg] = useState<string | null>(null);
 
   const user = session?.user as any;
 
@@ -57,7 +56,6 @@ export default function AccountPage() {
 
   async function onManageBilling() {
     setError(null);
-    setBillingMsg(null);
     setBillingLoading(true);
 
     try {
@@ -83,10 +81,12 @@ export default function AccountPage() {
 
   async function onDeleteAccount() {
     setError(null);
+
     if (confirmText.trim().toLowerCase() !== "delete") {
       setError('Type "delete" to confirm.');
       return;
     }
+
     setDeleting(true);
     try {
       const res = await fetch("/api/account", { method: "DELETE" });
@@ -95,6 +95,7 @@ export default function AccountPage() {
         setError(data?.error ?? "Failed to delete account.");
         return;
       }
+
       await signOut({ redirect: false });
       router.push("/auth/login");
       router.refresh();
@@ -111,11 +112,18 @@ export default function AccountPage() {
   }, [me?.stripeStatus]);
 
   const cancelInfo = useMemo(() => {
+    // cancel_at_period_end may be false until your webhook or cancel route updates it.
     if (!me?.stripeCancelAtPeriodEnd || !me?.stripeCurrentPeriodEnd) return null;
+
     const date = new Date(me.stripeCurrentPeriodEnd);
     if (Number.isNaN(date.getTime())) return null;
+
     return `Cancellation scheduled — access ends on ${date.toLocaleDateString()}.`;
   }, [me?.stripeCancelAtPeriodEnd, me?.stripeCurrentPeriodEnd]);
+
+  const showCancelBadge = useMemo(() => {
+    return !!me?.stripeCancelAtPeriodEnd;
+  }, [me?.stripeCancelAtPeriodEnd]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
@@ -162,16 +170,24 @@ export default function AccountPage() {
               <div className="pt-2">
                 <label className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Account Type</label>
 
-                <div
-                  className={`mt-2 inline-flex items-center px-4 py-2 rounded-full font-bold text-sm shadow-lg ${
-                    loadingMe
-                      ? "bg-gray-200 text-gray-700"
-                      : isPro
-                      ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white"
-                      : "bg-gradient-to-r from-purple-500 to-purple-600 text-white"
-                  }`}
-                >
-                  {loadingMe ? "..." : isPro ? "PRO" : "FREE"}
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <div
+                    className={`inline-flex items-center px-4 py-2 rounded-full font-bold text-sm shadow-lg ${
+                      loadingMe
+                        ? "bg-gray-200 text-gray-700"
+                        : isPro
+                        ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white"
+                        : "bg-gradient-to-r from-purple-500 to-purple-600 text-white"
+                    }`}
+                  >
+                    {loadingMe ? "..." : isPro ? "PRO" : "FREE"}
+                  </div>
+
+                  {!loadingMe && showCancelBadge && (
+                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold border border-amber-200">
+                      Cancel scheduled
+                    </div>
+                  )}
                 </div>
 
                 {!loadingMe && prettyStatus && (
@@ -208,6 +224,10 @@ export default function AccountPage() {
                 You're currently on{" "}
                 <span className="font-bold text-purple-700">{loadingMe ? "..." : isPro ? "PRO" : "FREE"}</span>
               </p>
+
+              {!loadingMe && cancelInfo && (
+                <p className="mt-2 text-sm font-semibold text-amber-700">{cancelInfo}</p>
+              )}
             </div>
 
             {/* FREE -> upgrade */}
@@ -233,13 +253,9 @@ export default function AccountPage() {
               <div className="rounded-2xl border-2 border-emerald-200 bg-emerald-50 p-6">
                 <h3 className="font-bold text-emerald-900 mb-2">Manage membership</h3>
                 <p className="text-sm text-emerald-800 mb-4">
-                  Manage your billing details or cancel your subscription. If you cancel, you keep access until the end of
-                  the billing period.
+                  Manage your billing details or cancel your subscription in Stripe. If you cancel, you keep access until
+                  the end of the billing period.
                 </p>
-
-                {billingMsg && (
-                  <p className="text-sm font-semibold text-emerald-700 mb-3">{billingMsg}</p>
-                )}
 
                 <button
                   onClick={onManageBilling}

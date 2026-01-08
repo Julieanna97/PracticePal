@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+// src/app/api/stripe/checkout-session/route.ts
+import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
@@ -8,7 +9,7 @@ import { stripe } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 
-export async function POST(_req: NextRequest) {
+export async function POST() {
   try {
     const session = await getServerSession(authOptions);
     const userId = (session?.user as any)?.id;
@@ -44,14 +45,16 @@ export async function POST(_req: NextRequest) {
       ui_mode: "embedded",
       mode: "subscription",
       customer: customerId,
-      line_items: [{ price: process.env.STRIPE_PRO_PRICE_ID!, quantity: 1 }],
 
-      // ✅ IMPORTANT: put userId on BOTH the Checkout Session AND the Subscription
+      // also store metadata on the session itself
       metadata: { userId: String(user._id) },
+
+      // ensure subscription gets metadata too (used by subscription webhooks)
       subscription_data: {
         metadata: { userId: String(user._id) },
       },
 
+      line_items: [{ price: process.env.STRIPE_PRO_PRICE_ID!, quantity: 1 }],
       return_url: `${origin}/upgrade/return?session_id={CHECKOUT_SESSION_ID}`,
     });
 
