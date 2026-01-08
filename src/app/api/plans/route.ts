@@ -1,40 +1,21 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-
-import { authOptions } from "@/lib/authOptions"; // <-- IMPORTANT: match your real file name
-import { connectToDB } from "@/lib/mongoose";    // <-- keep consistent with your connector file
+import { authOptions } from "@/lib/authOptions";
+import { connectToDB } from "@/lib/mongodb";
 import { PracticePlan } from "@/models/PracticePlan";
 
-type PublicPlan = {
-  _id: string;
-  userId: string;
-  title: string;
-  instrumentOrSkill: string;
-  goalDescription: string;
-  weeklyTargetMinutes: number;
-  createdAt?: string;
-  updatedAt?: string;
-};
-
-function toPublicPlan(doc: any): PublicPlan {
+function toPublicPlan(doc: any) {
   const obj = typeof doc?.toObject === "function" ? doc.toObject() : doc;
-
   return {
-    _id: String(obj._id),
-    userId: String(obj.userId),
-    title: String(obj.title ?? ""),
-    instrumentOrSkill: String(obj.instrumentOrSkill ?? ""),
-    goalDescription: String(obj.goalDescription ?? ""),
-    weeklyTargetMinutes: Number(obj.weeklyTargetMinutes ?? 0),
-    createdAt: obj.createdAt ? new Date(obj.createdAt).toISOString() : undefined,
-    updatedAt: obj.updatedAt ? new Date(obj.updatedAt).toISOString() : undefined,
+    ...obj,
+    _id: obj?._id?.toString?.() ?? obj?._id,
   };
 }
 
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
-    const userId = session?.user?.id; // works once next-auth.d.ts is included
+    const userId = (session?.user as any)?.id;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -42,9 +23,7 @@ export async function GET() {
 
     await connectToDB();
 
-    const plans = await PracticePlan.find({ userId })
-      .sort({ createdAt: -1 })
-      .lean();
+    const plans = await PracticePlan.find({ userId }).sort({ createdAt: -1 }).lean();
 
     return NextResponse.json(plans.map(toPublicPlan), { status: 200 });
   } catch (err) {
@@ -56,10 +35,24 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    const userId = session?.user?.id;
+    const userId = (session?.user as any)?.id;
+    const role = (session?.user as any)?.role ?? "FREE";
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    await connectToDB();
+
+    // ✅ FREE users can only have 1 plan
+    if (role !== "PRO") {
+      const count = await PracticePlan.countDocuments({ userId });
+      if (count >= 1) {
+        return NextResponse.json(
+          { error: "Free users can only have 1 plan. Upgrade to Pro to create more." },
+          { status: 403 }
+        );
+      }
     }
 
     const body = await req.json();
@@ -67,14 +60,9 @@ export async function POST(req: Request) {
     const title = String(body.title ?? "").trim();
     const instrumentOrSkill = String(body.instrumentOrSkill ?? "").trim();
     const goalDescription = String(body.goalDescription ?? "").trim();
-    const weeklyTargetMinutesRaw = body.weeklyTargetMinutes;
+    const weeklyTargetMinutes = Number(body.weeklyTargetMinutes);
 
-    const weeklyTargetMinutes =
-      typeof weeklyTargetMinutesRaw === "string"
-        ? Number(weeklyTargetMinutesRaw)
-        : Number(weeklyTargetMinutesRaw);
-
-    if (!title || !instrumentOrSkill) {
+    if (!title || !instrumentOrSkill || !goalDescription) {
       return NextResponse.json(
         { error: "Missing required fields: title, instrumentOrSkill, goalDescription" },
         { status: 400 }
@@ -87,8 +75,6 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-
-    await connectToDB();
 
     const plan = await PracticePlan.create({
       userId,

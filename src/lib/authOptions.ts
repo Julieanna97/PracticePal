@@ -41,7 +41,6 @@ export const authOptions: NextAuthOptions = {
 
         const role = (user.role ?? "FREE") as Role;
 
-        // This object becomes `user` inside callbacks.jwt (typed via augmentation)
         return {
           id: String(user._id),
           email: user.email,
@@ -70,7 +69,6 @@ export const authOptions: NextAuthOptions = {
 
       await connectToDB();
 
-      // Find or create DB user
       let dbUser = await User.findOne({ email: user.email });
       if (!dbUser) {
         dbUser = await User.create({
@@ -80,7 +78,6 @@ export const authOptions: NextAuthOptions = {
         });
       }
 
-      // Link provider account -> user
       await Account.findOneAndUpdate(
         { provider: account.provider, providerAccountId: account.providerAccountId },
         {
@@ -91,7 +88,6 @@ export const authOptions: NextAuthOptions = {
         { upsert: true, new: true }
       );
 
-      // Ensure `user` has our DB fields (typed via next-auth.d.ts)
       user.id = String(dbUser._id);
       user.role = (dbUser.role ?? "FREE") as Role;
 
@@ -99,18 +95,43 @@ export const authOptions: NextAuthOptions = {
     },
 
     async jwt({ token, user }) {
-      // When user is present, it’s sign-in time
+      // Sign-in time
       if (user) {
         token.id = user.id;
         token.role = user.role ?? "FREE";
+        token.email = user.email ?? token.email;
       }
+
+      // ✅ ALWAYS sync role from DB so webhook changes reflect without re-login
+      try {
+        await connectToDB();
+
+        // Prefer ID, fallback to email
+        let dbUser: any = null;
+
+        if ((token as any).id) {
+          dbUser = await User.findById((token as any).id).select({ role: 1 }).lean();
+        } else if (token.email) {
+          dbUser = await User.findOne({ email: token.email }).select({ role: 1 }).lean();
+        }
+
+        if (dbUser?.role) {
+          token.role = dbUser.role;
+        } else {
+          token.role = token.role ?? "FREE";
+        }
+      } catch {
+        // if DB is temporarily unavailable, keep existing token role
+        token.role = token.role ?? "FREE";
+      }
+
       return token;
     },
 
     async session({ session, token }) {
-      if (session.user && token.id) {
-        session.user.id = token.id;
-        session.user.role = token.role ?? "FREE";
+      if (session.user) {
+        (session.user as any).id = (token as any).id;
+        (session.user as any).role = (token as any).role ?? "FREE";
       }
       return session;
     },
