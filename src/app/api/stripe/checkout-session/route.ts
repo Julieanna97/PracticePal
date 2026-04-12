@@ -42,7 +42,7 @@ export async function POST() {
       "http://localhost:3000";
 
     const checkoutSession = await stripe.checkout.sessions.create({
-      ui_mode: "embedded",
+      ui_mode: "embedded_page",
       mode: "subscription",
       customer: customerId,
 
