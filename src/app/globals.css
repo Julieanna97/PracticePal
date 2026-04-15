@@ -26,19 +26,46 @@
 html, body {
   min-height: 100vh;
   width: 100%;
+  background: #f9f7f4;
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M0 0L0 14.4L4 10.4L8 16L10.4 13.6L5.6 8L14 8L14 6L1.2 6L0 0Z" fill="rgba(45,36,22,0.85)"/></svg>') 0 0, auto;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: #f9f7f4;
+  color: #6b5d4f;
   font-family: var(--font-geist-sans), "Segoe UI", sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 165, 116, 0.5) rgba(249, 247, 244, 0.3);
+}
+
+/* Webkit scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(249, 247, 244, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(212, 165, 116, 0.6), rgba(199, 125, 77, 0.6));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(199, 125, 77, 0.9), rgba(184, 101, 74, 0.9));
+  box-shadow: 0 0 8px rgba(199, 125, 77, 0.3);
 }
 
 ::selection {
-  background: #ddd6fe;
-  color: #312e81;
+  background: #d4a574;
+  color: white;
+}
+
+a, button, input, [role="button"] {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M0 0L0 14.4L4 10.4L8 16L10.4 13.6L5.6 8L14 8L14 6L1.2 6L0 0Z" fill="rgba(45,36,22,1)"/></svg>') 0 0, auto;
 }
 
 .app-canvas {
