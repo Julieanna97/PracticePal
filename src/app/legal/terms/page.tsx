@@ -8,7 +8,7 @@ export default function TermsPage() {
     >
       <div className="bg-purple-50 border-2 border-purple-200 rounded-2xl p-6 mb-8">
         <p className="text-purple-900 font-semibold flex items-center">
-          <span className="text-2xl mr-3">📜</span>
+          <span className="text-2xl mr-3">??</span>
           By using PracticePal, you agree to these terms. Please read them carefully.
         </p>
       </div>
@@ -47,15 +47,15 @@ export default function TermsPage() {
               <p className="font-semibold text-gray-900 mb-2">Acceptable Use:</p>
               <ul className="space-y-2">
                 <li className="flex items-start">
-                  <span className="text-purple-600 mr-2">✓</span>
+                  <span className="text-purple-600 mr-2">?</span>
                   <span className="text-gray-700">You agree to use PracticePal responsibly and lawfully</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-purple-600 mr-2">✓</span>
+                  <span className="text-purple-600 mr-2">?</span>
                   <span className="text-gray-700">You must provide accurate account information</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-purple-600 mr-2">✓</span>
+                  <span className="text-purple-600 mr-2">?</span>
                   <span className="text-gray-700">You're responsible for maintaining account security</span>
                 </li>
               </ul>
@@ -65,15 +65,15 @@ export default function TermsPage() {
               <p className="font-semibold text-gray-900 mb-2">Prohibited Activities:</p>
               <ul className="space-y-2">
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">✗</span>
+                  <span className="text-red-600 mr-2">?</span>
                   <span className="text-gray-700">Attempting to hack, disrupt, or abuse the service</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">✗</span>
+                  <span className="text-red-600 mr-2">?</span>
                   <span className="text-gray-700">Sharing your account credentials with others</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">✗</span>
+                  <span className="text-red-600 mr-2">?</span>
                   <span className="text-gray-700">Using the service for any illegal purpose</span>
                 </li>
               </ul>
@@ -208,3 +208,4 @@ export default function TermsPage() {
     </SimplePageShell>
   );
 }
+

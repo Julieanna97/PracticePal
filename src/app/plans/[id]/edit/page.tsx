@@ -1,4 +1,4 @@
-import { redirect, notFound } from "next/navigation";
+﻿import { redirect, notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { connectToDB } from "@/lib/mongodb";
@@ -24,7 +24,7 @@ export default async function EditPlanPage({ params }: Props) {
   if (!plan) notFound();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50">
       <main className="mx-auto max-w-4xl px-6 py-12">
         {/* Back Navigation */}
         <Link 
@@ -40,7 +40,7 @@ export default async function EditPlanPage({ params }: Props) {
         {/* Header */}
         <div className="text-center mb-10">
           <div className="inline-block mb-4">
-            <div className="w-20 h-20 bg-gradient-to-br from-purple-500 via-purple-600 to-purple-800 rounded-3xl shadow-lg flex items-center justify-center relative overflow-hidden">
+            <div className="w-20 h-20 bg-gradient-to-br from-purple-500 via-indigo-600 to-indigo-800 rounded-3xl shadow-lg flex items-center justify-center relative overflow-hidden">
               <div className="absolute inset-0 opacity-20">
                 <svg className="w-full h-full" viewBox="0 0 100 100">
                   <circle cx="20" cy="20" r="15" fill="white" opacity="0.3"/>
@@ -52,7 +52,7 @@ export default async function EditPlanPage({ params }: Props) {
               </svg>
             </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-900 mb-3">
+          <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-900 mb-3">
             Edit Practice Plan
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -63,9 +63,9 @@ export default async function EditPlanPage({ params }: Props) {
         {/* Main Form Card */}
         <div className="bg-white rounded-3xl shadow-2xl border-2 border-purple-100 p-8 md:p-10">
           {/* Current Plan Info Banner */}
-          <div className="mb-8 bg-gradient-to-r from-purple-100 to-purple-50 rounded-2xl p-6 border-2 border-purple-200">
+          <div className="mb-8 bg-gradient-to-r from-purple-100 to-indigo-50 rounded-2xl p-6 border-2 border-purple-200">
             <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-700 rounded-xl flex items-center justify-center flex-shrink-0">
                 <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
                   <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
@@ -94,7 +94,7 @@ export default async function EditPlanPage({ params }: Props) {
           {/* Form Section */}
           <div className="space-y-6">
             <div className="flex items-center space-x-3 pb-6 border-b-2 border-purple-100">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-700 rounded-xl flex items-center justify-center">
                 <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"/>
                   <path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd"/>
@@ -116,16 +116,16 @@ export default async function EditPlanPage({ params }: Props) {
         </div>
 
         {/* Help Tips */}
-        <div className="mt-8 bg-gradient-to-r from-blue-50 to-blue-100 rounded-3xl p-6 border-2 border-blue-200">
+        <div className="mt-8 bg-gradient-to-r from-purple-50 to-indigo-100 rounded-3xl p-6 border-2 border-purple-200">
           <div className="flex items-start space-x-4">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-700 rounded-xl flex items-center justify-center flex-shrink-0">
               <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
               </svg>
             </div>
             <div>
-              <h4 className="font-bold text-blue-900 mb-2">💡 Tips for Setting Goals</h4>
-              <ul className="text-sm text-blue-800 space-y-1">
+              <h4 className="font-bold text-purple-900 mb-2">💡 Tips for Setting Goals</h4>
+              <ul className="text-sm text-purple-800 space-y-1">
                 <li>• Start with realistic weekly targets you can consistently hit</li>
                 <li>• You can always increase your target as you build the habit</li>
                 <li>• Be specific in your goal description (e.g., "Master major scales" vs "Get better")</li>
@@ -141,7 +141,7 @@ export default async function EditPlanPage({ params }: Props) {
             href="/dashboard"
             className="bg-white rounded-2xl shadow-lg border-2 border-purple-100 p-6 text-center hover:shadow-xl hover:border-purple-300 transition-all group"
           >
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-700 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
               <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
               </svg>
@@ -167,7 +167,7 @@ export default async function EditPlanPage({ params }: Props) {
             href="/stats"
             className="bg-white rounded-2xl shadow-lg border-2 border-purple-100 p-6 text-center hover:shadow-xl hover:border-purple-300 transition-all group"
           >
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-700 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
               <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
               </svg>
@@ -180,3 +180,4 @@ export default async function EditPlanPage({ params }: Props) {
     </div>
   );
 }
+

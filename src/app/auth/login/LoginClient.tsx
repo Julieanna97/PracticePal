@@ -39,7 +39,7 @@ export default function LoginClient() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-purple-300 to-white relative overflow-hidden flex items-center justify-center px-6 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-indigo-300 to-white relative overflow-hidden flex items-center justify-center px-6 py-12">
       {/* Animated background musical notes */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-20 left-10 text-purple-200 text-4xl opacity-30 animate-pulse">♪</div>
@@ -56,7 +56,7 @@ export default function LoginClient() {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-block mb-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 via-purple-600 to-purple-800 rounded-2xl shadow-lg flex items-center justify-center relative overflow-hidden transform rotate-12">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 via-indigo-600 to-indigo-800 rounded-2xl shadow-lg flex items-center justify-center relative overflow-hidden transform rotate-12">
                 <div className="absolute inset-0 opacity-20">
                   <svg className="w-full h-full" viewBox="0 0 100 100">
                     <circle cx="20" cy="20" r="15" fill="white" opacity="0.3"/>
@@ -68,7 +68,7 @@ export default function LoginClient() {
                 </svg>
               </div>
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-900 mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-900 mb-2">
               Welcome Back!
             </h1>
             <p className="text-gray-600">Log in to continue your musical journey</p>
@@ -141,7 +141,7 @@ export default function LoginClient() {
                 id="password"
                 type="password"
                 className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all"
-                placeholder="••••••••"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -160,7 +160,7 @@ export default function LoginClient() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl px-4 py-3 font-bold hover:shadow-xl transform hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl px-4 py-3 font-bold hover:shadow-xl transform hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center space-x-2">
@@ -210,3 +210,4 @@ export default function LoginClient() {
     </div>
   );
 }
+

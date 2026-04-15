@@ -1,4 +1,4 @@
-// src/app/dashboard/page.tsx
+﻿// src/app/dashboard/page.tsx
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
@@ -91,41 +91,155 @@ export default async function DashboardPage() {
   }
 
   const userName = (session?.user as any)?.name || "there";
+  const weeklyGoal = 150;
+  const weeklyCompletion = Math.min(100, Math.round((weekMinutes / weeklyGoal) * 100));
+  const remainingToGoal = Math.max(0, weeklyGoal - weekMinutes);
+  const coachingMessage =
+    weeklyCompletion >= 100
+      ? "You hit your weekly target. Shift focus to quality reps and intentional practice notes."
+      : weeklyCompletion >= 70
+      ? `Great momentum. Just ${remainingToGoal} more minutes to close the week strong.`
+      : "Start with one focused 20-minute block today. Consistency compounds faster than intensity.";
+  const milestoneLabel =
+    streak >= 14
+      ? "Consistency Champion"
+      : streak >= 7
+      ? "Streak Builder"
+      : streak >= 3
+      ? "Momentum Mode"
+      : "Fresh Start";
+  const last7Days = Array.from({ length: 7 }, (_, i) => {
+    const day = addDaysUTC(todayStart, -(6 - i));
+    const nextDay = addDaysUTC(day, 1);
+    const minutes = sessionsForStats
+      .filter((s: any) => {
+        const t = new Date(s.practicedAt);
+        return t >= day && t < nextDay;
+      })
+      .reduce((sum: number, s: any) => sum + Number(s.durationMinutes || 0), 0);
+
+    return {
+      key: keyUTC(day),
+      label: day.toLocaleDateString("en-US", { weekday: "short" }),
+      minutes,
+    };
+  });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_10%_8%,#ede9fe_0%,transparent_34%),radial-gradient(circle_at_90%_0%,#dbeafe_0%,transparent_34%),#f8fafc]">
       <main className="mx-auto max-w-6xl px-6 py-12">
-        <div className="mb-10">
-          <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-900 mb-2">
-            Welcome back, {userName}! 🎵
-          </h1>
-          <p className="text-lg text-gray-600">Here's your practice overview</p>
-
-          {isPro && (
-            <div className="mt-4 inline-flex items-center rounded-full bg-gradient-to-r from-purple-600 to-purple-700 px-4 py-2 text-white font-bold text-sm shadow-lg">
-              PRO Member
+        <div className="mb-8 rounded-3xl border border-purple-200/70 bg-gradient-to-r from-white via-purple-50 to-indigo-50 p-6 shadow-xl md:p-8">
+          <div className="flex flex-wrap items-start justify-between gap-5">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-purple-700">Dashboard</p>
+              <h1 className="mt-2 text-4xl font-black tracking-tight text-slate-950 md:text-5xl">
+                Welcome back, {userName}! 🎵
+              </h1>
+              <p className="mt-2 text-lg text-slate-600">Here&apos;s your practice overview</p>
             </div>
-          )}
+
+            <div className="flex flex-wrap gap-3">
+              {isPro ? (
+                <div className="inline-flex items-center rounded-full bg-gradient-to-r from-fuchsia-600 to-indigo-600 px-4 py-2 text-sm font-bold text-white shadow-lg">
+                  PRO Member
+                </div>
+              ) : (
+                <Link
+                  href="/upgrade"
+                  className="inline-flex items-center rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-4 py-2 text-sm font-bold text-white shadow-lg"
+                >
+                  Upgrade to Pro
+                </Link>
+              )}
+              <Link
+                href="/sessions/new"
+                className="inline-flex items-center rounded-full border-2 border-purple-200 bg-white px-4 py-2 text-sm font-bold text-purple-700"
+              >
+                Log Session
+              </Link>
+            </div>
+          </div>
         </div>
 
         {/* Quick Stats */}
-        <div className="grid gap-6 sm:grid-cols-3 mb-10">
-          <div className="bg-white rounded-3xl shadow-xl border-2 border-purple-100 p-8">
-            <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-2">Today's Practice</h3>
-            <p className="text-4xl font-extrabold text-gray-900">{todayMinutes}</p>
-            <p className="text-sm text-gray-500 mt-1">minutes</p>
+        <div className="mb-8 grid gap-6 sm:grid-cols-3">
+          <div className="rounded-3xl border-2 border-violet-100 bg-white p-6 shadow-xl">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white shadow-md">
+              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <h3 className="text-xs font-bold uppercase tracking-wide text-gray-500">Today&apos;s Practice</h3>
+            <p className="mt-1 text-4xl font-extrabold text-gray-900">{todayMinutes}</p>
+            <p className="mt-1 text-sm text-gray-500">minutes</p>
           </div>
 
-          <div className="bg-white rounded-3xl shadow-xl border-2 border-purple-100 p-8">
-            <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-2">Current Streak</h3>
-            <p className="text-4xl font-extrabold text-gray-900">{streak}</p>
-            <p className="text-sm text-gray-500 mt-1">days {streak > 0 ? "🔥" : ""}</p>
+          <div className="rounded-3xl border-2 border-indigo-100 bg-white p-6 shadow-xl">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-sky-600 text-white shadow-md">
+              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13 7H7v6h6V7z" />
+                <path fillRule="evenodd" d="M5 3a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2H5zm1 4a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H7a1 1 0 01-1-1V7z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <h3 className="text-xs font-bold uppercase tracking-wide text-gray-500">Current Streak</h3>
+            <p className="mt-1 text-4xl font-extrabold text-gray-900">{streak}</p>
+            <p className="mt-1 text-sm text-gray-500">days {streak > 0 ? "🔥" : ""}</p>
           </div>
 
-          <div className="bg-white rounded-3xl shadow-xl border-2 border-purple-100 p-8">
-            <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-2">This Week</h3>
-            <p className="text-4xl font-extrabold text-gray-900">{weekMinutes}</p>
-            <p className="text-sm text-gray-500 mt-1">minutes</p>
+          <div className="rounded-3xl border-2 border-teal-100 bg-white p-6 shadow-xl">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white shadow-md">
+              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+              </svg>
+            </div>
+            <h3 className="text-xs font-bold uppercase tracking-wide text-gray-500">This Week</h3>
+            <p className="mt-1 text-4xl font-extrabold text-gray-900">{weekMinutes}</p>
+            <p className="mt-1 text-sm text-gray-500">minutes</p>
+          </div>
+        </div>
+
+        {/* Focus Panel */}
+        <div className="mb-8 grid gap-6 lg:grid-cols-[1.3fr_1fr]">
+          <div className="rounded-3xl border-2 border-purple-100 bg-white p-6 shadow-xl">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-black text-slate-900">Weekly Goal Progress</h2>
+              <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-bold text-purple-700">
+                Target {weeklyGoal} min
+              </span>
+            </div>
+
+            <div className="mt-4 h-3 overflow-hidden rounded-full bg-purple-100">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-fuchsia-500 via-purple-500 to-indigo-600 transition-all"
+                style={{ width: `${weeklyCompletion}%` }}
+              />
+            </div>
+
+            <div className="mt-3 flex items-center justify-between text-sm">
+              <p className="font-semibold text-slate-700">{weekMinutes} / {weeklyGoal} minutes</p>
+              <p className="font-bold text-purple-700">{weeklyCompletion}% complete</p>
+            </div>
+          </div>
+
+          <div className="rounded-3xl border-2 border-indigo-100 bg-white p-6 shadow-xl">
+            <h2 className="text-xl font-black text-slate-900">7-Day Rhythm</h2>
+            <p className="mt-1 text-sm text-slate-600">Small steps every day beat occasional marathons.</p>
+            <div className="mt-4 grid grid-cols-7 gap-2">
+              {last7Days.map((d) => (
+                <div key={d.key} className="text-center">
+                  <div
+                    className={`mx-auto h-9 w-9 rounded-lg border text-xs font-bold flex items-center justify-center ${
+                      d.minutes > 0
+                        ? "border-purple-300 bg-gradient-to-br from-purple-500 to-indigo-600 text-white"
+                        : "border-slate-200 bg-slate-50 text-slate-400"
+                    }`}
+                  >
+                    {d.minutes > 0 ? Math.min(99, d.minutes) : "-"}
+                  </div>
+                  <p className="mt-1 text-[11px] font-semibold text-slate-500">{d.label.slice(0, 1)}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -163,38 +277,37 @@ export default async function DashboardPage() {
           )}
         </div>
 
-        {/* Actions */}
-        <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-          <Link href="/plans/new" className="rounded-2xl border-2 border-purple-200 bg-white px-6 py-5 font-bold text-purple-700 text-center">
-            Create Practice Plan
-          </Link>
+        <section className="grid gap-6 md:grid-cols-2">
+          <div className="rounded-3xl border-2 border-fuchsia-100 bg-gradient-to-br from-white via-fuchsia-50 to-purple-50 p-6 shadow-xl">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-fuchsia-700">Milestone</p>
+            <h3 className="mt-2 text-2xl font-black text-slate-900">{milestoneLabel}</h3>
+            <p className="mt-2 text-slate-700">
+              {streak > 0
+                ? `You are on a ${streak}-day streak with ${todayMinutes} minutes practiced today.`
+                : "Log one session today to kick off your next streak."}
+            </p>
+            <div className="mt-4 inline-flex rounded-full bg-white/80 px-3 py-1 text-xs font-bold text-fuchsia-700 ring-1 ring-fuchsia-200">
+              Keep showing up
+            </div>
+          </div>
 
-          <Link href="/sessions/new" className="rounded-2xl bg-purple-700 px-6 py-5 font-bold text-white text-center lg:col-span-2">
-            Log Practice Session
-          </Link>
+          <div className="rounded-3xl border-2 border-indigo-100 bg-gradient-to-br from-white via-indigo-50 to-sky-50 p-6 shadow-xl">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-indigo-700">Coach Note</p>
+            <h3 className="mt-2 text-2xl font-black text-slate-900">Your Next Best Move</h3>
+            <p className="mt-2 text-slate-700">{coachingMessage}</p>
+            <div className="mt-4 h-2 overflow-hidden rounded-full bg-indigo-100">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-sky-500"
+                style={{ width: `${weeklyCompletion}%` }}
+              />
+            </div>
+            <p className="mt-2 text-xs font-semibold text-indigo-700">Weekly completion: {weeklyCompletion}%</p>
+          </div>
+        </section>
 
-          <Link href="/stats" className="rounded-2xl border-2 border-purple-200 bg-white px-6 py-5 font-bold text-purple-700 text-center">
-            View Statistics
-          </Link>
-        </div>
-
-        <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 mt-5">
-          {/* Only show upgrade if NOT pro */}
-          {!isPro ? (
-            <Link href="/upgrade" className="rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-5 font-bold text-white text-center">
-              Upgrade to Pro
-            </Link>
-          ) : (
-            <Link href="/account" className="rounded-2xl bg-gradient-to-r from-purple-600 to-purple-700 px-6 py-5 font-bold text-white text-center">
-              Manage membership
-            </Link>
-          )}
-
-          <Link href="/account" className="rounded-2xl border-2 border-purple-200 bg-white px-6 py-5 font-bold text-purple-700 text-center">
-            Account / Settings
-          </Link>
-        </div>
       </main>
     </div>
   );
 }
+
+

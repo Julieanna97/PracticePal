@@ -41,7 +41,7 @@ export default function PrivacyPolicyPage() {
           </div>
         </div>
 
-        <div className="bg-white border-2 border-purple-100 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+        <div className="bg-white border-2 border-blue-100 rounded-2xl p-6 hover:shadow-lg transition-shadow">
           <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
             <span className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center text-white mr-3">
               2
@@ -51,19 +51,19 @@ export default function PrivacyPolicyPage() {
           <div className="ml-13">
             <ul className="space-y-2">
               <li className="flex items-start">
-                <span className="text-purple-600 mr-2">✓</span>
+                <span className="text-purple-600 mr-2">?</span>
                 <span className="text-gray-700">Provide core features like practice tracking, streaks, and analytics</span>
               </li>
               <li className="flex items-start">
-                <span className="text-purple-600 mr-2">✓</span>
+                <span className="text-purple-600 mr-2">?</span>
                 <span className="text-gray-700">Send important account notifications and updates</span>
               </li>
               <li className="flex items-start">
-                <span className="text-purple-600 mr-2">✓</span>
+                <span className="text-purple-600 mr-2">?</span>
                 <span className="text-gray-700">Improve and personalize your experience</span>
               </li>
               <li className="flex items-start">
-                <span className="text-purple-600 mr-2">✓</span>
+                <span className="text-purple-600 mr-2">?</span>
                 <span className="text-gray-700">Ensure security and prevent fraud</span>
               </li>
             </ul>
@@ -72,7 +72,7 @@ export default function PrivacyPolicyPage() {
 
         <div className="bg-white border-2 border-purple-100 rounded-2xl p-6 hover:shadow-lg transition-shadow">
           <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-            <span className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center text-white mr-3">
+            <span className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center text-white mr-3">
               3
             </span>
             Data Sharing & Security
@@ -101,19 +101,19 @@ export default function PrivacyPolicyPage() {
             <p className="text-gray-700 mb-4">You have the right to:</p>
             <ul className="space-y-2">
               <li className="flex items-start">
-                <span className="text-purple-600 mr-2">•</span>
+                <span className="text-purple-600 mr-2">�</span>
                 <span className="text-gray-700">Access your personal data at any time</span>
               </li>
               <li className="flex items-start">
-                <span className="text-purple-600 mr-2">•</span>
+                <span className="text-purple-600 mr-2">�</span>
                 <span className="text-gray-700">Request corrections to your information</span>
               </li>
               <li className="flex items-start">
-                <span className="text-purple-600 mr-2">•</span>
+                <span className="text-purple-600 mr-2">�</span>
                 <span className="text-gray-700">Delete your account and all associated data</span>
               </li>
               <li className="flex items-start">
-                <span className="text-purple-600 mr-2">•</span>
+                <span className="text-purple-600 mr-2">�</span>
                 <span className="text-gray-700">Export your practice data</span>
               </li>
             </ul>
@@ -157,3 +157,4 @@ export default function PrivacyPolicyPage() {
     </SimplePageShell>
   );
 }
+

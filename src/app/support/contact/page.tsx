@@ -1,4 +1,4 @@
-import SimplePageShell from "@/components/SimplePageShell";
+﻿import SimplePageShell from "@/components/SimplePageShell";
 
 export default function ContactPage() {
   return (
@@ -8,38 +8,44 @@ export default function ContactPage() {
     >
       <div className="grid md:grid-cols-2 gap-8 mb-10">
         {/* Contact Info Cards */}
-        <div className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-2xl p-8 text-white shadow-xl">
-          <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
-            <span className="text-4xl">✉️</span>
+        <div className="bg-gradient-to-br from-fuchsia-500 to-purple-700 rounded-2xl p-8 text-white shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-10 bg-white transition-opacity"></div>
+          <div className="relative z-10">
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-sm">
+              <span className="text-4xl animate-bounce">📧</span>
+            </div>
+            <h3 className="text-2xl font-bold mb-3">Email Support</h3>
+            <p className="text-purple-100 mb-4">
+              Get in touch with our support team for any questions or issues.
+            </p>
+            <a 
+              href="mailto:support@practicepal.com" 
+              className="text-white font-bold text-lg hover:text-purple-100 transition-colors underline underline-offset-4"
+            >
+              support@practicepal.com
+            </a>
+            <p className="text-sm text-purple-200 mt-4">We typically respond within 24 hours</p>
           </div>
-          <h3 className="text-2xl font-bold mb-3">Email Support</h3>
-          <p className="text-purple-100 mb-4">
-            Get in touch with our support team for any questions or issues.
-          </p>
-          <a 
-            href="mailto:support@practicepal.com" 
-            className="text-white font-bold text-lg hover:text-purple-200 transition-colors underline underline-offset-4"
-          >
-            support@practicepal.com
-          </a>
-          <p className="text-sm text-purple-200 mt-4">We typically respond within 24 hours</p>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-8 text-white shadow-xl">
-          <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
-            <span className="text-4xl">💬</span>
+        <div className="bg-gradient-to-br from-indigo-500 to-sky-600 rounded-2xl p-8 text-white shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-10 bg-white transition-opacity"></div>
+          <div className="relative z-10">
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-sm">
+              <span className="text-4xl animate-pulse">💬</span>
+            </div>
+            <h3 className="text-2xl font-bold mb-3">Share Feedback</h3>
+            <p className="text-sky-100 mb-4">
+              Help us improve! Share your ideas, suggestions, or feature requests.
+            </p>
+            <a 
+              href="mailto:feedback@practicepal.com" 
+              className="text-white font-bold text-lg hover:text-sky-100 transition-colors underline underline-offset-4"
+            >
+              feedback@practicepal.com
+            </a>
+            <p className="text-sm text-sky-200 mt-4">Every voice matters!</p>
           </div>
-          <h3 className="text-2xl font-bold mb-3">Share Feedback</h3>
-          <p className="text-purple-100 mb-4">
-            Help us improve! Share your ideas, suggestions, or feature requests.
-          </p>
-          <a 
-            href="mailto:feedback@practicepal.com" 
-            className="text-white font-bold text-lg hover:text-purple-200 transition-colors underline underline-offset-4"
-          >
-            feedback@practicepal.com
-          </a>
-          <p className="text-sm text-purple-200 mt-4">Every voice matters!</p>
         </div>
       </div>
 
@@ -51,7 +57,7 @@ export default function ContactPage() {
             href="/support/faq" 
             className="flex items-start space-x-4 p-4 rounded-xl hover:bg-purple-50 transition-colors group"
           >
-            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-purple-200 transition-colors">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:from-purple-200 group-hover:to-indigo-200 transition-colors">
               <span className="text-2xl">❓</span>
             </div>
             <div>
@@ -64,11 +70,11 @@ export default function ContactPage() {
             href="/support/help-center" 
             className="flex items-start space-x-4 p-4 rounded-xl hover:bg-purple-50 transition-colors group"
           >
-            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-purple-200 transition-colors">
+            <div className="w-12 h-12 bg-gradient-to-br from-indigo-100 to-sky-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:from-indigo-200 group-hover:to-sky-200 transition-colors">
               <span className="text-2xl">📚</span>
             </div>
             <div>
-              <p className="font-bold text-gray-900 group-hover:text-purple-700 transition-colors">Help Center</p>
+              <p className="font-bold text-gray-900 group-hover:text-indigo-700 transition-colors">Help Center</p>
               <p className="text-sm text-gray-600">Guides and tutorials</p>
             </div>
           </a>
@@ -77,11 +83,11 @@ export default function ContactPage() {
             href="/legal/privacy" 
             className="flex items-start space-x-4 p-4 rounded-xl hover:bg-purple-50 transition-colors group"
           >
-            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-purple-200 transition-colors">
+            <div className="w-12 h-12 bg-gradient-to-br from-fuchsia-100 to-purple-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:from-fuchsia-200 group-hover:to-purple-200 transition-colors">
               <span className="text-2xl">🔒</span>
             </div>
             <div>
-              <p className="font-bold text-gray-900 group-hover:text-purple-700 transition-colors">Privacy & Terms</p>
+              <p className="font-bold text-gray-900 group-hover:text-fuchsia-700 transition-colors">Privacy & Terms</p>
               <p className="text-sm text-gray-600">Legal information</p>
             </div>
           </a>
@@ -89,7 +95,7 @@ export default function ContactPage() {
       </div>
 
       {/* Contact Form Placeholder */}
-      <div className="bg-purple-50 border-2 border-purple-200 rounded-2xl p-8">
+      <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-8">
         <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
           <span className="text-3xl mr-3">📝</span>
           Contact Form (Coming Soon)
@@ -99,23 +105,23 @@ export default function ContactPage() {
         </p>
 
         <div className="space-y-4">
-          <div className="bg-white rounded-xl p-4 border border-purple-200">
+          <div className="bg-white rounded-xl p-4 border border-blue-200">
             <p className="font-semibold text-gray-900 mb-2">Planned form fields:</p>
             <ul className="space-y-2 text-gray-700">
               <li className="flex items-center">
-                <span className="text-purple-600 mr-2">•</span>
+                <span className="text-blue-600 mr-2">•</span>
                 Your name and email
               </li>
               <li className="flex items-center">
-                <span className="text-purple-600 mr-2">•</span>
+                <span className="text-blue-600 mr-2">•</span>
                 Subject/topic selection
               </li>
               <li className="flex items-center">
-                <span className="text-purple-600 mr-2">•</span>
+                <span className="text-blue-600 mr-2">•</span>
                 Message details
               </li>
               <li className="flex items-center">
-                <span className="text-purple-600 mr-2">•</span>
+                <span className="text-blue-600 mr-2">•</span>
                 Optional: Attach screenshots
               </li>
             </ul>
@@ -124,7 +130,7 @@ export default function ContactPage() {
       </div>
 
       {/* Bug Reports */}
-      <div className="mt-10 bg-white border-2 border-purple-100 rounded-2xl p-8">
+      <div className="mt-10 bg-white border-2 border-blue-100 rounded-2xl p-8">
         <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
           <span className="text-3xl mr-3">🐛</span>
           Found a Bug?
@@ -134,34 +140,34 @@ export default function ContactPage() {
         </p>
         <ul className="space-y-2 text-gray-700 mb-6">
           <li className="flex items-start">
-            <span className="text-purple-600 mr-2 mt-1">✓</span>
+            <span className="text-blue-600 mr-2 mt-1">✓</span>
             <span>What you were trying to do</span>
           </li>
           <li className="flex items-start">
-            <span className="text-purple-600 mr-2 mt-1">✓</span>
+            <span className="text-blue-600 mr-2 mt-1">âœ“</span>
             <span>What happened instead</span>
           </li>
           <li className="flex items-start">
-            <span className="text-purple-600 mr-2 mt-1">✓</span>
+            <span className="text-blue-600 mr-2 mt-1">âœ“</span>
             <span>Your device and browser</span>
           </li>
           <li className="flex items-start">
-            <span className="text-purple-600 mr-2 mt-1">✓</span>
+            <span className="text-blue-600 mr-2 mt-1">âœ“</span>
             <span>Screenshots if possible</span>
           </li>
         </ul>
         <a 
           href="mailto:bugs@practicepal.com?subject=Bug%20Report" 
-          className="inline-block bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-3 rounded-full font-bold hover:shadow-xl transform hover:-translate-y-1 transition-all"
+          className="inline-block bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-3 rounded-full font-bold hover:shadow-xl transform hover:-translate-y-1 transition-all"
         >
           Report a Bug
         </a>
       </div>
 
       {/* Social/Community (future) */}
-      <div className="mt-10 bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl p-8 text-white text-center">
+      <div className="mt-10 bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 text-white text-center">
         <h3 className="text-2xl font-bold mb-3">Join Our Community</h3>
-        <p className="text-purple-100 mb-6">
+        <p className="text-blue-100 mb-6">
           Connect with fellow musicians, share your progress, and get tips (coming soon!)
         </p>
         <div className="flex flex-wrap justify-center gap-4">
@@ -179,3 +185,4 @@ export default function ContactPage() {
     </SimplePageShell>
   );
 }
+

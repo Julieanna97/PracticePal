@@ -1,4 +1,4 @@
-// src/app/stats/page.tsx
+﻿// src/app/stats/page.tsx
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
@@ -132,14 +132,14 @@ export default async function StatsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_10%_8%,#ede9fe_0%,transparent_34%),radial-gradient(circle_at_90%_0%,#dbeafe_0%,transparent_34%),#f8fafc]">
       <main className="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-12">
         {/* Header */}
         <div className="mb-8 sm:mb-10">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-900 mb-2">
+          <h1 className="mb-2 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl md:text-5xl">
             Your Stats 📊
           </h1>
-          <p className="text-base sm:text-lg text-gray-600">Track your progress and celebrate your dedication</p>
+          <p className="text-base text-slate-600 sm:text-lg">Track your progress and celebrate your dedication</p>
         </div>
 
         {/* Pro teaser */}
@@ -171,8 +171,8 @@ export default async function StatsPage() {
 
         {/* Summary Cards */}
         <div className="grid gap-4 sm:gap-6 grid-cols-2 lg:grid-cols-4 mb-8 sm:mb-10">
-          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg border-2 border-purple-100 p-4 sm:p-6">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-md mb-3 sm:mb-4">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg border-2 border-fuchsia-100 p-4 sm:p-6">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-fuchsia-500 to-violet-700 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-md mb-3 sm:mb-4">
               <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd"/>
               </svg>
@@ -182,8 +182,8 @@ export default async function StatsPage() {
             <p className="text-xs text-gray-500 mt-1">minutes</p>
           </div>
 
-          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg border-2 border-purple-100 p-4 sm:p-6">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-md mb-3 sm:mb-4">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg border-2 border-indigo-100 p-4 sm:p-6">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-md mb-3 sm:mb-4">
               <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
               </svg>
@@ -193,8 +193,8 @@ export default async function StatsPage() {
             <p className="text-xs text-gray-500 mt-1">minutes</p>
           </div>
 
-          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg border-2 border-purple-100 p-4 sm:p-6">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-md mb-3 sm:mb-4">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg border-2 border-sky-100 p-4 sm:p-6">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-sky-500 to-cyan-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-md mb-3 sm:mb-4">
               <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"/>
               </svg>
@@ -204,8 +204,8 @@ export default async function StatsPage() {
             <p className="text-xs text-gray-500 mt-1">minutes</p>
           </div>
 
-          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg border-2 border-purple-100 p-4 sm:p-6">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-md mb-3 sm:mb-4">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg border-2 border-rose-100 p-4 sm:p-6">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-amber-500 to-rose-500 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-md mb-3 sm:mb-4">
               <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
                 <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
@@ -228,7 +228,7 @@ export default async function StatsPage() {
         {/* Empty State */}
         {totalSessions === 0 && (
           <div className="bg-white rounded-3xl shadow-xl border-2 border-purple-100 p-12 text-center">
-            <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-indigo-700 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
               </svg>
@@ -237,7 +237,7 @@ export default async function StatsPage() {
             <p className="text-gray-600 mb-6">Start logging your practice sessions to see beautiful stats and insights!</p>
             <Link
               href="/sessions/new"
-              className="inline-block bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-3 rounded-full font-bold hover:shadow-xl transform hover:-translate-y-1 transition-all"
+              className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-3 rounded-full font-bold hover:shadow-xl transform hover:-translate-y-1 transition-all"
             >
               Log Your First Session
             </Link>
@@ -247,3 +247,4 @@ export default async function StatsPage() {
     </div>
   );
 }
+

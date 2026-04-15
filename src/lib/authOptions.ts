@@ -132,9 +132,17 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+
+    async redirect({ url, baseUrl }) {
+      // Ensure redirects go to the correct base URL, not localhost:3000
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      if (new URL(url).origin === baseUrl) return url;
+      return `${baseUrl}/dashboard`;
+    },
   },
 
   pages: {
     signIn: "/auth/login",
+    signOut: "/auth/login",
   },
 };

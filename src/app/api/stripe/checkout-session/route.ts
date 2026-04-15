@@ -38,8 +38,9 @@ export async function POST() {
 
     const origin =
       (await headers()).get("origin") ||
+      process.env.NEXT_PUBLIC_APP_URL ||
       process.env.NEXTAUTH_URL ||
-      "http://localhost:3000";
+      "http://localhost:3001";
 
     const checkoutSession = await stripe.checkout.sessions.create({
       ui_mode: "embedded_page",

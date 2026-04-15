@@ -7,7 +7,7 @@ import { stripe } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 
-export async function POST(_req: NextRequest) {
+export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   const userId = (session?.user as any)?.id;
 
@@ -20,7 +20,7 @@ export async function POST(_req: NextRequest) {
     return NextResponse.json({ error: "No Stripe customer for this user." }, { status: 400 });
   }
 
-  const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+  const baseUrl = req.nextUrl.origin || process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3001";
 
   const portal = await stripe.billingPortal.sessions.create({
     customer: user.stripeCustomerId,

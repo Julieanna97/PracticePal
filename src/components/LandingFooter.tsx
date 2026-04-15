@@ -1,16 +1,16 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 export default function LandingFooter() {
   return (
-    <footer className="bg-white/90 backdrop-blur-sm border-t border-purple-100 py-16 px-6">
+    <footer className="mt-16 border-t border-purple-100 bg-gradient-to-b from-white/95 to-purple-50/45 backdrop-blur-sm py-16 px-6">
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-4 gap-10">
           <div>
             <Link href="/" className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 bg-gradient-to-br from-fuchsia-600 to-indigo-800 rounded-full flex items-center justify-center shadow-lg">
                 <span className="text-white font-bold text-lg">P</span>
               </div>
-              <span className="text-2xl font-bold text-gray-800">PracticePal</span>
+              <span className="text-2xl font-black tracking-tight text-gray-800">PracticePal</span>
             </Link>
 
             <p className="text-gray-600 leading-relaxed">
@@ -26,7 +26,7 @@ export default function LandingFooter() {
               </Link>
               <Link
                 href="/auth/register"
-                className="inline-flex items-center justify-center px-5 py-2 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold hover:shadow-lg transition-all"
+                className="inline-flex items-center justify-center px-5 py-2 rounded-full bg-gradient-to-r from-fuchsia-600 to-indigo-700 text-white font-bold hover:shadow-lg transition-all"
               >
                 Start Free
               </Link>
@@ -62,9 +62,10 @@ export default function LandingFooter() {
         </div>
 
         <div className="border-t border-purple-100 mt-12 pt-8 text-center text-gray-600">
-          <p>&copy; 2024 PracticePal. All rights reserved. Made with 💜 for musicians everywhere.</p>
+          <p>&copy; 2024 PracticePal. All rights reserved. Made with heart for musicians everywhere.</p>
         </div>
       </div>
     </footer>
   );
 }
+

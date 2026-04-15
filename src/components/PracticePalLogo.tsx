@@ -1,4 +1,4 @@
-export function PracticePalLogo({ size = 'md', showText = true }: { size?: 'sm' | 'md' | 'lg' | 'xl', showText?: boolean }) {
+﻿export function PracticePalLogo({ size = 'md', showText = true }: { size?: 'sm' | 'md' | 'lg' | 'xl', showText?: boolean }) {
   const sizes = {
     sm: { icon: 'w-8 h-8', text: 'text-lg' },
     md: { icon: 'w-10 h-10', text: 'text-2xl' },
@@ -11,7 +11,7 @@ export function PracticePalLogo({ size = 'md', showText = true }: { size?: 'sm' 
   return (
     <div className="flex items-center space-x-2">
       <div className={`${icon} relative`}>
-        <div className="w-full h-full bg-gradient-to-br from-purple-500 via-purple-600 to-purple-800 rounded-2xl shadow-lg flex items-center justify-center relative overflow-hidden transform rotate-12 hover:rotate-0 transition-transform duration-300">
+        <div className="w-full h-full bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 rounded-2xl shadow-lg flex items-center justify-center relative overflow-hidden transform rotate-12 hover:rotate-0 transition-transform duration-300">
           <div className="absolute inset-0 opacity-20">
             <svg className="w-full h-full" viewBox="0 0 100 100">
               <circle cx="20" cy="20" r="15" fill="white" opacity="0.3"/>
@@ -24,7 +24,7 @@ export function PracticePalLogo({ size = 'md', showText = true }: { size?: 'sm' 
         </div>
       </div>
       {showText && (
-        <span className={`${text} font-bold bg-gradient-to-r from-purple-600 to-purple-900 bg-clip-text text-transparent`}>
+        <span className={`${text} font-bold bg-gradient-to-r from-blue-600 to-blue-900 bg-clip-text text-transparent`}>
           PracticePal
         </span>
       )}

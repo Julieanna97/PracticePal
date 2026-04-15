@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -73,6 +73,8 @@ type FieldErrors = Partial<Record<keyof FormState, string>>;
 
 export default function EditPlanForm({ planId, initial }: Props) {
   const router = useRouter();
+  const fieldClass =
+    "mt-2 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 outline-none transition focus:border-purple-300 focus:ring-4 focus:ring-purple-100";
 
   const initialSelect =
     (INSTRUMENT_OPTIONS as readonly string[]).includes(initial.instrumentOrSkill)
@@ -174,7 +176,7 @@ export default function EditPlanForm({ planId, initial }: Props) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
+    <form onSubmit={onSubmit} className="space-y-7 rounded-2xl border border-purple-100 bg-gradient-to-b from-white to-purple-50/30 p-6 md:p-7">
       {serverError && (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
           {serverError}
@@ -186,7 +188,7 @@ export default function EditPlanForm({ planId, initial }: Props) {
         <input
           value={form.title}
           onChange={(e) => setField("title", e.target.value)}
-          className="mt-2 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-purple-300"
+          className={fieldClass}
           placeholder="e.g. Vocal Belting Routine"
           autoComplete="off"
         />
@@ -202,10 +204,10 @@ export default function EditPlanForm({ planId, initial }: Props) {
             setField("selectInstrumentOrSkill", v);
             if (v !== "Other") setField("customInstrumentOrSkill", "");
           }}
-          className="mt-2 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-purple-300"
+          className={fieldClass}
         >
           <option value="" disabled>
-            Select one…
+            Select one...
           </option>
           {INSTRUMENT_OPTIONS.map((opt) => (
             <option key={opt} value={opt}>
@@ -226,8 +228,8 @@ export default function EditPlanForm({ planId, initial }: Props) {
           <input
             value={form.customInstrumentOrSkill}
             onChange={(e) => setField("customInstrumentOrSkill", e.target.value)}
-            className="mt-2 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-purple-300"
-            placeholder="e.g. Clarinet, Ukulele, Songwriting…"
+            className={fieldClass}
+            placeholder="e.g. Clarinet, Ukulele, Songwriting..."
             autoComplete="off"
           />
           {errors.customInstrumentOrSkill && (
@@ -239,10 +241,13 @@ export default function EditPlanForm({ planId, initial }: Props) {
       <div>
         <label className="block text-sm font-semibold text-gray-900">Weekly target (minutes)</label>
         <input
+          type="number"
+          min={10}
+          step={5}
           value={form.weeklyTargetMinutes}
           onChange={(e) => setField("weeklyTargetMinutes", e.target.value)}
           inputMode="numeric"
-          className="mt-2 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-purple-300"
+          className={fieldClass}
           placeholder="150"
         />
         {errors.weeklyTargetMinutes && (
@@ -257,7 +262,7 @@ export default function EditPlanForm({ planId, initial }: Props) {
         <textarea
           value={form.goalDescription}
           onChange={(e) => setField("goalDescription", e.target.value)}
-          className="mt-2 w-full min-h-[120px] rounded-xl border border-gray-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-purple-300"
+          className={`${fieldClass} min-h-[120px]`}
           placeholder="What are you focusing on this week?"
         />
         {errors.goalDescription && (
@@ -268,7 +273,7 @@ export default function EditPlanForm({ planId, initial }: Props) {
       <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Link
           href="/plans"
-          className="inline-flex items-center justify-center rounded-xl border border-gray-200 px-5 py-3 font-semibold text-gray-700 hover:bg-gray-50"
+          className="inline-flex items-center justify-center rounded-xl border border-gray-200 px-5 py-3 font-semibold text-gray-700 transition hover:bg-gray-50"
         >
           Cancel
         </Link>
@@ -276,7 +281,7 @@ export default function EditPlanForm({ planId, initial }: Props) {
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex items-center justify-center rounded-xl bg-purple-600 px-6 py-3 font-bold text-white hover:bg-purple-700 disabled:opacity-60"
+          className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-purple-600 to-indigo-700 px-6 py-3 font-bold text-white shadow-lg transition hover:opacity-90 disabled:opacity-60"
         >
           {submitting ? "Saving..." : "Save changes"}
         </button>
@@ -284,3 +289,5 @@ export default function EditPlanForm({ planId, initial }: Props) {
     </form>
   );
 }
+
+

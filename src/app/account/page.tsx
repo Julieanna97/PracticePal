@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
@@ -118,7 +118,7 @@ export default function AccountPage() {
     const date = new Date(me.stripeCurrentPeriodEnd);
     if (Number.isNaN(date.getTime())) return null;
 
-    return `Cancellation scheduled — access ends on ${date.toLocaleDateString()}.`;
+    return `Cancellation scheduled – access ends on ${date.toLocaleDateString()}`;
   }, [me?.stripeCancelAtPeriodEnd, me?.stripeCurrentPeriodEnd]);
 
   const showCancelBadge = useMemo(() => {
@@ -126,20 +126,20 @@ export default function AccountPage() {
   }, [me?.stripeCancelAtPeriodEnd]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_10%_8%,#ede9fe_0%,transparent_34%),radial-gradient(circle_at_90%_0%,#dbeafe_0%,transparent_34%),#f8fafc]">
       <main className="mx-auto max-w-6xl px-6 py-12">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-900">
+          <h1 className="text-4xl font-black tracking-tight text-slate-950">
             Account Settings
           </h1>
-          <p className="mt-2 text-gray-600">Manage your profile, settings, and account actions</p>
+          <p className="mt-2 text-slate-600">Manage your profile, settings, and account actions</p>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Profile Card */}
           <div className="bg-white rounded-3xl shadow-xl border-2 border-purple-100 p-8 hover:shadow-2xl transition-shadow">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-700 rounded-2xl flex items-center justify-center">
                 <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"
@@ -177,7 +177,7 @@ export default function AccountPage() {
                         ? "bg-gray-200 text-gray-700"
                         : isPro
                         ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white"
-                        : "bg-gradient-to-r from-purple-500 to-purple-600 text-white"
+                        : "bg-gradient-to-r from-purple-500 to-indigo-700 text-white"
                     }`}
                   >
                     {loadingMe ? "..." : isPro ? "PRO" : "FREE"}
@@ -206,7 +206,7 @@ export default function AccountPage() {
           {/* Subscription Card */}
           <div className="bg-white rounded-3xl shadow-xl border-2 border-purple-100 p-8 hover:shadow-2xl transition-shadow">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-700 rounded-2xl flex items-center justify-center">
                 <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
                   <path
@@ -232,7 +232,7 @@ export default function AccountPage() {
 
             {/* FREE -> upgrade */}
             {!loadingMe && !isPro && (
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 mb-6">
+              <div className="bg-gradient-to-br from-purple-50 to-indigo-100 rounded-2xl p-6 mb-6">
                 <h3 className="font-bold text-gray-900 mb-3">Upgrade to Pro</h3>
                 <ul className="space-y-2 text-sm text-gray-700 mb-4">
                   <li className="flex items-center">✅ Advanced analytics</li>
@@ -241,7 +241,7 @@ export default function AccountPage() {
                 </ul>
                 <button
                   onClick={() => router.push("/upgrade")}
-                  className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl px-4 py-3 font-bold hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+                  className="w-full bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-xl px-4 py-3 font-bold hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
                 >
                   Upgrade to Pro - $9/month
                 </button>
@@ -308,3 +308,5 @@ export default function AccountPage() {
     </div>
   );
 }
+
+

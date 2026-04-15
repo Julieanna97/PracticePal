@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 export default function ForgotPasswordPage() {
   return (
@@ -11,7 +11,7 @@ export default function ForgotPasswordPage() {
 
         {/* Minimal placeholder (no backend needed) */}
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-800 text-sm mb-6">
-          This feature isn’t implemented yet in this version.
+          This feature isn't implemented yet in this version.
         </div>
 
         <Link
@@ -24,3 +24,4 @@ export default function ForgotPasswordPage() {
     </div>
   );
 }
+

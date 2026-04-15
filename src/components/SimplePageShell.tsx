@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 type Props = {
   title: string;
@@ -8,71 +8,50 @@ type Props = {
 
 export default function SimplePageShell({ title, subtitle, children }: Props) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-purple-300 to-white relative overflow-x-hidden">
-      {/* Animated background musical notes */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-20 left-10 text-purple-200 text-4xl opacity-30 animate-pulse">
-          ♪
-        </div>
-        <div className="absolute top-40 right-20 text-purple-200 text-3xl opacity-25 animate-bounce">
-          ♫
-        </div>
-        <div className="absolute bottom-40 left-20 text-purple-200 text-5xl opacity-20 animate-pulse">
-          ♪
-        </div>
-        <div className="absolute bottom-20 right-40 text-purple-200 text-4xl opacity-30 animate-bounce">
-          ♫
-        </div>
-      </div>
+    <div className="min-h-screen app-canvas">
+      <main className="mx-auto max-w-5xl px-6 py-14 md:py-20">
+        <div className="glass-surface rounded-3xl p-8 md:p-12">
+          <div className="mb-6 h-1.5 w-24 rounded-full bg-gradient-to-r from-fuchsia-500 via-purple-500 to-indigo-600" />
 
-      {/* ✅ NO NAV HERE — layout already provides it */}
-
-      <main className="relative z-10 max-w-5xl mx-auto px-6 py-16 md:py-20">
-        <div className="bg-white rounded-3xl shadow-2xl border-2 border-purple-100 p-8 md:p-12">
-          {/* Decorative element */}
-          <div className="w-16 h-1 bg-gradient-to-r from-purple-600 to-purple-400 rounded-full mb-6" />
-
-          <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-900">
+          <h1 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">
             {title}
           </h1>
 
           {subtitle && (
-            <p className="mt-4 text-xl text-gray-600 leading-relaxed">{subtitle}</p>
+            <p className="mt-4 text-lg leading-relaxed text-slate-600 md:text-xl">{subtitle}</p>
           )}
 
-          <div className="mt-10 text-gray-700 leading-relaxed prose prose-lg max-w-none">
+          <div className="prose prose-slate mt-10 max-w-none leading-relaxed text-slate-700">
             {children}
           </div>
 
-          <div className="mt-12 pt-8 border-t-2 border-purple-100 flex items-center justify-between flex-wrap gap-4">
+          <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-slate-200 pt-8">
             <Link
               href="/"
-              className="inline-flex items-center text-purple-700 font-bold hover:text-purple-900 transition-colors group"
+              className="group inline-flex items-center font-semibold text-slate-700 transition hover:text-slate-900"
             >
-              <span className="mr-2 transform group-hover:-translate-x-1 transition-transform">
-                ←
-              </span>
+              <span className="mr-2 transition-transform group-hover:-translate-x-1">&larr;</span>
               Back to home
             </Link>
 
-            <div className="flex gap-3 items-center flex-wrap">
+            <div className="flex flex-wrap items-center gap-3">
               <Link
                 href="/support/help-center"
-                className="text-sm text-gray-600 hover:text-purple-600 font-medium transition-colors"
+                className="text-sm font-medium text-slate-600 transition hover:text-slate-900"
               >
                 Help Center
               </Link>
-              <span className="text-gray-400">•</span>
+              <span className="text-slate-300">•</span>
               <Link
                 href="/support/contact"
-                className="text-sm text-gray-600 hover:text-purple-600 font-medium transition-colors"
+                className="text-sm font-medium text-slate-600 transition hover:text-slate-900"
               >
                 Contact
               </Link>
-              <span className="text-gray-400">•</span>
+              <span className="text-slate-300">•</span>
               <Link
                 href="/support/faq"
-                className="text-sm text-gray-600 hover:text-purple-600 font-medium transition-colors"
+                className="text-sm font-medium text-slate-600 transition hover:text-slate-900"
               >
                 FAQ
               </Link>
@@ -83,3 +62,5 @@ export default function SimplePageShell({ title, subtitle, children }: Props) {
     </div>
   );
 }
+
+
