@@ -3445,6 +3445,23 @@ export default function Home() {
         <div className="ambient-blob ambient-blob-b"></div>
         <div className="ambient-blob ambient-blob-c"></div>
         <div className="ambient-noise"></div>
+        <div className="ambient-stars">
+          {ambientStars.map((star, index) => (
+            <span
+              key={`star-${index}-${star.top}-${star.left}`}
+              className="ambient-star"
+              style={{
+                top: star.top,
+                left: star.left,
+                animationDelay: star.delay,
+                animationDuration: star.duration,
+                ["--star-size" as string]: star.size,
+                ["--star-drift-x" as string]: star.driftX,
+                ["--star-drift-y" as string]: star.driftY,
+              }}
+            ></span>
+          ))}
+        </div>
         <div className="ambient-tokens">
           {ambientTokens.map((token) => (
             <span
