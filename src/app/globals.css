@@ -27,7 +27,7 @@ html, body {
   min-height: 100vh;
   width: 100%;
   background: #f9f7f4;
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M0 0L0 14.4L4 10.4L8 16L10.4 13.6L5.6 8L14 8L14 6L1.2 6L0 0Z" fill="rgba(45,36,22,0.85)"/></svg>') 0 0, auto;
+  cursor: url("https://media.tumblr.com/tumblr_m98z134kHu1qid2nw.gif"), auto;
 }
 
 body {
@@ -64,8 +64,18 @@ body {
   color: white;
 }
 
-a, button, input, [role="button"] {
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M0 0L0 14.4L4 10.4L8 16L10.4 13.6L5.6 8L14 8L14 6L1.2 6L0 0Z" fill="rgba(45,36,22,1)"/></svg>') 0 0, auto;
+a,
+button,
+input,
+[role="button"] {
+  cursor: url("https://media.tumblr.com/tumblr_m98z134kHu1qid2nw.gif"), pointer;
+}
+
+a:hover,
+button:hover,
+input:hover,
+[role="button"]:hover {
+  cursor: url("https://static.tumblr.com/xjqjg7j/Mhcmxtzxp/84.gif"), pointer;
 }
 
 .app-canvas {
