@@ -2852,6 +2852,11 @@ export default function Home() {
           color: var(--muted-color);
         }
 
+        .contact-lead {
+          margin-bottom: 20px;
+          color: var(--about-text-color);
+        }
+
         ::-webkit-scrollbar {
           width: 6px;
           background: transparent;
@@ -3353,10 +3358,62 @@ export default function Home() {
 
         @media (max-width: 900px) {
           .main-container {
-            height: calc(100vh - 24px);
-            top: 12px;
-            left: 50%;
-            transform: translateX(-50%);
+            position: relative;
+            left: auto;
+            top: auto;
+            transform: none;
+            width: 100%;
+            height: auto;
+            min-height: 100dvh;
+            display: block;
+            padding: 8px;
+          }
+
+          .topbar {
+            position: sticky;
+            top: 8px;
+            left: auto;
+            right: auto;
+            height: auto;
+            min-height: 48px;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+            z-index: 90;
+          }
+
+          .topbar-left {
+            gap: 8px;
+          }
+
+          .topbar-title {
+            min-width: 0;
+            height: 34px;
+            padding: 0 8px;
+          }
+
+          .topbar-title span {
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          .topbar-icons {
+            display: none;
+          }
+
+          .viewer-badge {
+            display: none;
+          }
+
+          .main-content {
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            min-height: calc(100dvh - 88px);
+            overflow: visible;
           }
 
           .sidebar-left {
@@ -3364,12 +3421,13 @@ export default function Home() {
           }
 
           .content-area {
-            padding: 24px;
+            padding: 18px 14px 110px;
+            overflow: visible;
           }
 
           .chat-widget {
-            right: 14px;
-            bottom: 14px;
+            right: 10px;
+            bottom: max(10px, env(safe-area-inset-bottom));
           }
 
           .chat-panel {
@@ -3377,16 +3435,13 @@ export default function Home() {
           }
 
           .side-player-shell {
-            transform: translate(224px, -50%);
-          }
-
-          .side-player-panel {
-            width: 270px;
+            display: none;
           }
 
           .intro-card {
             padding: 22px 20px;
           }
+
         }
 
         h1,
@@ -3893,7 +3948,7 @@ export default function Home() {
             <section id="contact" data-reveal-id="contact" className={`section reveal-item reveal-delay-4 ${isRevealVisible("contact") ? "reveal-visible" : ""}`}>
               <div className="section-subtitle">Get In Touch</div>
               <h2 className="section-title">Let's Build</h2>
-              <p style={{ marginBottom: "20px" }}>
+              <p className="contact-lead">
                 Open to opportunities, collaborations, and interesting projects.
                 Reach out anytime.
               </p>
