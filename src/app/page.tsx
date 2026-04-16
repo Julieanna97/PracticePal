@@ -1281,6 +1281,20 @@ export default function Home() {
           color: var(--accent-color);
         }
 
+        .site-top-gif {
+          position: fixed;
+          top: 2px;
+          left: 0;
+          width: 100vw;
+          height: 24px;
+          background-image: url("https://64.media.tumblr.com/tumblr_marmeszoT71rqliaa.gif");
+          background-repeat: repeat-x;
+          background-position: top left;
+          background-size: auto 100%;
+          pointer-events: none;
+          z-index: 140;
+        }
+
         .ambient-backdrop {
           position: fixed;
           inset: 0;
@@ -2857,6 +2871,22 @@ export default function Home() {
           color: var(--about-text-color);
         }
 
+        .contact-section {
+          display: grid;
+          gap: 10px;
+        }
+
+        .contact-section .contact-actions {
+          margin-top: 2px;
+          align-items: stretch;
+        }
+
+        .contact-section .contact-btn,
+        .contact-section .cv-btn {
+          min-height: 44px;
+          white-space: nowrap;
+        }
+
         ::-webkit-scrollbar {
           width: 6px;
           background: transparent;
@@ -3357,6 +3387,11 @@ export default function Home() {
         }
 
         @media (max-width: 900px) {
+          .site-top-gif {
+            top: 1px;
+            height: 20px;
+          }
+
           .main-container {
             position: relative;
             left: auto;
@@ -3425,6 +3460,28 @@ export default function Home() {
             overflow: visible;
           }
 
+          .contact-section {
+            gap: 8px;
+          }
+
+          .contact-section .contact-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+          }
+
+          .contact-section .contact-btn,
+          .contact-section .cv-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 12px 14px;
+            font-size: 0.9em;
+          }
+
+          .contact-lead {
+            margin-bottom: 14px;
+          }
+
           .chat-widget {
             right: 10px;
             bottom: max(10px, env(safe-area-inset-bottom));
@@ -3442,6 +3499,21 @@ export default function Home() {
             padding: 22px 20px;
           }
 
+        }
+
+        @media (max-width: 560px) {
+          .site-top-gif {
+            top: 0;
+            height: 16px;
+          }
+
+          .contact-section .section-title {
+            font-size: 1.2em;
+          }
+
+          .contact-prompt {
+            font-size: 0.8em;
+          }
         }
 
         h1,
@@ -3494,6 +3566,8 @@ export default function Home() {
           style={{ transform: `scaleX(${Math.min(100, Math.max(0, scrollProgress)) / 100})` }}
         ></div>
       </div>
+
+      <div className="site-top-gif" aria-hidden="true"></div>
 
       <div className={`ambient-backdrop ambient-theme-${themeKey}`} aria-hidden="true">
         <div className="ambient-blob ambient-blob-a"></div>
@@ -3945,7 +4019,7 @@ export default function Home() {
               </section>
             ) : null}
 
-            <section id="contact" data-reveal-id="contact" className={`section reveal-item reveal-delay-4 ${isRevealVisible("contact") ? "reveal-visible" : ""}`}>
+            <section id="contact" data-reveal-id="contact" className={`section contact-section reveal-item reveal-delay-4 ${isRevealVisible("contact") ? "reveal-visible" : ""}`}>
               <div className="section-subtitle">Get In Touch</div>
               <h2 className="section-title">Let's Build</h2>
               <p className="contact-lead">
