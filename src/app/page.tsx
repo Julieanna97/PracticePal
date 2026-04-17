@@ -6,6 +6,8 @@ const featuredProjects = [
   {
     name: "PracticePal",
     category: "Full Product",
+    demoUrl: "/auth/login",
+    demoLabel: "Open App Demo",
     role: "Founder + Full-Stack Engineer",
     duration: "6 months",
     architecture: "Next.js app-router + MongoDB + Stripe webhooks + NextAuth",
@@ -40,20 +42,22 @@ const featuredProjects = [
   {
     name: "PodManager.ai",
     category: "Internship",
+    demoUrl: "https://github.com/Julieanna97",
+    demoLabel: "View Internship Work",
     role: "Frontend + AI Features Intern",
     duration: "4 months",
-    architecture: "React UI + FastAPI services + FFmpeg pipelines + OpenAI APIs",
+    architecture: "React + WaveSurfer UI + video track strip + Python/FastAPI services + FFmpeg pipelines",
     summary:
-      "Podcast editing and AI analysis platform. Waveform UI, FFmpeg audio blending, AI transcription with Whisper and GPT.",
-    stack: ["React", "FastAPI", "FFmpeg", "OpenAI"],
+      "Podcast editing platform where I implemented audio waveform and video track strip workflows, plus crossfade/audio blending and upload validation routes.",
+    stack: ["React", "TypeScript", "WaveSurfer.js", "Python", "FastAPI", "FFmpeg"],
     impact: "Cut manual production steps by automating clipping and transcript workflows.",
     score: { impact: 4, complexity: 4, ownership: 3, business: 4 },
     whyBuilt:
       "Podcast teams needed fewer manual editing steps and faster insights from long-form audio.",
     highlights: [
-      "Built waveform-first editing interactions",
-      "Integrated FFmpeg pipelines for audio merging",
-      "Added AI transcription and summarization tooling",
+      "Implemented audio waveform and video track strip editing workflows",
+      "Implemented 1-second crossfade and FFmpeg audio merging/blending",
+      "Shipped upload and validation routes for episode media",
     ],
     challenges: [
       "Keeping responsive UI performance while rendering rich waveform interactions.",
@@ -74,6 +78,8 @@ const featuredProjects = [
   {
     name: "Sigma Autonomous Car",
     category: "Embedded Systems",
+    demoUrl: "https://github.com/Julieanna97",
+    demoLabel: "View Project Notes",
     role: "Embedded Developer",
     duration: "3 months",
     architecture: "Arduino controller + sensor fusion + serial telemetry tooling",
@@ -172,8 +178,10 @@ const skillMap = {
     { name: "React", level: 92, proof: "https://github.com/Julieanna97" },
     { name: "Next.js", level: 90, proof: "https://github.com/Julieanna97/PracticePal" },
     { name: "TypeScript", level: 86, proof: "https://github.com/Julieanna97/PracticePal" },
+    { name: "WaveSurfer.js", level: 84, proof: "https://github.com/Julieanna97" },
   ],
   backend: [
+    { name: "Python", level: 87, proof: "https://github.com/Julieanna97" },
     { name: "Node.js", level: 84, proof: "https://github.com/Julieanna97/PracticePal" },
     { name: "FastAPI", level: 82, proof: "https://github.com/Julieanna97" },
     { name: "MongoDB", level: 80, proof: "https://github.com/Julieanna97/PracticePal" },
@@ -186,6 +194,7 @@ const skillMap = {
   tooling: [
     { name: "Git", level: 90, proof: "https://github.com/Julieanna97" },
     { name: "Docker", level: 72, proof: "https://github.com/Julieanna97" },
+    { name: "FFmpeg", level: 80, proof: "https://github.com/Julieanna97" },
     { name: "Figma", level: 74, proof: "https://www.figma.com" },
   ],
 };
@@ -303,24 +312,6 @@ const themes = {
     shadow: "rgba(165, 114, 94, 0.15)",
     musicAccent: "#f2c8b7",
   },
-  mint: {
-    label: "Mint",
-    bg: "#f5fffb",
-    grid: "rgba(156, 211, 195, 0.22)",
-    text: "#567069",
-    muted: "rgba(86, 112, 105, 0.66)",
-    accent: "#79b8a6",
-    accentSoft: "rgba(121, 184, 166, 0.1)",
-    accentBorder: "rgba(121, 184, 166, 0.2)",
-    border: "#d7efe7",
-    panel: "rgba(255, 255, 255, 0.94)",
-    surface: "rgba(249, 255, 253, 0.9)",
-    dotMain: "#92d6c3",
-    dotShadow1: "rgba(146, 214, 195, 0.85)",
-    dotShadow2: "rgba(171, 225, 209, 0.72)",
-    shadow: "rgba(88, 149, 129, 0.15)",
-    musicAccent: "#9fdcc9",
-  },
 };
 
 type ThemeKey = keyof typeof themes;
@@ -367,6 +358,7 @@ export default function Home() {
     visible: false,
     message: "",
   });
+  const [typedPreloaderIntro, setTypedPreloaderIntro] = useState("");
   const [typedIntro, setTypedIntro] = useState("");
   const [typingLoop, setTypingLoop] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -379,7 +371,6 @@ export default function Home() {
   const toastTimerRef = useRef<number | null>(null);
   const modalCloseTimerRef = useRef<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const autoplayBoundRef = useRef(false);
   const autoplayPrimedRef = useRef(false);
   const timelineItemRefs = useRef<Array<HTMLDivElement | null>>([]);
   const contentAreaRef = useRef<HTMLDivElement | null>(null);
@@ -418,6 +409,7 @@ export default function Home() {
   }, [timelineFilter]);
 
   const skillCategoryOrder = Object.keys(skillMap) as SkillCategory[];
+  const activeSkills = skillMap[activeSkillCategory] ?? skillMap.frontend;
 
   const displayedProjects = useMemo(() => {
     if (!showFavoritesOnly) {
@@ -452,7 +444,7 @@ export default function Home() {
     setIsIntroExiting(true);
     window.setTimeout(() => {
       setIsIntroVisible(false);
-    }, reduceMotion ? 0 : 180);
+    }, reduceMotion ? 420 : 560);
   }, [isIntroVisible, reduceMotion]);
 
   const scrollToSection = useCallback((id: string) => {
@@ -482,34 +474,6 @@ export default function Home() {
       setActiveProjectTab("overview");
     }
   }, [selectedProject]);
-
-  const attemptAutoplay = useCallback(() => {
-    if (!audioRef.current) {
-      return;
-    }
-
-    const audio = audioRef.current;
-    audio.muted = false;
-
-    audio
-      .play()
-      .then(() => {
-        autoplayPrimedRef.current = true;
-        setIsPlaying(true);
-      })
-      .catch(() => {
-        audio.muted = true;
-        audio
-          .play()
-          .then(() => {
-            autoplayPrimedRef.current = false;
-            setIsPlaying(true);
-          })
-          .catch(() => {
-            setIsPlaying(false);
-          });
-      });
-  }, []);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -610,27 +574,57 @@ export default function Home() {
     }
 
     if (reduceMotion) {
-      setIsIntroExiting(true);
+      const fadeTimer = window.setTimeout(() => {
+        setIsIntroExiting(true);
+      }, 6200);
+
       const hideTimer = window.setTimeout(() => {
         setIsIntroVisible(false);
-      }, 80);
+      }, 7000);
 
-      return () => window.clearTimeout(hideTimer);
+      return () => {
+        window.clearTimeout(fadeTimer);
+        window.clearTimeout(hideTimer);
+      };
     }
 
     const fadeTimer = window.setTimeout(() => {
       setIsIntroExiting(true);
-    }, 2500);
+    }, 6200);
 
     const hideTimer = window.setTimeout(() => {
       setIsIntroVisible(false);
-    }, 3350);
+    }, 7000);
 
     return () => {
       window.clearTimeout(fadeTimer);
       window.clearTimeout(hideTimer);
     };
   }, [isIntroVisible, pageReady, reduceMotion]);
+
+  useEffect(() => {
+    if (!isIntroVisible) {
+      return;
+    }
+
+    const preloaderLine = "Hi, I'm Julie Anne and I'm a full-stack developer.";
+    let index = 0;
+
+    setTypedPreloaderIntro("");
+
+    const typingTimer = window.setInterval(() => {
+      index += 1;
+      setTypedPreloaderIntro(preloaderLine.slice(0, index));
+
+      if (index >= preloaderLine.length) {
+        window.clearInterval(typingTimer);
+      }
+    }, reduceMotion ? 95 : 110);
+
+    return () => {
+      window.clearInterval(typingTimer);
+    };
+  }, [isIntroVisible, reduceMotion]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -1025,10 +1019,6 @@ export default function Home() {
     audioRef.current.pause();
   }, [isPlaying]);
 
-  useEffect(() => {
-    attemptAutoplay();
-  }, [attemptAutoplay]);
-
   const commandActions = useMemo(
     () => [
       {
@@ -1167,41 +1157,6 @@ export default function Home() {
     }
     setActiveCommandIndex(Math.max(0, filteredCommandActions.length - 1));
   }, [activeCommandIndex, filteredCommandActions.length]);
-
-  useEffect(() => {
-    if (autoplayBoundRef.current) {
-      return;
-    }
-
-    autoplayBoundRef.current = true;
-
-    const handleFirstInteraction = () => {
-      if (audioRef.current) {
-        autoplayPrimedRef.current = true;
-        audioRef.current.muted = false;
-        audioRef.current.play().catch(() => {
-          setIsPlaying(false);
-        });
-      }
-      window.removeEventListener("pointerdown", handleFirstInteraction);
-      window.removeEventListener("keydown", handleFirstInteraction);
-      window.removeEventListener("touchstart", handleFirstInteraction);
-    };
-
-    window.addEventListener("pointerdown", handleFirstInteraction, {
-      once: true,
-    });
-    window.addEventListener("keydown", handleFirstInteraction, { once: true });
-    window.addEventListener("touchstart", handleFirstInteraction, {
-      once: true,
-    });
-
-    return () => {
-      window.removeEventListener("pointerdown", handleFirstInteraction);
-      window.removeEventListener("keydown", handleFirstInteraction);
-      window.removeEventListener("touchstart", handleFirstInteraction);
-    };
-  }, [attemptAutoplay]);
 
   const rootStyle: React.CSSProperties = {
     backgroundColor: activeTheme.bg,
@@ -1400,27 +1355,38 @@ export default function Home() {
           border-color: color-mix(in srgb, var(--accent-color) 32%, white);
         }
 
-        .ambient-theme-mint .ambient-token {
-          border-style: dashed;
-          opacity: 0.9;
-        }
-
         .main-container {
           position: fixed;
           left: 50%;
           top: 50%;
           transform: translate(-50%, -50%);
-          width: 1600px;
-          height: 900px;
+          width: min(1600px, calc(100vw - 24px));
+          height: min(900px, calc(100dvh - 24px));
           display: flex;
           gap: 0;
           z-index: 10;
-          transition: opacity 0.35s ease, filter 0.35s ease;
+          transition: opacity 0.6s ease, filter 0.6s ease;
+        }
+
+        .main-container-reveal {
+          animation: mainContainerReveal 0.86s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
+        .main-container-reveal .topbar {
+          animation: portfolioPanelReveal 0.52s cubic-bezier(0.22, 1, 0.36, 1) 0.04s both;
+        }
+
+        .main-container-reveal .main-content {
+          animation: portfolioPanelReveal 0.62s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+        }
+
+        .main-container-reveal .sidebar-right {
+          animation: portfolioPanelReveal 0.62s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
         }
 
         .main-container-preintro {
           opacity: 0;
-          filter: blur(2px);
+          filter: blur(6px);
           pointer-events: none;
         }
 
@@ -1436,7 +1402,8 @@ export default function Home() {
             linear-gradient(125deg, color-mix(in srgb, var(--bg-color) 88%, #ffffff) 0%, color-mix(in srgb, var(--card-bg) 75%, #ffffff) 100%);
           backdrop-filter: blur(10px) saturate(1.06);
           opacity: 1;
-          transition: opacity 0.35s ease;
+          transform: translateY(0) scale(1);
+          transition: opacity 0.55s ease, transform 0.55s ease, filter 0.55s ease;
           overflow: hidden;
         }
 
@@ -1494,53 +1461,103 @@ export default function Home() {
           animation-duration: 1.12s;
         }
 
-        .intro-overlay.intro-theme-mint .intro-orbit-1 {
-          animation-duration: 6.8s;
-          border-color: color-mix(in srgb, var(--accent-color) 50%, white);
-        }
-
-        .intro-overlay.intro-theme-mint .intro-orbit-2 {
-          animation-duration: 9.4s;
-          opacity: 0.66;
-        }
-
-        .intro-overlay.intro-theme-mint .intro-core {
-          animation-duration: 2.1s;
-        }
-
-        .intro-overlay.intro-theme-mint .intro-loader span {
-          animation-duration: 1.85s;
-        }
-
         .intro-overlay-exit {
           opacity: 0;
+          transform: translateY(-18px) scale(1.01);
+          filter: blur(2px);
           pointer-events: none;
+        }
+
+        .intro-transition-veil {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          opacity: 0;
+          z-index: 3;
+          background:
+            linear-gradient(180deg, color-mix(in srgb, var(--accent-color) 18%, transparent) 0%, transparent 42%),
+            linear-gradient(120deg, color-mix(in srgb, var(--music-accent) 24%, transparent) 0%, color-mix(in srgb, var(--accent-color) 16%, transparent) 100%);
+        }
+
+        .intro-transition-veil-active {
+          animation: introVeilSweep 0.64s ease both;
+        }
+
+        @keyframes mainContainerReveal {
+          0% {
+            opacity: 0;
+            filter: blur(10px) saturate(0.96);
+            transform: translate(-50%, calc(-50% + 18px)) scale(0.99);
+          }
+          100% {
+            opacity: 1;
+            filter: blur(0px) saturate(1);
+            transform: translate(-50%, -50%) scale(1);
+          }
+        }
+
+        @keyframes portfolioPanelReveal {
+          0% {
+            opacity: 0;
+            transform: translateY(14px);
+            filter: blur(4px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+          }
+        }
+
+        @keyframes introVeilSweep {
+          0% {
+            opacity: 0;
+            transform: translateY(24px) scale(1);
+          }
+          35% {
+            opacity: 0.62;
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(-20px) scale(1.02);
+          }
         }
 
         .intro-card {
-          width: min(620px, 90vw);
-          border: 1px solid color-mix(in srgb, var(--accent-border) 82%, white);
-          border-radius: 22px;
-          background: linear-gradient(160deg, color-mix(in srgb, var(--card-bg) 91%, #ffffff) 0%, color-mix(in srgb, var(--card-bg) 97%, var(--accent-soft)) 100%);
-          box-shadow:
-            0 28px 64px color-mix(in srgb, var(--shadow-color) 70%, transparent),
-            inset 0 1px 0 color-mix(in srgb, #ffffff 68%, transparent);
-          padding: 32px 34px;
+          width: min(980px, 94vw);
+          border: none;
+          border-radius: 0;
+          background: transparent;
+          box-shadow: none;
+          padding: 0;
           display: grid;
-          gap: 14px;
+          gap: 0;
           animation: introRise 0.55s ease forwards;
           position: relative;
           overflow: hidden;
+          justify-items: center;
+          text-align: center;
+        }
+
+        .intro-card-exit {
+          animation: introCardExit 0.54s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
+        @keyframes introCardExit {
+          0% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(-30px) scale(0.985);
+            filter: blur(2px);
+          }
         }
 
         .intro-card::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(105deg, transparent 35%, color-mix(in srgb, #ffffff 35%, transparent) 50%, transparent 65%);
-          transform: translateX(-100%);
-          animation: introCardSweep 2.8s ease-in-out infinite;
-          pointer-events: none;
+          content: none;
         }
 
         .intro-kicker {
@@ -1562,6 +1579,29 @@ export default function Home() {
           line-height: 1.15;
           color: color-mix(in srgb, var(--text-color) 80%, white);
           text-wrap: balance;
+        }
+
+        .intro-hero-typing {
+          font-size: clamp(2.2rem, 7vw, 5.8rem);
+          line-height: 1.06;
+          letter-spacing: -0.02em;
+          color: color-mix(in srgb, var(--text-color) 86%, #ffffff);
+          text-wrap: balance;
+          text-shadow: 0 12px 28px color-mix(in srgb, var(--shadow-color) 40%, transparent);
+          max-width: 20ch;
+        }
+
+        .intro-typing-caret {
+          font-size: 0.95em;
+          margin-left: 4px;
+          color: var(--accent-color);
+        }
+
+        .intro-subline {
+          font-size: clamp(0.92rem, 1.5vw, 1.12rem);
+          max-width: 56ch;
+          color: color-mix(in srgb, var(--muted-color) 84%, var(--text-color));
+          line-height: 1.6;
         }
 
         .intro-tagline {
@@ -1639,7 +1679,7 @@ export default function Home() {
         }
 
         .intro-loader {
-          margin-top: 2px;
+          margin-top: 6px;
           width: 100%;
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1664,9 +1704,9 @@ export default function Home() {
         }
 
         .intro-loader-label {
-          font-size: 0.76em;
+          font-size: 0.84em;
           color: color-mix(in srgb, var(--muted-color) 88%, var(--text-color));
-          letter-spacing: 0.3px;
+          letter-spacing: 0.35px;
         }
 
         .intro-skip {
@@ -2040,14 +2080,16 @@ export default function Home() {
         }
 
         .profile-icon {
-          width: 60px;
-          height: 60px;
-          border-radius: 80px;
+          width: 168px;
+          height: 168px;
+          border-radius: 999px;
           background: url('/profile_image/profile-img.jfif');
           background-size: cover;
           background-position: center;
-          border: 2px solid var(--border-color);
-          box-shadow: 0px 6px 14px var(--shadow-color);
+          border: 3px solid color-mix(in srgb, var(--accent-color) 32%, white);
+          box-shadow:
+            0 12px 26px color-mix(in srgb, var(--shadow-color) 75%, transparent),
+            0 0 0 4px color-mix(in srgb, var(--accent-soft) 65%, transparent);
         }
 
         .profile-name {
@@ -2585,6 +2627,7 @@ export default function Home() {
           margin-top: 12px;
           display: flex;
           justify-content: flex-end;
+          gap: 8px;
         }
 
         .project-btn {
@@ -2596,6 +2639,19 @@ export default function Home() {
           font-weight: 700;
           font-size: 0.8em;
           cursor: pointer;
+        }
+
+        .project-btn-link {
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .project-btn-secondary {
+          background: color-mix(in srgb, var(--card-bg) 96%, white);
+          color: var(--text-color);
+          border-color: var(--border-color);
         }
 
         .project-title {
@@ -3101,7 +3157,10 @@ export default function Home() {
         }
 
         .project-modal {
-          opacity: 0;
+          opacity: 1;
+        }
+
+        .project-modal.modal-overlay-open {
           animation: modalOverlayIn 0.2s ease forwards;
         }
 
@@ -3172,6 +3231,11 @@ export default function Home() {
         }
 
         .project-modal .modal-card {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+
+        .project-modal.modal-overlay-open .modal-card {
           opacity: 0;
           transform: translateY(10px) scale(0.98);
           animation: modalCardIn 0.22s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -3294,11 +3358,55 @@ export default function Home() {
           animation-iteration-count: infinite !important;
         }
 
+        .reduce-motion .intro-loader span {
+          animation: introLoadSegment 1.4s ease-in-out infinite !important;
+        }
+
         .reduce-motion .ambient-star {
           animation-name: ambientStarTwinkle !important;
           animation-duration: 14s !important;
           animation-timing-function: ease-in-out !important;
           animation-iteration-count: infinite !important;
+        }
+
+        /* Keep the intro handoff animated even when reduce-motion is enabled. */
+        .reduce-motion .intro-overlay {
+          transition: opacity 0.55s ease, transform 0.55s ease, filter 0.55s ease !important;
+        }
+
+        .reduce-motion .main-container {
+          transition: opacity 0.6s ease, filter 0.6s ease !important;
+        }
+
+        .reduce-motion .intro-card-exit {
+          animation: introCardExit 0.54s cubic-bezier(0.2, 0.8, 0.2, 1) both !important;
+        }
+
+        .reduce-motion .intro-transition-veil-active {
+          animation: introVeilSweep 0.64s ease both !important;
+        }
+
+        .reduce-motion .main-container-reveal {
+          animation: mainContainerReveal 0.86s cubic-bezier(0.2, 0.8, 0.2, 1) both !important;
+        }
+
+        .reduce-motion .main-container-reveal .topbar {
+          animation: portfolioPanelReveal 0.52s cubic-bezier(0.22, 1, 0.36, 1) 0.04s both !important;
+        }
+
+        .reduce-motion .main-container-reveal .main-content {
+          animation: portfolioPanelReveal 0.62s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both !important;
+        }
+
+        .reduce-motion .main-container-reveal .sidebar-right {
+          animation: portfolioPanelReveal 0.62s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both !important;
+        }
+
+        .reduce-motion .project-modal,
+        .reduce-motion .project-modal .modal-card {
+          animation: none !important;
+          opacity: 1 !important;
+          transform: none !important;
         }
 
         .side-player-shell {
@@ -3376,9 +3484,131 @@ export default function Home() {
           display: none;
         }
 
+        @media (max-width: 1400px) and (min-width: 901px) {
+          .topbar {
+            left: 14px;
+            right: 14px;
+            padding: 0 14px;
+          }
+
+          .main-content {
+            top: 42px;
+            height: calc(100% - 40px);
+          }
+
+          .content-area {
+            padding: 34px;
+          }
+
+          .sidebar-left {
+            width: 220px;
+          }
+
+          .section {
+            padding: 24px;
+          }
+        }
+
+        @media (max-width: 1366px) and (max-height: 768px) and (min-width: 901px) {
+          .main-container {
+            width: calc(100vw - 10px);
+            height: calc(100dvh - 10px);
+          }
+
+          .topbar {
+            left: 10px;
+            right: 10px;
+            height: 44px;
+            padding: 0 12px;
+          }
+
+          .topbar-title {
+            height: 32px;
+            font-size: 13px;
+          }
+
+          .topbar-title span {
+            font-size: 13px;
+          }
+
+          .main-content {
+            top: 38px;
+            height: calc(100% - 36px);
+          }
+
+          .sidebar-left {
+            width: 198px;
+          }
+
+          .profile-section {
+            padding: 14px;
+            gap: 8px;
+          }
+
+          .profile-icon {
+            width: 108px;
+            height: 108px;
+          }
+
+          .content-area {
+            padding: 24px 22px 18px;
+            gap: 20px;
+          }
+
+          .section {
+            padding: 20px;
+          }
+        }
+
+        @media (max-width: 1280px) and (max-height: 720px) and (min-width: 901px) {
+          .main-container {
+            width: calc(100vw - 8px);
+            height: calc(100dvh - 8px);
+          }
+
+          .sidebar-left {
+            width: 182px;
+          }
+
+          .profile-icon {
+            width: 94px;
+            height: 94px;
+          }
+
+          .content-area {
+            padding: 20px 18px 14px;
+            gap: 16px;
+          }
+
+          .section {
+            padding: 16px;
+          }
+
+          .section-title {
+            font-size: 1.24em;
+            margin-bottom: 11px;
+          }
+        }
+
+        @media (max-height: 860px) and (min-width: 901px) {
+          .main-container {
+            height: calc(100dvh - 12px);
+          }
+
+          .content-area {
+            padding: 28px 30px 22px;
+          }
+
+          .profile-icon {
+            width: 136px;
+            height: 136px;
+          }
+        }
+
         @media (max-width: 1200px) {
           .main-container {
             width: 96vw;
+            height: min(900px, calc(100dvh - 16px));
           }
 
           .sidebar-right {
@@ -3531,32 +3761,13 @@ export default function Home() {
 
       {isIntroVisible ? (
         <div className={`intro-overlay intro-theme-${themeKey} ${isIntroExiting ? "intro-overlay-exit" : ""}`} aria-live="polite">
-          <div className="intro-card">
-            <p className="intro-kicker">{introCopy.kicker}</p>
-            <h1 className="intro-name">Julie Anne Cantillep</h1>
-            <p className="intro-tagline">{introCopy.tagline}</p>
-            <div className="intro-scene" aria-hidden="true">
-              <div className="intro-orbit intro-orbit-1"></div>
-              <div className="intro-orbit intro-orbit-2"></div>
-              <div className="intro-core"></div>
-            </div>
-            <div className="intro-pill-row" aria-hidden="true">
-              {introCopy.pills.map((pill) => (
-                <span key={pill} className="intro-pill">
-                  {pill}
-                </span>
-              ))}
-            </div>
-            <div className="intro-loader" aria-hidden="true">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-            <p className="intro-loader-label">{introCopy.loaderLabel}</p>
-            <button type="button" className="intro-skip" onClick={dismissIntro}>
-              Enter Portfolio
-            </button>
+          <div className={`intro-card ${isIntroExiting ? "intro-card-exit" : ""}`}>
+            <h1 className="intro-hero-typing">
+              {typedPreloaderIntro}
+              <span className="typing-caret intro-typing-caret">|</span>
+            </h1>
           </div>
+          <div className={`intro-transition-veil ${isIntroExiting ? "intro-transition-veil-active" : ""}`}></div>
         </div>
       ) : null}
 
@@ -3612,7 +3823,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className={`main-container ${isIntroVisible ? "main-container-preintro" : ""}`}>
+      <div className={`main-container ${isIntroVisible && !isIntroExiting ? "main-container-preintro" : ""} ${isIntroExiting ? "main-container-reveal" : ""}`}>
         <div className="topbar">
           <div className="topbar-left">
             <div className="topbar-dots"></div>
@@ -3694,8 +3905,8 @@ export default function Home() {
             <div className="profile-section">
               <div className="profile-icon"></div>
               <div className="profile-name">Julie Anne</div>
-              <div className="profile-info">@kisamae1997</div>
-              <div className="profile-role">Fullstack Developer</div>
+              <div className="profile-info">@Julieanna97</div>
+              <div className="profile-role">Full-Stack Developer | Product-Focused Engineer</div>
             </div>
 
             <div className="sidebar-links">
@@ -3844,17 +4055,10 @@ export default function Home() {
                 <span className="typing-caret">|</span>
               </div>
               <p className="about-copy" style={{ marginBottom: "15px" }}>
-                I work across frontend, backend, and embedded systems. Started with
-                embedded projects at Sigma Industry Evolution and Nodehill AB
-                (Arduino, ESP32, LoRa). Then moved to fullstack web development,
-                built PracticePal with Next.js and Stripe, worked on audio editing at
-                PodManager.ai with React and FastAPI, and trained AI models at
-                Outlier.
+                I work across frontend, backend, and embedded systems. Started with embedded projects at Sigma Industry Evolution and Nodehill AB. Then moved to fullstack web development, built PracticePal with Next.js and Stripe, worked on audio editing at PodManager.ai with React and FastAPI, and trained AI models at Outlier.
               </p>
               <p className="about-copy">
-                I care about clear interfaces, performant code, and products that
-                actually solve problems. Graduating April 2026. Looking to keep
-                building things that matter.
+                I care about clear interfaces, performant code, and products that actually solve problems. Graduating April 2026. Looking to keep building things that matter.
               </p>
             </section>
 
@@ -3966,6 +4170,16 @@ export default function Home() {
                       <div className="score-chip"><span>Business</span><span>{project.score.business}/5</span></div>
                     </div>
                     <div className="project-actions">
+                      {project.demoUrl ? (
+                        <a
+                          href={project.demoUrl}
+                          target={project.demoUrl.startsWith("http") ? "_blank" : undefined}
+                          rel={project.demoUrl.startsWith("http") ? "noreferrer" : undefined}
+                          className="project-btn project-btn-link project-btn-secondary"
+                        >
+                          {project.demoLabel ?? "View demo"}
+                        </a>
+                      ) : null}
                       <button
                         type="button"
                         className="project-btn"
@@ -4056,7 +4270,7 @@ export default function Home() {
           <div className="sidebar-right">
             <div className="live-now-box">
               <div className="skill-category-name">Live Now</div>
-              <div className="stat-value">Working on portfolio and case studies</div>
+              <div className="stat-value">Working on my portfolio and internship at PodManager.ai</div>
               <div className="live-time" suppressHydrationWarning>
                 {liveNow
                   ? liveNow.toLocaleTimeString("en-US", {
@@ -4099,7 +4313,7 @@ export default function Home() {
                 ))}
               </div>
               <div className="skills-map-grid">
-                {skillMap[activeSkillCategory].map((skill) => (
+                {activeSkills.map((skill) => (
                   <div key={skill.name} className="skills-map-row">
                     <div className="skills-map-label">
                       <span>{skill.name}</span>
@@ -4262,6 +4476,18 @@ export default function Home() {
               </button>
             </div>
             <div className="project-category">{selectedProject.category}</div>
+            {selectedProject.demoUrl ? (
+              <div className="project-actions" style={{ marginTop: "2px" }}>
+                <a
+                  href={selectedProject.demoUrl}
+                  target={selectedProject.demoUrl.startsWith("http") ? "_blank" : undefined}
+                  rel={selectedProject.demoUrl.startsWith("http") ? "noreferrer" : undefined}
+                  className="project-btn project-btn-link project-btn-secondary"
+                >
+                  {selectedProject.demoLabel ?? "View demo"}
+                </a>
+              </div>
+            ) : null}
             <div className="modal-tabs" role="tablist" aria-label="Project deep dive tabs">
               {projectModalTabs.map((tab) => (
                 <button
