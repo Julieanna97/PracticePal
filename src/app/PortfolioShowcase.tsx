@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 
 // 3D globe loaded only on client (Three.js requires DOM)
-const SkillsGlobe = dynamic(() => import("./SkillsGlobe"), {
+const SkillsGlobe = dynamic(() => import("@/app/SkillsGlobe"), {
   ssr: false,
   loading: () => (
     <div
@@ -741,19 +741,19 @@ export default function PortfolioShowcase() {
     /* ── SKILLS — now with 3D globe ── */
     .skills-section {
       background: var(--burg);
-      padding: 80px 5vw;
+      padding: 0;
       position: relative;
       overflow: hidden;
     }
-    .skills-section::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse at 30% 20%, rgba(245,160,200,0.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 70% 80%, rgba(232,97,58,0.05) 0%, transparent 50%);
-      pointer-events: none;
+
+    .skills-section-full {
+      min-height: 720px;
     }
+      
+    .skills-section::before {
+      display: none;
+    }
+      
     .skills-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1245,38 +1245,8 @@ export default function PortfolioShowcase() {
       </section>
 
       {/* SKILLS — 3D GLOBE */}
-      <section className="skills-section" id="skills">
-        <div className="skills-grid">
-          {/* LEFT: text + tabs */}
-          <div className="skills-text-side fade-up d2">
-            <div className="sec-super">Interactive Stack Map</div>
-            <div className="sec-title">Skills</div>
-
-            <div className="skills-tabs-vert">
-              {skillCategories.map(cat => (
-                <button key={cat} type="button"
-                  className={`skill-tab-vert ${activeSkill === cat ? "skill-tab-vert-on" : ""}`}
-                  onClick={() => setActiveSkill(cat)}
-                >
-                  <span>{skillMap[cat].label}</span>
-                  <span style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <span className="stv-count">{skillMap[cat].skills.length}</span>
-                    <span className="stv-arrow">→</span>
-                  </span>
-                </button>
-              ))}
-            </div>
-
-            <p className="skills-active-desc">
-              {skillMap[activeSkill].description}
-            </p>
-          </div>
-
-          {/* RIGHT: 3D globe */}
-          <div className="skills-globe-side fade-up d3">
-            <SkillsGlobe />
-          </div>
-        </div>
+      <section className="skills-section skills-section-full" id="skills">
+        <SkillsGlobe />
       </section>
 
       {/* CONTACT */}

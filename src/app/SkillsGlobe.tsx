@@ -1,309 +1,249 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Html, OrbitControls } from "@react-three/drei";
-import { useMemo, useRef, Suspense, useState } from "react";
+import { Html, OrbitControls, Stars } from "@react-three/drei";
+import { Suspense, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+
+import {
+  SiReact,
+  SiNextdotjs,
+  SiTypescript,
+  SiTailwindcss,
+  SiNodedotjs,
+  SiPython,
+  SiFastapi,
+  SiMongodb,
+  SiMysql,
+  SiDocker,
+  SiVercel,
+  SiLinux,
+  SiArduino,
+  SiGit,
+  SiGithub,
+  SiFigma,
+  SiStripe,
+  SiJavascript,
+} from "react-icons/si";
+import { FaCode, FaServer } from "react-icons/fa6";
 
 type Skill = {
   name: string;
-  category: string;
-  icon: string;
+  color: string;
+  Icon: React.ComponentType<{ size?: number; color?: string; className?: string }>;
+};
+
+const theme = {
+  burg: "#1a0808",
+  burg2: "#2e0e0e",
+  cream: "#f0ece4",
+  pink: "#f5a0c8",
+  orange: "#e8613a",
 };
 
 const skills: Skill[] = [
-  // Frontend
-  { name: "React", category: "frontend", icon: "⚛" },
-  { name: "Next.js", category: "frontend", icon: "▲" },
-  { name: "TypeScript", category: "frontend", icon: "TS" },
-  { name: "Tailwind", category: "frontend", icon: "≈" },
-  { name: "Radix UI", category: "frontend", icon: "◈" },
-  { name: "SWR", category: "frontend", icon: "↻" },
-  { name: "Framer Motion", category: "frontend", icon: "◆" },
-
-  // Backend
-  { name: "Node.js", category: "backend", icon: "⬢" },
-  { name: "FastAPI", category: "backend", icon: "⚡" },
-  { name: "Python", category: "backend", icon: "Py" },
-  { name: "Express", category: "backend", icon: "Ex" },
-  { name: "Socket.IO", category: "backend", icon: "◎" },
-  { name: "REST APIs", category: "backend", icon: "{}" },
-
-  // Data
-  { name: "MongoDB", category: "data", icon: "◐" },
-  { name: "MySQL", category: "data", icon: "SQL" },
-  { name: "SQL", category: "data", icon: "DB" },
-
-  // Cloud
-  { name: "Docker", category: "cloud", icon: "▣" },
-  { name: "Azure", category: "cloud", icon: "A" },
-  { name: "Vercel", category: "cloud", icon: "△" },
-  { name: "Linux", category: "cloud", icon: "⌘" },
-
-  // Systems
-  { name: "C/C++", category: "systems", icon: "C++" },
-  { name: "Arduino", category: "systems", icon: "∞" },
-  { name: "ESP32", category: "systems", icon: "µC" },
-  { name: "LoRa", category: "systems", icon: "⌁" },
-
-  // Tools
-  { name: "Git", category: "tools", icon: "⑂" },
-  { name: "Figma", category: "tools", icon: "✦" },
-  { name: "VS Code", category: "tools", icon: "</>" },
-  { name: "Stripe", category: "tools", icon: "$" },
+  { name: "React", color: "#61dafb", Icon: SiReact },
+  { name: "Next.js", color: "#ffffff", Icon: SiNextdotjs },
+  { name: "TypeScript", color: "#3178c6", Icon: SiTypescript },
+  { name: "JavaScript", color: "#f7df1e", Icon: SiJavascript },
+  { name: "Tailwind", color: "#38bdf8", Icon: SiTailwindcss },
+  { name: "Node.js", color: "#68a063", Icon: SiNodedotjs },
+  { name: "FastAPI", color: "#009688", Icon: SiFastapi },
+  { name: "Python", color: "#ffd43b", Icon: SiPython },
+  { name: "REST APIs", color: "#f5a0c8", Icon: FaServer },
+  { name: "MongoDB", color: "#47a248", Icon: SiMongodb },
+  { name: "MySQL", color: "#3e8dbb", Icon: SiMysql },
+  { name: "Docker", color: "#2496ed", Icon: SiDocker },
+  { name: "Azure", color: "#0078d4", Icon: FaServer },
+  { name: "Vercel", color: "#ffffff", Icon: SiVercel },
+  { name: "Linux", color: "#f5a0c8", Icon: SiLinux },
+  { name: "Arduino", color: "#00979d", Icon: SiArduino },
+  { name: "C/C++", color: "#e8613a", Icon: FaCode },
+  { name: "Git", color: "#f05032", Icon: SiGit },
+  { name: "GitHub", color: "#ffffff", Icon: SiGithub },
+  { name: "Figma", color: "#ff6b2c", Icon: SiFigma },
+  { name: "Stripe", color: "#8b5cf6", Icon: SiStripe },
 ];
 
-const categoryColor: Record<string, string> = {
-  frontend: "#f5a0c8",
-  backend: "#e8613a",
-  data: "#ffb7d7",
-  cloud: "#ff8d6a",
-  systems: "#f5a0c8",
-  tools: "#e8613a",
-};
+const additionalSkills = [
+  "HTML",
+  "CSS",
+  "Bootstrap",
+  "Radix UI",
+  "SWR",
+  "React Hook Form",
+  "Zod",
+  "Framer Motion",
+  "WaveSurfer.js",
+  "MediaPipe",
+  "TensorFlow.js",
+  "Express.js",
+  "Flask",
+  "WebSocket APIs",
+  "Socket.IO",
+  "NextAuth",
+  "Mailchimp",
+  "FFmpeg",
+  "SQL",
+  "NoSQL",
+  "MariaDB",
+  "phpMyAdmin",
+  "Docker Compose",
+  "Azure Container Registry",
+  "Gunicorn",
+  "Linux / Ubuntu",
+  "Jira",
+  "VS Code",
+  "WordPress",
+  "npm",
+  "ESLint",
+  "Prettier",
+  "Postman",
+  "Jupyter Notebook",
+  "Turbopack",
+  "Recharts",
+  "date-fns",
+  "next-themes",
+  "ESP32",
+  "LoRa",
+  "RTOS / Zephyr",
+  "Yocto",
+  "UART / SPI / I2C / CAN",
+  "GTest",
+  "CMake",
+];
 
-const categorySoftColor: Record<string, string> = {
-  frontend: "rgba(245,160,200,0.16)",
-  backend: "rgba(232,97,58,0.16)",
-  data: "rgba(255,183,215,0.16)",
-  cloud: "rgba(255,141,106,0.16)",
-  systems: "rgba(245,160,200,0.16)",
-  tools: "rgba(232,97,58,0.16)",
-};
-
-// Distribute points evenly on a sphere using fibonacci spiral
 function fibonacciSphere(n: number, radius: number): THREE.Vector3[] {
   const points: THREE.Vector3[] = [];
   const phi = Math.PI * (3 - Math.sqrt(5));
 
-  for (let i = 0; i < n; i++) {
+  for (let i = 0; i < n; i += 1) {
     const y = 1 - (i / Math.max(1, n - 1)) * 2;
     const r = Math.sqrt(Math.max(0, 1 - y * y));
     const theta = phi * i;
 
-    const x = Math.cos(theta) * r;
-    const z = Math.sin(theta) * r;
-
-    points.push(new THREE.Vector3(x * radius, y * radius, z * radius));
+    points.push(
+      new THREE.Vector3(
+        Math.cos(theta) * r * radius,
+        y * radius,
+        Math.sin(theta) * r * radius,
+      ),
+    );
   }
 
   return points;
 }
 
-function OrbitRing({
-  radius,
-  rotation,
-  color,
-  opacity,
-}: {
-  radius: number;
-  rotation: [number, number, number];
-  color: string;
-  opacity: number;
-}) {
-  return (
-    <mesh rotation={rotation}>
-      <torusGeometry args={[radius, 0.006, 8, 160]} />
-      <meshBasicMaterial color={color} transparent opacity={opacity} />
-    </mesh>
-  );
-}
-
-function GlobeWireframe() {
+function GlobeMesh() {
   const groupRef = useRef<THREE.Group>(null);
-  const innerRef = useRef<THREE.Group>(null);
-  const radius = 2.15;
-  const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+  const orbitRef = useRef<THREE.Group>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
 
-  useFrame((_state, delta) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.11;
-      groupRef.current.rotation.x = Math.sin(Date.now() * 0.00025) * 0.04;
-    }
+  const radius = 1.9;
 
-    if (innerRef.current) {
-      innerRef.current.rotation.y -= delta * 0.055;
-      innerRef.current.rotation.z += delta * 0.025;
-    }
-  });
-
-  const positions = useMemo(
+  const skillPositions = useMemo(
     () => fibonacciSphere(skills.length, radius * 1.18),
     [],
   );
 
-  const dotPositions = useMemo(() => fibonacciSphere(170, radius), []);
+  useFrame((_state, delta) => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y += delta * 0.075;
+      groupRef.current.rotation.x = Math.sin(Date.now() * 0.00022) * 0.03;
+    }
+
+    if (orbitRef.current) {
+      orbitRef.current.rotation.y -= delta * 0.04;
+      orbitRef.current.rotation.z += delta * 0.018;
+    }
+  });
 
   return (
-    <group ref={groupRef}>
-      {/* Soft outer glow */}
+    <group ref={groupRef} position={[0, -0.18, 0]}>
       <mesh>
-        <sphereGeometry args={[radius * 1.08, 48, 48]} />
+        <sphereGeometry args={[radius, 64, 64]} />
+        <meshBasicMaterial color={theme.burg2} transparent opacity={0.34} />
+      </mesh>
+
+      <mesh>
+        <sphereGeometry args={[radius * 1.12, 64, 64]} />
         <meshBasicMaterial
-          color="#f5a0c8"
+          color={theme.pink}
           transparent
-          opacity={0.035}
+          opacity={0.06}
           side={THREE.BackSide}
         />
       </mesh>
 
-      {/* Inner dark body */}
       <mesh>
-        <sphereGeometry args={[radius * 0.99, 48, 48]} />
-        <meshBasicMaterial color="#1a0808" transparent opacity={0.72} />
+        <sphereGeometry args={[radius * 0.72, 48, 48]} />
+        <meshBasicMaterial color={theme.pink} transparent opacity={0.035} />
       </mesh>
 
-      {/* Wireframe sphere */}
-      <mesh>
-        <sphereGeometry args={[radius, 42, 42]} />
-        <meshBasicMaterial
-          color="#f5a0c8"
-          wireframe
-          transparent
-          opacity={0.16}
-        />
-      </mesh>
-
-      {/* Second orange wireframe for depth */}
-      <mesh rotation={[0.2, 0.45, 0.12]}>
-        <sphereGeometry args={[radius * 0.96, 28, 28]} />
-        <meshBasicMaterial
-          color="#e8613a"
-          wireframe
-          transparent
-          opacity={0.07}
-        />
-      </mesh>
-
-      {/* Orbit rings */}
-      <group ref={innerRef}>
-        <OrbitRing
-          radius={radius * 1.07}
-          rotation={[Math.PI / 2, 0, 0]}
-          color="#f5a0c8"
-          opacity={0.2}
-        />
-        <OrbitRing
-          radius={radius * 1.04}
-          rotation={[0.92, 0.25, 0.6]}
-          color="#e8613a"
-          opacity={0.16}
-        />
-        <OrbitRing
-          radius={radius * 1.12}
-          rotation={[0.25, 1.05, 0.15]}
-          color="#f5a0c8"
-          opacity={0.12}
-        />
-      </group>
-
-      {/* Center core */}
       <mesh>
         <sphereGeometry args={[0.12, 32, 32]} />
-        <meshBasicMaterial color="#f5a0c8" transparent opacity={0.9} />
+        <meshBasicMaterial color={theme.pink} transparent opacity={0.75} />
       </mesh>
 
       <mesh>
         <sphereGeometry args={[0.34, 32, 32]} />
-        <meshBasicMaterial color="#f5a0c8" transparent opacity={0.08} />
+        <meshBasicMaterial color={theme.pink} transparent opacity={0.07} />
       </mesh>
 
-      {/* Particle dots on the surface */}
-      {dotPositions.map((p, i) => {
-        const isWarm = i % 4 === 0;
-        return (
-          <mesh key={`dot-${i}`} position={p}>
-            <sphereGeometry args={[i % 9 === 0 ? 0.027 : 0.017, 10, 10]} />
-            <meshBasicMaterial
-              color={isWarm ? "#e8613a" : "#f5a0c8"}
-              transparent
-              opacity={isWarm ? 0.55 : 0.42}
-            />
-          </mesh>
-        );
-      })}
+      <group ref={orbitRef}>
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[radius * 1.02, 0.005, 8, 190]} />
+          <meshBasicMaterial color={theme.pink} transparent opacity={0.3} />
+        </mesh>
 
-      {/* Skill tags floating outside the sphere */}
-      {skills.map((skill, i) => {
-        const pos = positions[i];
-        const color = categoryColor[skill.category];
-        const soft = categorySoftColor[skill.category];
+        <mesh rotation={[0.75, 0.2, 0.3]}>
+          <torusGeometry args={[radius * 1.06, 0.005, 8, 190]} />
+          <meshBasicMaterial color={theme.orange} transparent opacity={0.22} />
+        </mesh>
+
+        <mesh rotation={[0.25, 1.08, 0.12]}>
+          <torusGeometry args={[radius * 0.94, 0.004, 8, 190]} />
+          <meshBasicMaterial color={theme.cream} transparent opacity={0.11} />
+        </mesh>
+
+        <mesh rotation={[1.05, 0.55, 0.8]}>
+          <torusGeometry args={[radius * 1.15, 0.0035, 8, 190]} />
+          <meshBasicMaterial color={theme.pink} transparent opacity={0.13} />
+        </mesh>
+      </group>
+
+      {skills.map((skill, index) => {
+        const pos = skillPositions[index];
+        const Icon = skill.Icon;
+        const isHovered = hovered === skill.name;
 
         return (
-            <Html
+          <Html
             key={skill.name}
             position={[pos.x, pos.y, pos.z]}
             center
-            distanceFactor={6.3}
+            distanceFactor={7.8}
             occlude={false}
             style={{
-                pointerEvents: "auto",
-                userSelect: "none",
-                cursor: "pointer",
-                zIndex: hoveredSkill === skill.name ? 20 : 1,
+              pointerEvents: "auto",
+              userSelect: "none",
+              zIndex: isHovered ? 20 : 1,
             }}
+          >
+            <button
+              type="button"
+              className={`skill-orb ${isHovered ? "skill-orb-active" : ""}`}
+              style={{ "--skill-color": skill.color } as React.CSSProperties}
+              onMouseEnter={() => setHovered(skill.name)}
+              onMouseLeave={() => setHovered(null)}
+              onFocus={() => setHovered(skill.name)}
+              onBlur={() => setHovered(null)}
+              aria-label={skill.name}
             >
-            <div
-                onMouseEnter={() => setHoveredSkill(skill.name)}
-                onMouseLeave={() => setHoveredSkill(null)}
-                style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "7px",
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontSize: hoveredSkill === skill.name ? "0.95rem" : "0.82rem",
-                fontWeight: 800,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                color: hoveredSkill === skill.name ? "#1a0808" : color,
-                background:
-                    hoveredSkill === skill.name
-                    ? `linear-gradient(135deg, ${color}, #f0ece4)`
-                    : "linear-gradient(135deg, rgba(26,8,8,0.92), rgba(46,14,14,0.76))",
-                border: `1px solid ${hoveredSkill === skill.name ? color : `${color}55`}`,
-                boxShadow:
-                    hoveredSkill === skill.name
-                    ? `0 0 28px ${color}88, 0 0 55px ${color}44`
-                    : `0 0 18px ${color}22, inset 0 0 18px ${soft}`,
-                padding:
-                    hoveredSkill === skill.name
-                    ? "8px 13px 8px 8px"
-                    : "6px 10px 6px 7px",
-                borderRadius: "999px",
-                whiteSpace: "nowrap",
-                backdropFilter: "blur(9px)",
-                WebkitBackdropFilter: "blur(9px)",
-                transform:
-                    hoveredSkill === skill.name
-                    ? "scale(1.16) translateY(-3px)"
-                    : "scale(1)",
-                transition:
-                    "transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, padding 0.18s ease, font-size 0.18s ease",
-                }}
-            >
-                <span
-                style={{
-                    width: hoveredSkill === skill.name ? "26px" : "22px",
-                    height: hoveredSkill === skill.name ? "26px" : "22px",
-                    borderRadius: "999px",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                    color: hoveredSkill === skill.name ? color : "#1a0808",
-                    background: hoveredSkill === skill.name ? "#1a0808" : color,
-                    fontSize: skill.icon.length > 2 ? "0.58rem" : "0.7rem",
-                    fontWeight: 900,
-                    letterSpacing: "0",
-                    boxShadow: `0 0 12px ${color}55`,
-                    transition: "all 0.18s ease",
-                }}
-                >
-                {skill.icon}
-                </span>
-                <span>{skill.name}</span>
-            </div>
-            </Html>
+              <Icon size={isHovered ? 38 : 26} color={skill.color} />
+              <span className="skill-orb-label">{skill.name}</span>
+            </button>
+          </Html>
         );
       })}
     </group>
@@ -312,90 +252,307 @@ function GlobeWireframe() {
 
 export default function SkillsGlobe() {
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "min(72vh, 680px)",
-        minHeight: "500px",
-        position: "relative",
-        cursor: "grab",
-      }}
-    >
-      {/* Decorative background glow behind the canvas */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: "8% 4%",
+    <div className="skills-universe">
+      <style>{`
+        .skills-universe {
+          position: relative;
+          width: 100%;
+          min-height: 900px;
+          overflow: hidden;
           background:
-            "radial-gradient(circle at 50% 50%, rgba(245,160,200,0.12), transparent 55%), radial-gradient(circle at 70% 35%, rgba(232,97,58,0.08), transparent 44%)",
-          filter: "blur(8px)",
-          pointerEvents: "none",
-        }}
-      />
+            radial-gradient(circle at 50% 38%, rgba(245,160,200,0.1), transparent 34%),
+            radial-gradient(circle at 55% 45%, rgba(232,97,58,0.08), transparent 28%),
+            linear-gradient(180deg, #1a0808 0%, #1a0808 100%);
+          cursor: grab;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
 
-      <Canvas
-        camera={{ position: [0, 0, 6.4], fov: 48 }}
-        gl={{ antialias: true, alpha: true }}
-        style={{ background: "transparent", position: "relative", zIndex: 1 }}
-      >
-        <Suspense fallback={null}>
-          <ambientLight intensity={0.75} />
-          <pointLight position={[4, 5, 5]} intensity={0.7} />
-          <pointLight position={[-4, -3, 2]} intensity={0.3} color="#f5a0c8" />
-          <GlobeWireframe />
-          <OrbitControls
-            enableZoom={false}
-            enablePan={false}
-            rotateSpeed={0.45}
-            autoRotate
-            autoRotateSpeed={0.35}
-          />
-        </Suspense>
-      </Canvas>
+        .skills-heading {
+          position: relative;
+          z-index: 5;
+          text-align: center;
+          padding-top: 0;
+          padding-bottom: 32px;
+          pointer-events: none;
+        }
 
-      {/* Small corner label */}
-      <div
-        style={{
-          position: "absolute",
-          top: 18,
-          left: 18,
-          zIndex: 2,
-          fontFamily: "'Barlow Condensed', sans-serif",
-          fontSize: "0.72rem",
-          fontWeight: 800,
-          letterSpacing: "0.18em",
-          textTransform: "uppercase",
-          color: "rgba(245, 160, 200, 0.55)",
-          pointerEvents: "none",
-        }}
-      >
-        Interactive stack map
+        .skills-heading-kicker {
+          font-family: "Barlow Condensed", sans-serif;
+          font-size: 0.82rem;
+          font-weight: 800;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: rgba(245,160,200,0.72);
+          margin-bottom: 10px;
+        }
+
+        .skills-heading-title {
+          font-family: "Barlow Condensed", sans-serif;
+          font-size: clamp(4rem, 8vw, 7rem);
+          font-weight: 900;
+          line-height: 0.82;
+          color: #f0ece4;
+          letter-spacing: -0.045em;
+          text-transform: uppercase;
+        }
+
+        .skills-heading-title span {
+          color: #f5a0c8;
+        }
+
+        .skills-canvas-wrap {
+          position: relative;
+          z-index: 3;
+          width: min(1080px, 100%);
+          height: 620px;
+          margin-top: 0;
+          overflow: hidden;
+        }
+
+        .skill-orb {
+          --skill-color: #f5a0c8;
+          position: relative;
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          min-width: 72px;
+          border: 0;
+          background: transparent;
+          color: var(--skill-color);
+          cursor: pointer;
+          opacity: 0.64;
+          filter: drop-shadow(0 0 10px color-mix(in srgb, var(--skill-color) 18%, transparent));
+          transform: scale(1);
+          transition:
+            transform 0.2s ease,
+            opacity 0.2s ease,
+            filter 0.2s ease;
+        }
+
+        .skill-orb:hover,
+        .skill-orb:focus-visible,
+        .skill-orb-active {
+          opacity: 1;
+          transform: scale(1.14) translateY(-3px);
+          filter:
+            drop-shadow(0 0 12px color-mix(in srgb, var(--skill-color) 68%, transparent))
+            drop-shadow(0 0 24px color-mix(in srgb, var(--skill-color) 28%, transparent));
+          outline: none;
+        }
+
+        .skill-orb::before {
+          content: "";
+          position: absolute;
+          width: 48px;
+          height: 48px;
+          border-radius: 999px;
+          background:
+            radial-gradient(circle, color-mix(in srgb, var(--skill-color) 17%, transparent), transparent 68%);
+          border: 1px solid color-mix(in srgb, var(--skill-color) 12%, transparent);
+          opacity: 0;
+          transform: scale(0.65);
+          transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .skill-orb:hover::before,
+        .skill-orb:focus-visible::before,
+        .skill-orb-active::before {
+          opacity: 1;
+          transform: scale(1);
+        }
+
+        .skill-orb svg {
+          position: relative;
+          z-index: 1;
+        }
+
+        .skill-orb-label {
+          position: relative;
+          z-index: 1;
+          font-family: "Barlow Condensed", sans-serif;
+          font-size: 0.64rem;
+          font-weight: 800;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: rgba(240,236,228,0.62);
+          transition: color 0.2s ease;
+        }
+
+        .skill-orb:hover .skill-orb-label,
+        .skill-orb:focus-visible .skill-orb-label,
+        .skill-orb-active .skill-orb-label {
+          color: #f0ece4;
+        }
+
+        .additional-skills-wrap {
+          position: relative;
+          z-index: 5;
+          width: min(1280px, calc(100% - 32px));
+          margin-top: 6px;
+          pointer-events: none;
+        }
+
+        .additional-skills-title {
+          margin-bottom: 12px;
+          text-align: center;
+          font-family: "Barlow Condensed", sans-serif;
+          font-size: 0.88rem;
+          font-weight: 800;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: rgba(245,160,200,0.72);
+        }
+
+        .additional-skills-marquee {
+          overflow: hidden;
+          border: 1px solid rgba(245,160,200,0.2);
+          border-radius: 999px;
+          background: rgba(26,8,8,0.68);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+        }
+
+        .additional-skills-track {
+          display: inline-flex;
+          gap: 12px;
+          padding: 12px;
+          white-space: nowrap;
+          animation: additionalSkillsMove 42s linear infinite;
+        }
+
+        .additional-skill-chip {
+          display: inline-flex;
+          align-items: center;
+          border: 1px solid rgba(245,160,200,0.26);
+          border-radius: 999px;
+          padding: 9px 15px;
+          font-family: "Barlow Condensed", sans-serif;
+          font-size: 0.9rem;
+          font-weight: 800;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: rgba(240,236,228,0.88);
+          background: rgba(245,160,200,0.08);
+        }
+
+        @keyframes additionalSkillsMove {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%);
+          }
+        }
+
+        @media (max-width: 768px) {
+          .skills-universe {
+            min-height: 830px;
+          }
+
+          .skills-heading {
+            padding-bottom: 24px;
+          }
+
+          .skills-heading-title {
+            font-size: clamp(3.2rem, 14vw, 5rem);
+          }
+
+          .skills-canvas-wrap {
+            width: 100%;
+            height: 540px;
+          }
+
+          .skill-orb {
+            min-width: 62px;
+          }
+
+          .skill-orb-label {
+            font-size: 0.58rem;
+          }
+
+          .additional-skills-wrap {
+            width: calc(100% - 24px);
+            margin-top: 4px;
+          }
+
+          .additional-skills-title {
+            font-size: 0.78rem;
+          }
+
+          .additional-skill-chip {
+            font-size: 0.72rem;
+            padding: 7px 12px;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .additional-skills-track {
+            animation: none;
+          }
+        }
+      `}</style>
+
+      <div className="skills-heading">
+        <div className="skills-heading-kicker">Tech Stack</div>
+        <div className="skills-heading-title">
+          My <span>Skills</span>
+        </div>
       </div>
 
-      {/* Hint text */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 12,
-          left: "50%",
-          zIndex: 2,
-          transform: "translateX(-50%)",
-          fontFamily: "'Barlow Condensed', sans-serif",
-          fontSize: "0.7rem",
-          fontWeight: 800,
-          letterSpacing: "0.18em",
-          textTransform: "uppercase",
-          color: "rgba(245, 160, 200, 0.52)",
-          background: "rgba(26,8,8,0.58)",
-          border: "1px solid rgba(245,160,200,0.18)",
-          padding: "8px 14px",
-          borderRadius: "999px",
-          backdropFilter: "blur(8px)",
-          pointerEvents: "none",
-        }}
-      >
-        Drag to rotate
+      <div className="skills-canvas-wrap">
+        <Canvas
+          camera={{ position: [0, 0, 7.7], fov: 46 }}
+          gl={{ antialias: true, alpha: true }}
+          style={{
+            width: "100%",
+            height: "100%",
+            background: "transparent",
+          }}
+        >
+          <Suspense fallback={null}>
+            <ambientLight intensity={0.78} />
+            <pointLight position={[4, 5, 5]} intensity={0.65} />
+            <pointLight position={[-4, -3, 3]} intensity={0.3} color={theme.pink} />
+
+            <Stars
+              radius={16}
+              depth={14}
+              count={550}
+              factor={1.8}
+              saturation={0}
+              fade
+              speed={0.24}
+            />
+
+            <GlobeMesh />
+
+            <OrbitControls
+              enableZoom={false}
+              enablePan={false}
+              rotateSpeed={0.42}
+              autoRotate
+              autoRotateSpeed={0.28}
+            />
+          </Suspense>
+        </Canvas>
+      </div>
+
+      <div className="additional-skills-wrap">
+        <div className="additional-skills-title">Also familiar with</div>
+
+        <div className="additional-skills-marquee">
+          <div className="additional-skills-track">
+            {[...additionalSkills, ...additionalSkills].map((skill, index) => (
+              <span key={`${skill}-${index}`} className="additional-skill-chip">
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

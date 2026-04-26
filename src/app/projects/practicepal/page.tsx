@@ -115,7 +115,7 @@ export default function PracticePalCaseStudyPage() {
         <div className="pointer-events-none absolute -left-40 top-10 h-96 w-96 rounded-full bg-[#f5a0c8]/30 blur-3xl" />
         <div className="pointer-events-none absolute right-[-10rem] top-24 h-[32rem] w-[32rem] rounded-full bg-[#e8613a]/20 blur-3xl" />
 
-        <div className="relative grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="relative grid items-center gap-16 lg:grid-cols-[0.82fr_1.18fr]">
           <div>
             <Link
               href="/"
@@ -128,9 +128,13 @@ export default function PracticePalCaseStudyPage() {
               Full Product Case Study
             </p>
 
-            <h1 className="max-w-[9ch] text-[clamp(4rem,9vw,9rem)] font-black uppercase leading-[0.82] tracking-[-0.055em]">
-              Practice
-              <span className="text-[#f5a0c8]">Pal</span>
+            <h1 className="max-w-4xl font-black uppercase leading-[0.78] tracking-[-0.06em]">
+              <span className="block text-[clamp(4.5rem,10vw,10rem)]">
+                Practice
+              </span>
+              <span className="block text-[clamp(4.5rem,10vw,10rem)] text-[#f5a0c8]">
+                Pal
+              </span>
             </h1>
 
             <p className="mt-8 max-w-2xl text-sm font-medium uppercase leading-8 tracking-[0.08em] text-[#3a1818] md:text-base">
