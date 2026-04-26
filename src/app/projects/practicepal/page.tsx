@@ -1,171 +1,331 @@
 import Link from "next/link";
 
+const heroStats = [
+  { label: "Role", value: "Fullstack Developer" },
+  { label: "Period", value: "2025 – 2026" },
+  { label: "Type", value: "Internship" },
+  { label: "Stack", value: "Next.js · FastAPI · MongoDB" },
+];
+
 const wins = [
-  "Built the core product flow from authentication to practice planning, session logging, and analytics.",
-  "Created structured MongoDB models for users, plans, sessions, and subscription-related data.",
-  "Integrated Stripe subscription and billing logic with webhook syncing.",
-  "Designed responsive pages for onboarding, dashboard views, forms, and progress tracking.",
-];
-
-const stack = ["Next.js", "React", "MongoDB", "NextAuth", "Stripe", "Tailwind CSS"];
-
-const features = [
-  {
-    title: "Authentication",
-    detail: "Secure account flows for returning users, protected pages, and user-specific practice data.",
-  },
-  {
-    title: "Practice Planning",
-    detail: "Users can create practice plans, organize goals, and track structured sessions over time.",
-  },
-  {
-    title: "Session Logging",
-    detail: "Practice sessions can be saved with duration, notes, focus areas, and progress context.",
-  },
-  {
-    title: "Subscriptions",
-    detail: "Stripe-powered subscription flows with webhook syncing for account and billing state.",
-  },
-];
-
-const productFlow = [
-  "Create an account",
-  "Build a practice plan",
-  "Log focused sessions",
-  "Review progress",
-  "Upgrade with Stripe",
+  "Shipped features across the Next.js App Router frontend and FastAPI backend in a real production codebase.",
+  "Built browser-based audio and video editing tools with WaveSurfer.js, custom track logic, and FFmpeg-backed processing.",
+  "Implemented form-heavy product surfaces using React Hook Form + Zod with SWR for data fetching and caching.",
+  "Worked across recording studio flows powered by Socket.IO for real-time multi-participant sessions.",
+  "Contributed to MongoDB-backed services and Dockerized deployment workflows targeting Azure Container Registry.",
 ];
 
 const sections = [
   {
     number: "01",
-    title: "Product Thinking",
-    text: "PracticePal started as a real product idea: helping musicians practice more consistently with plans, sessions, and progress visibility. I treated it as more than a school-style project and focused on user flow, structure, and long-term usefulness.",
+    title: "Real Production Codebase",
+    text: "PodManager.ai is a comprehensive podcast management platform — recording studio, AI editing, guest management, marketplace. I joined an existing team and shipped features across a monorepo of Next.js 16, TypeScript, and a FastAPI backend, learning to navigate scale instead of starting from scratch.",
   },
   {
     number: "02",
-    title: "Fullstack Build",
-    text: "The project connects frontend screens with backend logic, authentication, database models, and subscription handling. It shows that I can work across the full product stack instead of only building static interfaces.",
+    title: "Real-Time & Media",
+    text: "I worked on flows that depend on Socket.IO synchronization, WebRTC recording, WaveSurfer.js waveforms, and TensorFlow.js / MediaPipe for media processing. These are problems where state, timing, and UI feedback all matter — much more demanding than typical CRUD work.",
   },
   {
     number: "03",
-    title: "Business Logic",
-    text: "Stripe billing, account state, protected routes, and saved user data made the project more realistic. It helped me understand how product features depend on reliable state management and backend design.",
+    title: "Fullstack Across the Stack",
+    text: "I moved between frontend components, FastAPI routes, MongoDB repositories, and Docker / Azure deployment. The role taught me how every layer impacts the user — from API design and data shapes to loading states and animation polish.",
   },
 ];
 
-export default function PracticePalCaseStudyPage() {
+const featureGroups = [
+  {
+    name: "Recording Studio",
+    items: [
+      "Multi-participant WebRTC recording with WebSocket sync",
+      "Separate-track recording per participant",
+      "Screen sharing and live chat during sessions",
+      "Host / guest role management",
+      "Pause / resume controls",
+      "Automatic upload to Blob storage on completion",
+    ],
+  },
+  {
+    name: "Episode Editing",
+    items: [
+      "AI-powered audio enhancement and voice isolation",
+      "Multi-language transcription and translation",
+      "Speaker diarization for multi-host shows",
+      "Audio effects and sound effects library",
+      "Video trim, cut, and chapter identification",
+      "Automated publishing workflow",
+    ],
+  },
+  {
+    name: "Guest & Marketplace",
+    items: [
+      "Guest invitation flows with email templates",
+      "Guest information forms and booking",
+      "Ad store with dynamic ad insertion",
+      "Guest store for finding podcast guests",
+      "Freelancer portal for editors and producers",
+      "Proposal management system",
+    ],
+  },
+];
+
+const productFlow = [
+  "Invite guests",
+  "Record in studio",
+  "Edit with AI tools",
+  "Generate shorts",
+  "Publish episode",
+];
+
+const stack = {
+  Frontend: [
+    "Next.js 16 (App Router)",
+    "TypeScript 5",
+    "Tailwind CSS 4",
+    "Radix UI",
+    "SWR",
+    "React Hook Form + Zod",
+    "Framer Motion",
+    "WaveSurfer.js",
+    "MediaPipe",
+    "TensorFlow.js",
+    "Recharts",
+  ],
+  Backend: [
+    "FastAPI (Python)",
+    "MongoDB",
+    "Socket.IO",
+    "REST + WebSocket APIs",
+    "Pydantic schemas",
+    "Repository pattern",
+  ],
+  "Real-Time & Media": [
+    "Socket.IO Client",
+    "WebRTC",
+    "WaveSurfer.js 7",
+    "FFmpeg",
+    "Blob storage",
+  ],
+  "DevOps & Deploy": [
+    "Docker (multi-stage)",
+    "Docker Compose",
+    "Azure Container Registry",
+    "Gunicorn",
+    "Turbopack",
+    "Vercel Analytics",
+  ],
+};
+
+const learnings = [
+  {
+    label: "Reading Code",
+    text: "Working in a real production codebase taught me how to navigate, understand existing patterns, and contribute without breaking conventions.",
+  },
+  {
+    label: "Real-Time Logic",
+    text: "Recording studios live and die on timing. I learned to think in terms of synchronization, race conditions, and UI feedback for async events.",
+  },
+  {
+    label: "Media Engineering",
+    text: "Audio and video processing brought me deeper into the browser — MediaRecorder, WebRTC, waveform rendering, and how to keep UI smooth under load.",
+  },
+  {
+    label: "Type Safety in Practice",
+    text: "Heavy use of TypeScript and Zod showed me how strong typing scales — fewer runtime errors, faster refactors, clearer API contracts between layers.",
+  },
+];
+
+export default function PodManagerCaseStudyPage() {
   return (
     <main className="min-h-screen bg-[#f0ece4] text-[#1a0808]">
-      {/* Top Bar */}
-      <nav className="flex items-center justify-between border-b border-[#1a0808]/10 px-6 py-5 md:px-12">
+      {/* TOP NAV */}
+      <nav className="sticky top-0 z-50 flex items-center justify-between bg-[#1a0808] px-6 py-4 md:px-10">
         <Link
           href="/"
-          className="text-xs font-black uppercase tracking-[0.18em] text-[#1a0808] transition hover:text-[#e8613a]"
+          className="text-xs font-bold uppercase tracking-[0.18em] text-[#f5a0c8] transition hover:opacity-65"
+          style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
         >
           Julie Anne Cantillep
         </Link>
 
-        <div className="flex items-center gap-5 text-xs font-black uppercase tracking-[0.18em]">
-          <Link href="/auth/login?callbackUrl=%2Fdashboard" className="hover:text-[#e8613a]">
-            View Demo
-          </Link>
-          <Link href="https://github.com/Julieanna97/PracticePal" className="hover:text-[#e8613a]" target="_blank" rel="noopener noreferrer">
+        <div
+          className="flex items-center gap-6 text-xs font-bold uppercase tracking-[0.18em] text-[#f5a0c8]"
+          style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+        >
+          <Link href="/#projects" className="hover:opacity-65">All Projects</Link>
+          <Link
+            href="https://github.com/Julieanna97"
+            className="hover:opacity-65"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             GitHub
           </Link>
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="grid min-h-[calc(100vh-73px)] grid-cols-1 lg:grid-cols-[1.05fr_0.95fr]">
-        <div className="flex flex-col justify-center px-6 py-16 md:px-12 lg:py-24">
-          <Link
-            href="/"
-            className="mb-12 text-xs font-black uppercase tracking-[0.18em] text-[#7a5050] transition hover:text-[#e8613a]"
-          >
-            ← Back to Portfolio
-          </Link>
+      {/* HERO */}
+      <section className="bg-[#1a0808] px-6 pb-0 pt-12 md:px-10">
+        <Link
+          href="/"
+          className="mb-12 inline-block text-xs font-bold uppercase tracking-[0.22em] text-[#f5a0c8]/60 transition hover:text-[#f5a0c8]"
+          style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+        >
+          ← Back to Portfolio
+        </Link>
 
-          <p className="mb-6 text-xs font-black uppercase tracking-[0.24em] text-[#e8613a]">
-            Case Study
-          </p>
+        <p
+          className="mb-6 text-xs font-bold uppercase tracking-[0.24em] text-[#e8613a]"
+          style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+        >
+          Case Study · Internship
+        </p>
 
-          <h1 className="max-w-4xl text-[clamp(4rem,10vw,10rem)] font-black uppercase leading-[0.82] tracking-[-0.04em]">
-            Practice
-            <span className="text-[#f5a0c8]">Pal</span>
-          </h1>
+        <h1
+          className="text-[clamp(4rem,12vw,14rem)] font-black uppercase leading-[0.82] tracking-[-0.03em] text-[#f5a0c8]"
+          style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+        >
+          Pod
+          <span className="text-white">Manager</span>
+          <span className="text-[#e8613a]">.ai</span>
+        </h1>
 
-          <p className="mt-8 max-w-2xl text-sm font-medium uppercase leading-8 tracking-[0.08em] text-[#3a1818] md:text-base">
-            PracticePal is a full product build for helping musicians stay
-            consistent. I use it in my portfolio to show product thinking,
-            fullstack execution, database design, authentication, and
-            subscription logic.
-          </p>
+        <p
+          className="mt-10 max-w-3xl text-sm font-light uppercase leading-[1.85] tracking-[0.06em] text-white/60 md:text-base"
+          style={{ fontFamily: "'Barlow', sans-serif" }}
+        >
+          A comprehensive podcast management platform with AI-powered editing, real-time recording studio,
+          guest management, and marketplace features. I joined the team as a fullstack developer and
+          shipped features across the Next.js frontend, FastAPI backend, and Dockerized deployment.
+        </p>
 
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <Link
-              href="/auth/login?callbackUrl=%2Fdashboard"
-              className="inline-flex items-center justify-center rounded-full border border-[#1a0808] bg-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] text-[#f0ece4] transition hover:bg-transparent hover:text-[#1a0808]"
-            >
-              View Demo
-            </Link>
-
-            <Link
-              href="https://github.com/Julieanna97/PracticePal"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-full border border-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] transition hover:bg-[#1a0808] hover:text-[#f0ece4]"
-            >
-              View on GitHub
-            </Link>
-          </div>
+        {/* Hero stats grid */}
+        <div className="mt-16 grid grid-cols-2 gap-6 border-t border-[#f5a0c8]/15 pt-10 md:grid-cols-4">
+          {heroStats.map((stat) => (
+            <div key={stat.label}>
+              <p
+                className="text-[0.65rem] font-bold uppercase tracking-[0.22em] text-[#f5a0c8]/45"
+                style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+              >
+                {stat.label}
+              </p>
+              <p
+                className="mt-2 text-base font-bold uppercase tracking-[0.04em] text-white md:text-lg"
+                style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+              >
+                {stat.value}
+              </p>
+            </div>
+          ))}
         </div>
 
-        <aside className="bg-[#1a0808] p-6 md:p-10">
-          <div className="flex h-full min-h-[520px] flex-col justify-between bg-[#f5a0c8] p-8 text-[#1a0808]">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.24em]">
-                What I Built
-              </p>
-
-              <ul className="mt-10 space-y-6">
-                {wins.map((item) => (
-                  <li
-                    key={item}
-                    className="border-t border-[#1a0808]/25 pt-5 text-sm font-medium leading-7 text-[#3a1818]"
-                  >
-                    <span className="mr-3 font-black text-[#1a0808]">→</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <p className="mt-12 text-[clamp(3rem,8vw,8rem)] font-black uppercase leading-[0.82] tracking-[-0.05em]">
-              Full
-              <br />
-              Stack
-            </p>
-          </div>
-        </aside>
+        {/* Giant pink wordmark bleeds off */}
+        <div className="mt-20 -mx-6 overflow-hidden md:-mx-10">
+          <p
+            className="whitespace-nowrap text-center text-[clamp(7rem,22vw,28rem)] font-black uppercase leading-[0.82] tracking-[-0.04em] text-[#f5a0c8]"
+            style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+          >
+            PODMANAGER
+          </p>
+        </div>
       </section>
 
-      {/* Sections */}
-      <section className="border-y border-[#1a0808]/10 bg-[#1a0808] px-6 py-20 text-[#f5a0c8] md:px-12">
-        <p className="mb-10 text-xs font-black uppercase tracking-[0.24em]">
+      {/* WHAT I BUILT */}
+      <section className="bg-[#f0ece4] px-6 py-20 md:px-10">
+        <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr]">
+          <div>
+            <p
+              className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-[#7a5050]"
+              style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+            >
+              My Contributions
+            </p>
+            <h2
+              className="text-[clamp(2.8rem,6vw,6rem)] font-black uppercase leading-[0.9] tracking-[0.01em] text-[#1a0808]"
+              style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+            >
+              What I<br />Built.
+            </h2>
+          </div>
+
+          <div className="flex flex-col">
+            {wins.map((item, i) => (
+              <div
+                key={i}
+                className="grid grid-cols-[40px_1fr] items-start gap-4 border-t border-[#1a0808]/12 py-6 last:border-b"
+              >
+                <span
+                  className="pt-1 text-xs font-bold uppercase tracking-[0.18em] text-[#e8613a]"
+                  style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+                >
+                  0{i + 1}
+                </span>
+                <p
+                  className="text-sm font-light uppercase leading-[1.85] tracking-[0.05em] text-[#3a1818]"
+                  style={{ fontFamily: "'Barlow', sans-serif" }}
+                >
+                  {item}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ORANGE MARQUEE */}
+      <div className="overflow-hidden whitespace-nowrap bg-[#e8613a] py-4">
+        <div className="inline-flex animate-[marquee_22s_linear_infinite]">
+          {[
+            ...["REAL-TIME RECORDING", "AI EDITING", "WEBSOCKET SYNC", "FASTAPI", "MONGODB", "NEXT.JS 16"],
+            ...["REAL-TIME RECORDING", "AI EDITING", "WEBSOCKET SYNC", "FASTAPI", "MONGODB", "NEXT.JS 16"],
+          ].map((item, i) => (
+            <span
+              key={i}
+              className="inline-flex items-center gap-6 px-9 text-sm font-bold uppercase tracking-[0.14em] text-[#f5a0c8]"
+              style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+            >
+              {item}
+              <span className="text-xs text-[#f5a0c8]/60">✦</span>
+            </span>
+          ))}
+        </div>
+        <style>{`@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }`}</style>
+      </div>
+
+      {/* PROJECT BREAKDOWN */}
+      <section className="bg-[#1a0808] px-6 py-20 md:px-10">
+        <p
+          className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-[#f5a0c8]/50"
+          style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+        >
           Project Breakdown
         </p>
+        <h2
+          className="mb-14 text-[clamp(2.8rem,6vw,6rem)] font-black uppercase leading-[0.9] tracking-[0.01em] text-[#f5a0c8]"
+          style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+        >
+          Where I<br />Worked.
+        </h2>
 
         <div className="grid gap-5 lg:grid-cols-3">
           {sections.map((item) => (
-            <article key={item.title} className="border border-[#f5a0c8]/25 p-6">
-              <p className="mb-10 text-xs font-black text-[#f5a0c8]/50">
+            <article key={item.title} className="border border-[#f5a0c8]/22 p-7">
+              <p
+                className="mb-10 text-xs font-bold tracking-[0.18em] text-[#f5a0c8]/50"
+                style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+              >
                 {item.number}
               </p>
-              <h2 className="text-3xl font-black uppercase leading-none">
+              <h3
+                className="text-2xl font-black uppercase leading-none tracking-[0.02em] text-white md:text-3xl"
+                style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+              >
                 {item.title}
-              </h2>
-              <p className="mt-6 text-sm font-medium leading-7 text-[#f0ece4]/70">
+              </h3>
+              <p
+                className="mt-6 text-sm font-light uppercase leading-[1.85] tracking-[0.05em] text-white/55"
+                style={{ fontFamily: "'Barlow', sans-serif" }}
+              >
                 {item.text}
               </p>
             </article>
@@ -173,47 +333,68 @@ export default function PracticePalCaseStudyPage() {
         </div>
       </section>
 
-      {/* Product Snapshot */}
-      <section className="grid grid-cols-1 gap-10 px-6 py-20 md:px-12 lg:grid-cols-[1fr_1fr]">
-        <div>
-          <p className="mb-5 text-xs font-black uppercase tracking-[0.24em] text-[#e8613a]">
-            Product Snapshot
-          </p>
-          <h2 className="text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.86] tracking-[-0.04em]">
-            What Ships in PracticePal
-          </h2>
-          <p className="mt-8 max-w-3xl text-sm font-medium uppercase leading-8 tracking-[0.08em] text-[#3a1818] md:text-base">
-            This is the feature set that was previously shown on the separate demo page. It now lives directly in the case study so everything is in one place.
-          </p>
-        </div>
+      {/* PRODUCT MODULES */}
+      <section className="bg-[#f0ece4] px-6 py-20 md:px-10">
+        <p
+          className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-[#7a5050]"
+          style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+        >
+          Product Modules
+        </p>
+        <h2
+          className="mb-14 text-[clamp(2.8rem,6vw,6rem)] font-black uppercase leading-[0.9] tracking-[0.01em] text-[#1a0808]"
+          style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+        >
+          What Ships<br />in PodManager.
+        </h2>
 
-        <div className="grid gap-5">
-          {features.map((feature) => (
-            <article key={feature.title} className="border-t border-[#1a0808]/20 pt-5">
-              <h3 className="text-2xl font-black uppercase tracking-[-0.02em] text-[#1a0808]">
-                {feature.title}
+        <div className="grid gap-12 lg:grid-cols-3">
+          {featureGroups.map((group) => (
+            <div key={group.name}>
+              <h3
+                className="mb-6 text-2xl font-black uppercase tracking-[0.02em] text-[#1a0808] md:text-3xl"
+                style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+              >
+                {group.name}
               </h3>
-              <p className="mt-2 text-sm font-medium leading-7 text-[#3a1818]">
-                {feature.detail}
-              </p>
-            </article>
+              <ul className="flex flex-col">
+                {group.items.map((item) => (
+                  <li
+                    key={item}
+                    className="border-t border-[#1a0808]/12 py-3 text-xs font-light uppercase leading-[1.7] tracking-[0.06em] text-[#3a1818] last:border-b md:text-sm"
+                    style={{ fontFamily: "'Barlow', sans-serif" }}
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
         </div>
       </section>
 
-      {/* Product Flow */}
-      <section className="border-y border-[#1a0808]/10 bg-[#1a0808] px-6 py-16 text-[#f5a0c8] md:px-12">
-        <p className="mb-8 text-xs font-black uppercase tracking-[0.24em]">
+      {/* PRODUCT FLOW */}
+      <section className="bg-[#1a0808] px-6 py-16 md:px-10">
+        <p
+          className="mb-8 text-xs font-bold uppercase tracking-[0.22em] text-[#f5a0c8]/50"
+          style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+        >
           Product Flow
         </p>
 
-        <div className="grid gap-4 md:grid-cols-5">
+        <div className="grid gap-3 md:grid-cols-5">
           {productFlow.map((step, index) => (
-            <div key={step} className="border border-[#f5a0c8]/25 p-5">
-              <p className="mb-8 text-xs font-black text-[#f5a0c8]/50">
+            <div key={step} className="border border-[#f5a0c8]/22 p-5">
+              <p
+                className="mb-8 text-xs font-bold tracking-[0.18em] text-[#f5a0c8]/50"
+                style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+              >
                 0{index + 1}
               </p>
-              <h3 className="text-xl font-black uppercase leading-none">
+              <h3
+                className="text-lg font-black uppercase leading-tight tracking-[0.02em] text-[#f5a0c8] md:text-xl"
+                style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+              >
                 {step}
               </h3>
             </div>
@@ -221,112 +402,132 @@ export default function PracticePalCaseStudyPage() {
         </div>
       </section>
 
-      {/* Why This Matters */}
-      <section className="grid grid-cols-1 gap-10 px-6 py-20 md:px-12 lg:grid-cols-[0.9fr_1.1fr]">
-        <div>
-          <p className="mb-5 text-xs font-black uppercase tracking-[0.24em] text-[#e8613a]">
-            Why This Matters
-          </p>
-          <h2 className="text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.86] tracking-[-0.04em]">
-            Full Product Showcase
-          </h2>
-        </div>
-
-        <div className="space-y-8">
-          <p className="max-w-3xl text-sm font-medium uppercase leading-8 tracking-[0.08em] text-[#3a1818] md:text-base">
-            PracticePal shows my ability to build beyond a simple landing page.
-            It combines product thinking, user flows, database models,
-            authentication, subscription logic, and dashboard experiences into
-            one complete app.
-          </p>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <article className="border border-[#1a0808]/15 p-6">
-              <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-[#7a5050]">
-                Ownership
-              </p>
-              <p className="text-sm font-medium leading-7 text-[#3a1818]">
-                Designed and developed the product flow from concept to working
-                implementation.
-              </p>
-            </article>
-
-            <article className="border border-[#1a0808]/15 p-6">
-              <p className="mb-4 text-xs font-black uppercase tracking-[0.18em] text-[#7a5050]">
-                Engineering
-              </p>
-              <p className="text-sm font-medium leading-7 text-[#3a1818]">
-                Connected frontend, backend, database, authentication, and
-                billing into one cohesive experience.
-              </p>
-            </article>
+      {/* TECH STACK */}
+      <section className="bg-[#f0ece4] px-6 py-20 md:px-10">
+        <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
+          <div>
+            <p
+              className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-[#e8613a]"
+              style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+            >
+              Technical Stack
+            </p>
+            <h2
+              className="text-[clamp(2.8rem,6vw,6rem)] font-black uppercase leading-[0.9] tracking-[0.01em] text-[#1a0808]"
+              style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+            >
+              Built<br />Like a Real<br />Product.
+            </h2>
           </div>
-        </div>
-      </section>
 
-      {/* Stack */}
-      <section className="grid grid-cols-1 gap-10 px-6 py-20 md:px-12 lg:grid-cols-[0.85fr_1.15fr]">
-        <div>
-          <p className="mb-5 text-xs font-black uppercase tracking-[0.24em] text-[#e8613a]">
-            Technical Stack
-          </p>
-          <h2 className="text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.86] tracking-[-0.04em]">
-            Built Like a Product.
-          </h2>
-        </div>
-
-        <div>
-          <p className="max-w-3xl text-sm font-medium uppercase leading-8 tracking-[0.08em] text-[#3a1818] md:text-base">
-            The project helped me practice the real connections between product
-            design and engineering: how users sign in, how data is stored, how
-            subscriptions affect access, and how the interface guides users
-            through repeatable practice habits.
-          </p>
-
-          <div className="mt-10 flex flex-wrap gap-3">
-            {stack.map((item) => (
-              <span
-                key={item}
-                className="rounded-full border border-[#1a0808] px-5 py-3 text-xs font-black uppercase tracking-[0.16em] text-[#1a0808]"
-              >
-                {item}
-              </span>
+          <div className="grid gap-10">
+            {Object.entries(stack).map(([group, items]) => (
+              <div key={group}>
+                <p
+                  className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-[#7a5050]"
+                  style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+                >
+                  {group}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {items.map((item) => (
+                    <span
+                      key={item}
+                      className="rounded-full border border-[#1a0808] bg-transparent px-4 py-2 text-[0.72rem] font-bold uppercase tracking-[0.12em] text-[#1a0808]"
+                      style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* WHAT I LEARNED */}
+      <section className="bg-[#2e0e0e] px-6 py-20 md:px-10">
+        <p
+          className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-[#f5a0c8]/50"
+          style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+        >
+          Reflection
+        </p>
+        <h2
+          className="mb-14 text-[clamp(2.8rem,6vw,6rem)] font-black uppercase leading-[0.9] tracking-[0.01em] text-[#f5a0c8]"
+          style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+        >
+          What I<br />Took Away.
+        </h2>
+
+        <div className="grid gap-5 md:grid-cols-2">
+          {learnings.map((item) => (
+            <article key={item.label} className="border border-[#f5a0c8]/22 p-7">
+              <p
+                className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-[#f5a0c8]"
+                style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+              >
+                {item.label}
+              </p>
+              <p
+                className="text-sm font-light uppercase leading-[1.85] tracking-[0.05em] text-white/55"
+                style={{ fontFamily: "'Barlow', sans-serif" }}
+              >
+                {item.text}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       {/* CTA */}
-      <section className="bg-[#e8613a] px-6 py-20 md:px-12">
-        <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
+      <section className="bg-[#e8613a] px-6 py-20 md:px-10">
+        <div className="flex flex-col justify-between gap-10 md:flex-row md:items-end">
           <div>
-            <p className="mb-6 text-xs font-black uppercase tracking-[0.24em] text-[#1a0808]">
-              Live Demo
+            <p
+              className="mb-6 text-xs font-bold uppercase tracking-[0.22em] text-[#1a0808]"
+              style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+            >
+              Want to talk shop?
             </p>
-            <h2 className="max-w-4xl text-[clamp(3rem,8vw,8rem)] font-black uppercase leading-[0.82] tracking-[-0.05em] text-[#1a0808]">
-              Explore the product flow.
+            <h2
+              className="max-w-4xl text-[clamp(3rem,9vw,9rem)] font-black uppercase leading-[0.82] tracking-[-0.02em] text-[#1a0808]"
+              style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+            >
+              Let's<br />work together.
             </h2>
           </div>
 
-          <div className="flex shrink-0 flex-col gap-4 sm:flex-row">
+          <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
             <Link
-              href="/auth/login?callbackUrl=%2Fdashboard"
-              className="inline-flex items-center justify-center rounded-full border border-[#1a0808] bg-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] text-[#f0ece4] transition hover:bg-transparent hover:text-[#1a0808]"
+              href="mailto:kisamae1997@gmail.com"
+              className="inline-flex items-center justify-center rounded-full border border-[#1a0808] bg-[#1a0808] px-8 py-4 text-xs font-bold uppercase tracking-[0.18em] text-[#f5a0c8] transition hover:bg-transparent hover:text-[#1a0808]"
+              style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
             >
-              View Demo
+              Send Email
             </Link>
 
             <Link
-              href="https://github.com/Julieanna97/PracticePal"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-full border border-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] text-[#1a0808] transition hover:bg-[#1a0808] hover:text-[#f0ece4]"
+              href="/#projects"
+              className="inline-flex items-center justify-center rounded-full border border-[#1a0808] px-8 py-4 text-xs font-bold uppercase tracking-[0.18em] text-[#1a0808] transition hover:bg-[#1a0808] hover:text-[#f0ece4]"
+              style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
             >
-              View on GitHub
+              View All Projects
             </Link>
           </div>
         </div>
       </section>
+
+      {/* FOOTER WORDMARK */}
+      <div className="overflow-hidden bg-[#f0ece4] pt-6">
+        <p
+          className="block text-[clamp(8rem,22vw,28rem)] font-black uppercase leading-[0.82] tracking-[-0.03em] text-[#1a0808]"
+          style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+        >
+          CANTILLEP
+        </p>
+      </div>
     </main>
   );
 }

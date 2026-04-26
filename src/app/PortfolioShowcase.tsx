@@ -2,7 +2,33 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
+
+// 3D globe loaded only on client (Three.js requires DOM)
+const SkillsGlobe = dynamic(() => import("./SkillsGlobe"), {
+  ssr: false,
+  loading: () => (
+    <div
+      style={{
+        width: "100%",
+        height: "min(70vh, 640px)",
+        minHeight: "480px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "'Barlow Condensed', sans-serif",
+        fontSize: "0.8rem",
+        fontWeight: 700,
+        letterSpacing: "0.18em",
+        textTransform: "uppercase",
+        color: "rgba(245,160,200,0.4)",
+      }}
+    >
+      Loading globe…
+    </div>
+  ),
+});
 
 type TimelineFilter = "all" | "work" | "product" | "ai" | "education";
 type SkillCategory = "frontend" | "backend" | "databases" | "cloud" | "tools" | "systems";
@@ -41,20 +67,10 @@ const projectItems: ProjectItem[] = [
     category: "Full Product",
     summary: "A practice planning and analytics SaaS for musicians — authentication, session tracking, plans, and subscriptions from zero to launch.",
     links: [
-    {
-      label: "View Case Study",
-      href: "/projects/practicepal",
-    },
-    {
-      label: "View Demo",
-      href: "/auth/login?callbackUrl=%2Fdashboard",
-    },
-    {
-      label: "GitHub",
-      href: "https://github.com/Julieanna97/PracticePal",
-      external: true,
-    },
-  ],
+      { label: "View Case Study", href: "/projects/practicepal" },
+      { label: "View Demo", href: "/auth/login?callbackUrl=%2Fdashboard" },
+      { label: "GitHub", href: "https://github.com/Julieanna97/PracticePal", external: true },
+    ],
     bullets: ["Next.js app router with MongoDB and NextAuth", "Stripe subscription flows and webhook syncing", "End-to-end SaaS story from concept to launch"],
     tags: ["Next.js", "MongoDB", "Stripe", "NextAuth"],
   },
@@ -62,7 +78,10 @@ const projectItems: ProjectItem[] = [
     name: "PodManager.ai",
     category: "Internship",
     summary: "Worked in a monorepo podcast platform with Next.js App Router, FastAPI, MongoDB, and Socket.IO to deliver studio, editing, publishing, and marketplace experiences.",
-    links: [{ label: "GitHub", href: "https://github.com/Julieanna97", external: true }],
+    links: [
+      { label: "View Case Study", href: "/projects/podmanager" },
+      { label: "GitHub Profile", href: "https://github.com/Julieanna97", external: true },
+    ],
     bullets: ["Built real-time studio and editing flows with Socket.IO, WaveSurfer.js, and MediaPipe/TensorFlow tooling", "Implemented form-heavy product surfaces using React Hook Form + Zod with SWR data fetching", "Contributed to FastAPI services, MongoDB-backed modules, and Dockerized deployment workflows"],
     tags: ["Next.js", "TypeScript", "FastAPI", "Socket.IO", "MongoDB", "WaveSurfer.js"],
   },
@@ -70,7 +89,7 @@ const projectItems: ProjectItem[] = [
     name: "Sigma Autonomous Car",
     category: "Embedded Systems",
     summary: "An Arduino-based autonomous car focused on sensor input, control loops, and path reliability.",
-    links: [{ label: "GitHub", href: "https://github.com/Julieanna97", external: true }],
+    links: [{ label: "GitHub Profile", href: "https://github.com/Julieanna97", external: true }],
     bullets: ["Sensor calibration and data fusion", "C/C++ firmware with Python testing", "Constrained hardware problem solving"],
     tags: ["Arduino", "C/C++", "Python", "RTOS/Zephyr"],
   },
@@ -117,8 +136,30 @@ export default function PortfolioShowcase() {
   const [tlFilter, setTlFilter] = useState<TimelineFilter>("all");
   const [activeSkill, setActiveSkill] = useState<SkillCategory>("frontend");
   const [toast, setToast] = useState("");
+  const [scrollPct, setScrollPct] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
+
+  // Scroll progress indicator
+  useEffect(() => {
+    const onScroll = () => {
+      const h = document.documentElement;
+      const total = h.scrollHeight - h.clientHeight;
+      const pct = total > 0 ? (h.scrollTop / total) * 100 : 0;
+      setScrollPct(pct);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Lock body scroll when mobile menu open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(""), 2200);
@@ -133,6 +174,13 @@ export default function PortfolioShowcase() {
   const copyEmail = async () => {
     try { await navigator.clipboard.writeText("kisamae1997@gmail.com"); setToast("EMAIL COPIED"); }
     catch { setToast("kisamae1997@gmail.com"); }
+  };
+
+  const closeMenuAndScroll = (id: string) => {
+    setMenuOpen(false);
+    setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
   };
 
   const marqueeItems = ["FULLSTACK DEVELOPER", "EMBEDDED SYSTEMS", "AI WORKFLOWS", "REACT & NEXT.JS", "C/C++ & ARDUINO", "OPEN TO WORK"];
@@ -167,6 +215,18 @@ export default function PortfolioShowcase() {
     a { color: inherit; text-decoration: none; }
     button { font: inherit; cursor: pointer; background: none; border: none; }
     ::selection { background: var(--pink); color: var(--burg); }
+
+    /* ── SCROLL PROGRESS BAR ── */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--pink) 0%, var(--orange) 100%);
+      z-index: 300;
+      transition: width 0.08s linear;
+      pointer-events: none;
+    }
 
     /* ── NAV ── */
     .nav {
@@ -203,57 +263,131 @@ export default function PortfolioShowcase() {
     }
     .nav-link:hover { opacity: 0.65; }
 
+    /* Hamburger button */
+    .nav-burger {
+      display: none;
+      width: 32px;
+      height: 22px;
+      position: relative;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .nav-burger span {
+      display: block;
+      height: 2px;
+      width: 100%;
+      background: var(--pink);
+      transition: transform 0.3s, opacity 0.3s;
+      transform-origin: center;
+    }
+    .nav-burger.open span:nth-child(1) {
+      transform: translateY(10px) rotate(45deg);
+    }
+    .nav-burger.open span:nth-child(2) {
+      opacity: 0;
+    }
+    .nav-burger.open span:nth-child(3) {
+      transform: translateY(-10px) rotate(-45deg);
+    }
+
+    /* Mobile drawer */
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(86%, 360px);
+      background: var(--burg);
+      border-left: 1px solid rgba(245,160,200,0.18);
+      z-index: 250;
+      padding: 100px 32px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .mobile-drawer.open { transform: translateX(0); }
+    .mobile-drawer-link {
+      font-family: var(--cond);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--pink);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(245,160,200,0.1);
+      text-align: left;
+      transition: padding-left 0.2s;
+    }
+    .mobile-drawer-link:hover, .mobile-drawer-link:focus { padding-left: 8px; }
+    .mobile-drawer-cta {
+      margin-top: 24px;
+      font-family: var(--cond);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--burg);
+      background: var(--pink);
+      padding: 16px 24px;
+      border-radius: 999px;
+      text-align: center;
+    }
+    .mobile-drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 240;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .mobile-drawer-overlay.open { opacity: 1; pointer-events: auto; }
+
     /* ── HERO ── */
     .hero {
-    background: var(--burg);
-    padding: 36px 3vw 0;
-    overflow: hidden;
-  }
-
-  .hero-photo {
-    position: relative;
-    width: 100%;
-    height: 72vh;
-    min-height: 520px;
-    overflow: hidden;
-  }
-
-  .hero-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 20%;
-    display: block;
-  }
-
-  .hero-photo-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(26,8,8,0.08) 0%,
-      rgba(26,8,8,0.22) 100%
-    );
-    z-index: 1;
-  }
-
-  .hero-name-wrap {
-    padding: 18px 2vw 0;
-    line-height: 0.8;
-    overflow: hidden;
-  }
-
-  .hero-name-giant {
-    display: block;
-    font-family: var(--cond);
-    font-size: clamp(7rem, 21vw, 26rem);
-    font-weight: 900;
-    color: var(--pink);
-    letter-spacing: -0.03em;
-    text-transform: uppercase;
-    line-height: 0.82;
-    white-space: nowrap;
-  }
+      background: var(--burg);
+      padding: 36px 3vw 0;
+      overflow: hidden;
+    }
+    .hero-photo {
+      position: relative;
+      width: 100%;
+      height: 72vh;
+      min-height: 520px;
+      overflow: hidden;
+    }
+    .hero-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      display: block;
+    }
+    .hero-photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(26,8,8,0.08) 0%, rgba(26,8,8,0.22) 100%);
+      z-index: 1;
+    }
+    .hero-name-wrap {
+      padding: 18px 2vw 0;
+      line-height: 0.8;
+      overflow: hidden;
+    }
+    .hero-name-giant {
+      display: block;
+      font-family: var(--cond);
+      font-size: clamp(7rem, 21vw, 26rem);
+      font-weight: 900;
+      color: var(--pink);
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      line-height: 0.82;
+      white-space: nowrap;
+    }
 
     /* ── INTRO ── */
     .intro {
@@ -264,12 +398,7 @@ export default function PortfolioShowcase() {
       gap: 56px;
       align-items: start;
     }
-
-    .intro-left {
-      display: flex;
-      flex-direction: column;
-    }
-
+    .intro-left { display: flex; flex-direction: column; }
     .intro-bottom-photo {
       margin-top: 64px;
       position: relative;
@@ -279,7 +408,6 @@ export default function PortfolioShowcase() {
       overflow: hidden;
       background: #ddd;
     }
-
     .intro-bottom-photo img {
       width: 100%;
       height: 100%;
@@ -287,17 +415,15 @@ export default function PortfolioShowcase() {
       object-position: center;
       display: block;
     }
-
     .intro-photo-box {
       position: relative;
       width: 100%;
-      max-width: 560px;   /* smaller = sharper looking */
+      max-width: 560px;
       margin-left: auto;
       aspect-ratio: 4 / 5;
       overflow: hidden;
       background: var(--burg2);
     }
-
     .intro-photo-box img {
       width: 100%;
       height: 100%;
@@ -346,21 +472,6 @@ export default function PortfolioShowcase() {
     }
     .pill-btn:hover { background: var(--ink); color: var(--cream); }
 
-    /* Intro photo — real photo in a tall portrait box */
-    .intro-photo-box {
-      position: relative;
-      aspect-ratio: 4/5;
-      overflow: hidden;
-      background: var(--burg2);
-    }
-    .intro-photo-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center top;
-      display: block;
-    }
-
     /* ── STATEMENT ── */
     .statement {
       background: var(--cream);
@@ -388,7 +499,7 @@ export default function PortfolioShowcase() {
     }
     .marquee-inner {
       display: inline-flex;
-      animation: marquee 20s linear infinite;
+      animation: marquee 22s linear infinite;
     }
     .marquee-item {
       font-family: var(--cond);
@@ -454,8 +565,6 @@ export default function PortfolioShowcase() {
       line-height: 1.85;
       max-width: 52ch;
     }
-
-    /* Approach panel photo — real photo */
     .dark-panel-photo {
       position: relative;
       overflow: hidden;
@@ -629,61 +738,84 @@ export default function PortfolioShowcase() {
       line-height: 1.75;
     }
 
-    /* ── SKILLS ── */
-    .skills-section { background: var(--cream); padding: 80px 5vw; }
-    .skill-tabs {
-      display: flex;
-      gap: 0;
-      margin-bottom: 48px;
-      border-bottom: 2px solid var(--burg);
+    /* ── SKILLS — now with 3D globe ── */
+    .skills-section {
+      background: var(--burg);
+      padding: 80px 5vw;
+      position: relative;
+      overflow: hidden;
     }
-    .skill-tab {
-      font-family: var(--cond);
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding: 14px 24px;
-      border-bottom: 3px solid transparent;
-      margin-bottom: -2px;
-      transition: all 0.18s;
+    .skills-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(245,160,200,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(232,97,58,0.05) 0%, transparent 50%);
+      pointer-events: none;
     }
-    .skill-tab:hover { color: var(--burg); }
-    .skill-tab-on { color: var(--burg); border-bottom-color: var(--burg); }
-    .skill-group-title {
-      font-family: var(--cond);
-      font-size: clamp(1.1rem, 2vw, 1.5rem);
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--burg);
-      margin-bottom: 6px;
-    }
-    .skill-group-desc {
-      font-family: var(--body-f);
-      font-size: 0.76rem;
-      font-weight: 400;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 20px;
-    }
-    .skill-list {
+    .skills-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
     }
-    .skill-pill {
-      border: 1px solid rgba(26,8,8,0.14);
-      padding: 10px 12px;
-      font-family: var(--body-f);
-      font-size: 0.72rem;
-      font-weight: 500;
+    .skills-text-side .sec-super { color: rgba(245,160,200,0.5); }
+    .skills-text-side .sec-title { color: var(--pink); margin-bottom: 32px; }
+    .skills-tabs-vert {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .skill-tab-vert {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 0;
+      border-top: 1px solid rgba(245,160,200,0.12);
+      font-family: var(--cond);
+      font-size: 1rem;
+      font-weight: 700;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: var(--body);
-      background: rgba(255,255,255,0.45);
+      color: rgba(245,160,200,0.55);
+      transition: all 0.2s;
+      text-align: left;
+      width: 100%;
+    }
+    .skill-tab-vert:last-child { border-bottom: 1px solid rgba(245,160,200,0.12); }
+    .skill-tab-vert:hover { color: var(--pink); padding-left: 8px; }
+    .skill-tab-vert-on { color: var(--pink); padding-left: 8px; }
+    .skill-tab-vert-on .stv-arrow { color: var(--pink); transform: translateX(4px); }
+    .stv-arrow {
+      font-size: 1rem;
+      color: rgba(245,160,200,0.3);
+      transition: color 0.2s, transform 0.2s;
+    }
+    .stv-count {
+      font-family: var(--body-f);
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: rgba(245,160,200,0.4);
+    }
+    .skills-active-desc {
+      font-family: var(--body-f);
+      font-size: 0.78rem;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.85;
+      margin-top: 24px;
+      max-width: 50ch;
+    }
+    .skills-globe-side {
+      width: 100%;
+      position: relative;
     }
 
     /* ── CONTACT ── */
@@ -878,12 +1010,14 @@ export default function PortfolioShowcase() {
       .intro { grid-template-columns: 1fr; }
       .dark-panel { grid-template-columns: 1fr; }
       .contact-section { grid-template-columns: 1fr; }
+      .skills-grid { grid-template-columns: 1fr; gap: 40px; }
       .statement-text { grid-template-columns: 1fr 1fr; }
       .tagline-text { grid-template-columns: 1fr 1fr; }
       .footer-links { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 768px) {
       .nav-links { display: none; }
+      .nav-burger { display: flex; }
       .nav { padding: 16px 24px; }
       .intro { padding: 56px 24px; }
       .projects-section, .timeline-section, .skills-section { padding: 60px 24px; }
@@ -891,7 +1025,6 @@ export default function PortfolioShowcase() {
       .footer-tagline { padding: 48px 24px 16px; }
       .proj-row { grid-template-columns: 1fr; gap: 16px; }
       .proj-row:hover { margin: 0 -24px; padding: 40px 24px; }
-      .skill-list { grid-template-columns: 1fr 1fr; }
       .statement-text { grid-template-columns: 1fr; font-size: clamp(2rem,8vw,4rem); }
       .tagline-text { grid-template-columns: 1fr; }
       .footer-links { grid-template-columns: 1fr 1fr; }
@@ -905,7 +1038,28 @@ export default function PortfolioShowcase() {
     <div className={mounted ? "mounted" : ""}>
       <style>{css}</style>
 
-      {/* ── NAV ── */}
+      {/* SCROLL PROGRESS BAR */}
+      <div className="scroll-progress" style={{ width: `${scrollPct}%` }} />
+
+      {/* MOBILE DRAWER OVERLAY */}
+      <div
+        className={`mobile-drawer-overlay ${menuOpen ? "open" : ""}`}
+        onClick={() => setMenuOpen(false)}
+      />
+
+      {/* MOBILE DRAWER */}
+      <div className={`mobile-drawer ${menuOpen ? "open" : ""}`}>
+        <button type="button" className="mobile-drawer-link" onClick={() => closeMenuAndScroll("about")}>About</button>
+        <button type="button" className="mobile-drawer-link" onClick={() => closeMenuAndScroll("projects")}>Projects</button>
+        <button type="button" className="mobile-drawer-link" onClick={() => closeMenuAndScroll("timeline")}>Timeline</button>
+        <button type="button" className="mobile-drawer-link" onClick={() => closeMenuAndScroll("skills")}>Skills</button>
+        <button type="button" className="mobile-drawer-link" onClick={() => closeMenuAndScroll("contact")}>Contact</button>
+        <a href="mailto:kisamae1997@gmail.com" className="mobile-drawer-cta" onClick={() => setMenuOpen(false)}>
+          Get in Touch
+        </a>
+      </div>
+
+      {/* NAV */}
       <nav className="nav">
         <div className="nav-logo">Julie Anne Cantillep</div>
         <div className="nav-links">
@@ -914,94 +1068,93 @@ export default function PortfolioShowcase() {
           <a href="#skills" className="nav-link">Skills</a>
           <a href="#contact" className="nav-link">Contact</a>
         </div>
-        <a href="mailto:kisamae1997@gmail.com" className="nav-link">Get in Touch</a>
+        <a href="mailto:kisamae1997@gmail.com" className="nav-link" style={{ display: "none" }}>Get in Touch</a>
+        {/* Hamburger (mobile only) */}
+        <button
+          type="button"
+          className={`nav-burger ${menuOpen ? "open" : ""}`}
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span /><span /><span />
+        </button>
       </nav>
 
-      {/* ── HERO — real photo with giant pink name bleeding off bottom ── */}
+      {/* HERO */}
       <section className="hero">
         <div className="hero-photo">
           <div className="hero-photo-overlay" />
-
           <Image
             src="/profile.jpg"
             alt="Julie Anne Cantillep"
             fill
             loading="eager"
             sizes="100vw"
-            style={{
-              objectFit: "cover",
-              objectPosition: "center 20%",
-            }}
+            style={{ objectFit: "cover", objectPosition: "center 20%" }}
           />
         </div>
-
         <div className="hero-name-wrap">
-          <span className="hero-name-giant">
-            JULIE ANNE
-          </span>
+          <span className="hero-name-giant">JULIE ANNE</span>
         </div>
       </section>
 
-      {/* ── INTRO ── */}
+      {/* INTRO */}
       <section className="intro" id="about">
-        {/* LEFT SIDE */}
         <div className="intro-left fade-up d2">
           <h1 className="intro-heading">
-            I'm a software<br />
-            developer.<br />
-            Let's build.
+            I'm a software<br />developer.<br />Let's build.
           </h1>
-
           <p className="intro-body">
-            I build modern software across frontend, backend, and embedded 
-            systems — from React and scalable APIs to intelligent IoT devices 
-            and hardware-connected products. Based in Malmö, Sweden. 
-            Open to software engineering and product development roles.
+            I build modern software across frontend, backend, and embedded systems — from React and scalable APIs to intelligent IoT devices and hardware-connected products. Based in Malmö, Sweden. Open to software engineering and product development roles.
           </p>
-
           <button
             type="button"
             className="pill-btn"
-            onClick={() =>
-              document.getElementById("contact")?.scrollIntoView({
-                behavior: "smooth",
-              })
-            }
+            onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
           >
             Work with Me
           </button>
-
-          {/* NEW BOTTOM LEFT IMAGE */}
           <div className="intro-bottom-photo">
             <Image
               src="/intro-img-1.png"
               alt="Julie Anne Cantillep"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
-              style={{
-                objectFit: "cover",
-                objectPosition: "center",
-              }}
+              style={{ objectFit: "cover", objectPosition: "center" }}
             />
           </div>
         </div>
-
-        {/* RIGHT IMAGE */}
         <div className="intro-photo-box fade-up d3">
           <Image
             src="/intro-img.png"
             alt="Julie Anne Cantillep"
             fill
             sizes="(max-width: 1024px) 100vw, 45vw"
-            style={{
-              objectFit: "cover",
-              objectPosition: "center top",
-            }}
+            style={{ objectFit: "cover", objectPosition: "center top" }}
           />
         </div>
       </section>
 
-      {/* ── DARK APPROACH PANEL ── */}
+      {/* STATEMENT */}
+      <section className="statement fade-up d2">
+        <div className="statement-text">
+          <span>INSPIRING</span>
+          <span>CLEAN CODE</span>
+          <span>AND</span>
+          <span>THOUGHTFUL DESIGN</span>
+        </div>
+      </section>
+
+      {/* ORANGE MARQUEE */}
+      <div className="marquee-wrap">
+        <div className="marquee-inner">
+          {[...marqueeItems, ...marqueeItems].map((item, i) => (
+            <span key={i} className="marquee-item">{item}</span>
+          ))}
+        </div>
+      </div>
+
+      {/* DARK APPROACH PANEL */}
       <section className="dark-panel">
         <div className="dark-panel-text fade-up d2">
           <div className="dark-label">My Approach</div>
@@ -1012,8 +1165,6 @@ export default function PortfolioShowcase() {
             I work closely with teams I join, immersing myself in the product's vision. I ship working code quickly and refine based on feedback. I care about the interface as much as the logic — clean, accessible, and polished UIs are part of my standard.
           </p>
         </div>
-
-        {/* ↓↓↓ YOUR REAL PHOTO — dark toned version for the approach panel ↓↓↓ */}
         <div className="dark-panel-photo fade-up d3">
           <Image
             src="/profile.jpg"
@@ -1026,13 +1177,12 @@ export default function PortfolioShowcase() {
         </div>
       </section>
 
-      {/* ── PROJECTS ── */}
+      {/* PROJECTS */}
       <section className="projects-section" id="projects">
         <div className="fade-up d2">
           <div className="sec-super">Selected Work</div>
           <div className="sec-title">Projects</div>
         </div>
-
         <div className="proj-list fade-up d3">
           {projectItems.map(p => (
             <article key={p.name} className="proj-row">
@@ -1064,13 +1214,12 @@ export default function PortfolioShowcase() {
         </div>
       </section>
 
-      {/* ── TIMELINE ── */}
+      {/* TIMELINE */}
       <section className="timeline-section" id="timeline">
         <div className="fade-up d2">
           <div className="sec-super" style={{ color: "rgba(245,160,200,0.5)" }}>Career Arc</div>
           <div className="sec-title" style={{ color: "var(--pink)" }}>Timeline</div>
         </div>
-
         <div className="filter-row fade-up d3">
           {timelineFilters.map(f => (
             <button key={f} type="button"
@@ -1081,7 +1230,6 @@ export default function PortfolioShowcase() {
             </button>
           ))}
         </div>
-
         <div className="tl-list fade-up d4">
           {filteredTl.map(item => (
             <div key={`${item.year}-${item.title}`} className="tl-row">
@@ -1096,36 +1244,42 @@ export default function PortfolioShowcase() {
         </div>
       </section>
 
-      {/* ── SKILLS ── */}
+      {/* SKILLS — 3D GLOBE */}
       <section className="skills-section" id="skills">
-        <div className="fade-up d2">
-          <div className="sec-super">Capability Map</div>
-          <div className="sec-title">Skills</div>
-        </div>
+        <div className="skills-grid">
+          {/* LEFT: text + tabs */}
+          <div className="skills-text-side fade-up d2">
+            <div className="sec-super">Interactive Stack Map</div>
+            <div className="sec-title">Skills</div>
 
-        <div className="skill-tabs fade-up d3">
-          {skillCategories.map(cat => (
-            <button key={cat} type="button"
-              className={`skill-tab ${activeSkill === cat ? "skill-tab-on" : ""}`}
-              onClick={() => setActiveSkill(cat)}
-            >
-              {skillMap[cat].label}
-            </button>
-          ))}
-        </div>
+            <div className="skills-tabs-vert">
+              {skillCategories.map(cat => (
+                <button key={cat} type="button"
+                  className={`skill-tab-vert ${activeSkill === cat ? "skill-tab-vert-on" : ""}`}
+                  onClick={() => setActiveSkill(cat)}
+                >
+                  <span>{skillMap[cat].label}</span>
+                  <span style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                    <span className="stv-count">{skillMap[cat].skills.length}</span>
+                    <span className="stv-arrow">→</span>
+                  </span>
+                </button>
+              ))}
+            </div>
 
-        <div className="fade-up d4">
-          <div className="skill-group-title">{skillMap[activeSkill].label}</div>
-          <div className="skill-group-desc">{skillMap[activeSkill].description}</div>
-          <div className="skill-list">
-            {skillMap[activeSkill].skills.map((skill) => (
-              <div key={skill} className="skill-pill">{skill}</div>
-            ))}
+            <p className="skills-active-desc">
+              {skillMap[activeSkill].description}
+            </p>
+          </div>
+
+          {/* RIGHT: 3D globe */}
+          <div className="skills-globe-side fade-up d3">
+            <SkillsGlobe />
           </div>
         </div>
       </section>
 
-      {/* ── CONTACT ── */}
+      {/* CONTACT */}
       <section className="contact-section" id="contact">
         <div className="contact-left fade-up d2">
           <div className="contact-label">Get in Touch</div>
@@ -1153,7 +1307,6 @@ export default function PortfolioShowcase() {
             </button>
           </div>
         </div>
-
         <div className="contact-right fade-up d3">
           {[
             { label: "Email",    val: "kisamae1997@gmail.com",  href: "mailto:kisamae1997@gmail.com" },
@@ -1176,7 +1329,7 @@ export default function PortfolioShowcase() {
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
+      {/* FOOTER */}
       <footer className="footer-tagline">
         <div className="tagline-text fade-up d2">
           <span>Inspiring</span>
@@ -1184,7 +1337,6 @@ export default function PortfolioShowcase() {
           <span>And</span>
           <span>Bold Ideas</span>
         </div>
-
         <div className="footer-links fade-up d3">
           <div>
             <div className="footer-col-text">
@@ -1214,7 +1366,6 @@ export default function PortfolioShowcase() {
         </div>
       </footer>
 
-      {/* Giant footer wordmark */}
       <div className="footer-wordmark">
         <span className="footer-word">CANTILLEP</span>
       </div>
