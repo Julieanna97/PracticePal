@@ -1,23 +1,62 @@
 import Link from "next/link";
 
-const demos = [
+const featureAreas = [
   {
-    name: "Episode Pipeline Board",
+    name: "Recording Studio",
     description:
-      "Visualized progress from recording through publishing so teams can spot blockers earlier.",
-    outcome: "Clearer status handoff across production roles.",
+      "Real-time recording workflows with role-aware host/guest experiences, synchronization, and recording controls.",
+    outcome: "Supported live collaboration flows for podcast capture and studio coordination.",
   },
   {
-    name: "Assignment Timeline",
+    name: "Episode Editing & AI Tools",
     description:
-      "Mapped ownership by stage and date to improve coordination between operations and content contributors.",
-    outcome: "Reduced confusion about who owns next action.",
+      "Audio/video editing surfaces with waveform tooling, processing jobs, and AI-powered features like transcription, enhancement, and speaker diarization.",
+    outcome: "Improved speed from raw recording to publish-ready output.",
   },
   {
-    name: "Performance Snapshot",
+    name: "Marketplace & Operations",
     description:
-      "Created a concise analytics surface for weekly trend checks and episode comparisons.",
-    outcome: "Faster decisions during review meetings.",
+      "Guest, freelancer, and ad-store modules with supporting management pages, forms, and workflow visibility across the product.",
+    outcome: "Expanded the platform from editor tooling into end-to-end podcast operations.",
+  },
+];
+
+const stackGroups = [
+  {
+    title: "Frontend",
+    items: [
+      "Next.js App Router",
+      "TypeScript",
+      "Tailwind CSS",
+      "Radix UI",
+      "SWR",
+      "React Hook Form + Zod",
+      "Socket.IO Client",
+      "Framer Motion",
+      "WaveSurfer.js",
+      "MediaPipe + TensorFlow.js",
+      "Recharts",
+    ],
+  },
+  {
+    title: "Backend",
+    items: [
+      "FastAPI",
+      "MongoDB",
+      "Socket.IO (Python)",
+      "REST + WebSocket architecture",
+      "Repository/service-layer organization",
+    ],
+  },
+  {
+    title: "DevOps",
+    items: [
+      "Docker multi-stage builds",
+      "Docker Compose",
+      "Azure Container Registry",
+      "Gunicorn production serving",
+      "ESLint + TypeScript checks",
+    ],
   },
 ];
 
@@ -32,11 +71,11 @@ export default function PodManagerCaseStudyPage() {
         <p className="mt-10 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">Internship Case Study</p>
         <h1 className="mt-4 text-5xl font-black tracking-tight">Pod<span className="bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-transparent">Manager.ai</span></h1>
         <p className="mt-6 max-w-3xl text-lg leading-relaxed text-slate-300">
-          During my internship, I built demo concepts focused on podcast workflow and team visibility. This page documents each demo with context, outcomes, and strategic impact.
+          During my internship, I worked in a production-scale monorepo spanning Next.js frontend surfaces and FastAPI backend services. My contributions covered recording studio workflows, editing features, AI-tooling experiences, and operational marketplace modules.
         </p>
 
         <div className="mt-12 grid gap-6">
-          {demos.map((demo, idx) => (
+          {featureAreas.map((demo, idx) => (
             <article key={demo.name} className="group rounded-2xl border border-slate-700/50 bg-slate-800/30 backdrop-blur-sm p-8 hover:border-slate-600 hover:bg-slate-800/50 transition-all">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
@@ -53,6 +92,22 @@ export default function PodManagerCaseStudyPage() {
             </article>
           ))}
         </div>
+
+        <section className="mt-14 rounded-2xl border border-slate-700/50 bg-slate-800/30 p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">Tech Stack Used</p>
+          <div className="mt-6 grid gap-6 md:grid-cols-3">
+            {stackGroups.map((group) => (
+              <article key={group.title}>
+                <h2 className="text-lg font-bold text-white">{group.title}</h2>
+                <ul className="mt-3 space-y-2 text-sm text-slate-300">
+                  {group.items.map((item) => (
+                    <li key={item}>• {item}</li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </section>
       </div>
     </main>
   );

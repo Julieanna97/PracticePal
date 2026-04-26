@@ -14,8 +14,8 @@ const projects = [
     slug: "podmanager",
     type: "Internship",
     summary:
-      "Internship demo concepts focused on podcast operations, visibility, and workflow acceleration.",
-    highlights: ["Workflow UX", "Dashboard prototypes", "Stakeholder-focused demos"],
+      "Production internship work across a Next.js + FastAPI podcast platform with real-time studio, editing, AI, and marketplace modules.",
+    highlights: ["Next.js + TypeScript", "FastAPI + MongoDB + Socket.IO", "WaveSurfer, MediaPipe, TensorFlow.js"],
   },
 ];
 
@@ -26,7 +26,7 @@ export default function ProjectsPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">Portfolio</p>
         <h1 className="mt-4 text-4xl md:text-5xl font-black tracking-tight text-white">Project <span className="bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-transparent">Case Studies</span></h1>
         <p className="mt-4 max-w-3xl text-lg text-slate-300">
-          A focused view of my product work, internship demos, and implementation decisions.
+          A focused view of my product builds, internship engineering work, and implementation decisions.
         </p>
 
         <div className="mt-12 grid gap-6 md:grid-cols-2">

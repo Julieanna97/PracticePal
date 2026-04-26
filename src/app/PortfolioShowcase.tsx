@@ -28,7 +28,7 @@ const timelineItems: TimelineItem[] = [
   { year: "2023", category: "work", title: "Embedded Software Developer Intern", subtitle: "Sigma Industry Evolution", detail: "Built part of an autonomous radio-controlled car project using Arduino, sensors, C/C++, and Python." },
   { year: "2024", category: "work", title: "Embedded Software Developer Intern", subtitle: "Nodehill AB", detail: "Implemented a LoRa communication system using ESP32 microcontrollers and LoRa modules for long-range wireless communication." },
   { year: "2024–25", category: "ai", title: "AI Trainer (Coder)", subtitle: "Outlier", detail: "Developed, reviewed, and optimized AI model outputs, improved training quality, and supported cross-functional AI workflows." },
-  { year: "2025–26", category: "product", title: "Fullstack Developer", subtitle: "PodManager.ai", detail: "Built browser-based audio and video editing tools with React, TypeScript, and backend APIs for clips, effects, and processing workflows." },
+  { year: "2025–26", category: "product", title: "Fullstack Developer", subtitle: "PodManager.ai", detail: "Shipped features across a Next.js + TypeScript frontend and FastAPI backend for podcast editing, recording studio workflows, guest management, and marketplace modules." },
   { year: "2026", category: "ai", title: "Quality Assurance Analyst", subtitle: "OneForma.com", detail: "Reviewed and improved multilingual AI content applying QA guidelines, natural language quality checks, and workflow consistency." },
   { year: "2026", category: "ai", title: "AI Data Specialist", subtitle: "Appen.com", detail: "Worked on AI training projects involving text, audio, and multilingual data — transcription, labeling, and content evaluation." },
   { year: "2026", category: "education", title: "Fullstack Developer", subtitle: "The Media Institute", detail: "Graduating 2026 after training in frontend, backend, databases, APIs, agile development, and e-commerce." },
@@ -61,10 +61,10 @@ const projectItems: ProjectItem[] = [
   {
     name: "PodManager.ai",
     category: "Internship",
-    summary: "Podcast editing workflows with waveform controls, track strips, and backend APIs for clips and effects.",
+    summary: "Worked in a monorepo podcast platform with Next.js App Router, FastAPI, MongoDB, and Socket.IO to deliver studio, editing, publishing, and marketplace experiences.",
     links: [{ label: "GitHub", href: "https://github.com/Julieanna97", external: true }],
-    bullets: ["React + TypeScript interface engineering", "WaveSurfer-style editing and track logic", "FastAPI and Node.js behind media tooling"],
-    tags: ["React", "TypeScript", "FastAPI", "FFmpeg"],
+    bullets: ["Built real-time studio and editing flows with Socket.IO, WaveSurfer.js, and MediaPipe/TensorFlow tooling", "Implemented form-heavy product surfaces using React Hook Form + Zod with SWR data fetching", "Contributed to FastAPI services, MongoDB-backed modules, and Dockerized deployment workflows"],
+    tags: ["Next.js", "TypeScript", "FastAPI", "Socket.IO", "MongoDB", "WaveSurfer.js"],
   },
   {
     name: "Sigma Autonomous Car",
@@ -79,15 +79,15 @@ const projectItems: ProjectItem[] = [
 const skillMap: Record<SkillCategory, Array<{ name: string; level: number; note: string }>> = {
   frontend: [
     { name: "React", level: 92, note: "Component architecture & interfaces" },
-    { name: "Next.js", level: 90, note: "App router, SSR, product flows" },
+    { name: "Next.js", level: 90, note: "App Router, Turbopack, production features" },
     { name: "TypeScript", level: 88, note: "Type-safe UI and data logic" },
-    { name: "HTML / CSS", level: 95, note: "Visual polish and layout control" },
+    { name: "Tailwind CSS + Radix UI", level: 90, note: "Design systems and scalable UI primitives" },
   ],
   backend: [
-    { name: "Node.js / Express", level: 84, note: "API design and server logic" },
-    { name: "FastAPI", level: 82, note: "Clean Python backend services" },
-    { name: "MongoDB", level: 80, note: "Data models and persistence" },
-    { name: "REST APIs", level: 90, note: "Clear integration contracts" },
+    { name: "FastAPI", level: 86, note: "Python services and business logic layers" },
+    { name: "MongoDB", level: 83, note: "Collections, schemas, and repository patterns" },
+    { name: "Socket.IO", level: 82, note: "WebSocket-driven real-time product workflows" },
+    { name: "REST APIs", level: 90, note: "Clear contracts across frontend and backend" },
   ],
   systems: [
     { name: "C / C++", level: 80, note: "Embedded control and firmware" },
@@ -97,9 +97,10 @@ const skillMap: Record<SkillCategory, Array<{ name: string; level: number; note:
   ],
   tooling: [
     { name: "Git / GitHub", level: 92, note: "Collaboration and code review" },
-    { name: "Docker / Azure", level: 76, note: "Deployment-ready habits" },
-    { name: "Figma", level: 78, note: "Design system communication" },
-    { name: "Jira / VS Code", level: 88, note: "Disciplined delivery workflow" },
+    { name: "Docker / Compose / ACR", level: 82, note: "Containerized builds and deployment pipelines" },
+    { name: "SWR + React Hook Form + Zod", level: 86, note: "Reliable data and validation workflows" },
+    { name: "Framer Motion + Recharts", level: 78, note: "Interactive UX and data visualization" },
+    { name: "ESLint + TypeScript", level: 88, note: "Consistent code quality and type safety" },
   ],
 };
 
