@@ -80,7 +80,7 @@ const projectItems: ProjectItem[] = [
     summary: "Worked in a monorepo podcast platform with Next.js App Router, FastAPI, MongoDB, and Socket.IO to deliver studio, editing, publishing, and marketplace experiences.",
     links: [
       { label: "View Case Study", href: "/projects/podmanager" },
-      { label: "GitHub Profile", href: "https://github.com/Julieanna97", external: true },
+      { label: "Website", href: "https://www.podmanager.ai/", external: true },
     ],
     bullets: ["Built real-time studio and editing flows with Socket.IO, WaveSurfer.js, and MediaPipe/TensorFlow tooling", "Implemented form-heavy product surfaces using React Hook Form + Zod with SWR data fetching", "Contributed to FastAPI services, MongoDB-backed modules, and Dockerized deployment workflows"],
     tags: ["Next.js", "TypeScript", "FastAPI", "Socket.IO", "MongoDB", "WaveSurfer.js"],
