@@ -18,8 +18,14 @@ export default function Navbar() {
   const { data: session, status } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Keep the home portfolio and archived PracticePal demo clean (no shared navbar)
-  if (pathname === "/" || pathname === "/projects/practicepal/landing") return null;
+  // Keep portfolio and PracticePal showcase pages clean (no shared navbar)
+  if (
+    pathname === "/" ||
+    pathname === "/projects/practicepal" ||
+    pathname === "/projects/practicepal/landing"
+  ) {
+    return null;
+  }
 
   const isAuthed = !!session?.user;
 

@@ -40,7 +40,21 @@ const projectItems: ProjectItem[] = [
     name: "PracticePal",
     category: "Full Product",
     summary: "A practice planning and analytics SaaS for musicians — authentication, session tracking, plans, and subscriptions from zero to launch.",
-    links: [{ label: "View Demo", href: "/projects/practicepal/landing" }, { label: "GitHub", href: "https://github.com/Julieanna97/PracticePal", external: true }],
+    links: [
+    {
+      label: "View Case Study",
+      href: "/projects/practicepal",
+    },
+    {
+      label: "View Demo",
+      href: "/projects/practicepal/landing",
+    },
+    {
+      label: "GitHub",
+      href: "https://github.com/Julieanna97/PracticePal",
+      external: true,
+    },
+  ],
     bullets: ["Next.js app router with MongoDB and NextAuth", "Stripe subscription flows and webhook syncing", "End-to-end SaaS story from concept to launch"],
     tags: ["Next.js", "MongoDB", "Stripe", "NextAuth"],
   },
