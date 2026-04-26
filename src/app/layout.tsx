@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: "Julie Anne Cantillep | Fullstack Portfolio",
   description: "A creative portfolio showcasing fullstack engineering, embedded systems work, and AI-focused experience.",
   icons: {
-    icon: "/favicon.svg",
+    icon: "/favicon.png",
   },
 };
 
@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <head>
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.png" type="public/png" />
       </head>
       <body className="antialiased">
         <Providers>

@@ -934,16 +934,16 @@ export default function PortfolioShowcase() {
         {/* LEFT SIDE */}
         <div className="intro-left fade-up d2">
           <h1 className="intro-heading">
-            I'm a fullstack<br />
+            I'm a software<br />
             developer.<br />
             Let's build.
           </h1>
 
           <p className="intro-body">
-            I build thoughtful interfaces, reliable backend flows, and embedded
-            systems that connect design intuition with technical depth — from React
-            and Next.js to LoRa wireless and Arduino. Based in Malmö, Sweden.
-            Open to SWE and product roles.
+            I build modern software across frontend, backend, and embedded 
+            systems — from React and scalable APIs to intelligent IoT devices 
+            and hardware-connected products. Based in Malmö, Sweden. 
+            Open to software engineering and product development roles.
           </p>
 
           <button
