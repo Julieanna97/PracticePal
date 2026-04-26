@@ -1,95 +1,110 @@
 import Link from "next/link";
 
 const metrics = [
-  { label: "Product Type", value: "Podcast SaaS" },
-  { label: "Role", value: "Fullstack" },
-  { label: "Core Stack", value: "Next.js" },
-  { label: "Focus", value: "Media AI" },
+  { label: "Project Type", value: "Internship" },
+  { label: "Role",         value: "Fullstack Dev" },
+  { label: "Team Size",    value: "Production" },
+  { label: "Domain",       value: "Podcast SaaS" },
 ];
 
 const wins = [
   {
-    title: "Real product codebase",
-    text: "Worked inside a larger podcast platform with existing architecture, product requirements, Git workflows, and team feedback.",
+    title: "Joined a real production codebase",
+    text: "Onboarded into an existing Next.js 16 + FastAPI monorepo, learned the conventions, and started shipping features alongside the team.",
   },
   {
-    title: "Media editing workflows",
-    text: "Contributed to browser-based audio and video editing experiences, including media controls, preview flows, and episode tooling.",
+    title: "Shipped media editing surfaces",
+    text: "Worked on browser-based audio and video editing — waveform interactions, track logic, preview flows, and the supporting backend processing.",
   },
   {
-    title: "AI-powered podcast tools",
-    text: "Worked around AI features such as transcription, audio enhancement, voice isolation, translation, speaker workflows, and smart editing logic.",
+    title: "Worked on real-time studio flows",
+    text: "Contributed to the WebRTC + Socket.IO recording experience: multi-participant sessions, separate-track recording, host/guest roles.",
   },
   {
-    title: "Fullstack product delivery",
-    text: "Built and improved product-facing features across Next.js, TypeScript, FastAPI, MongoDB, Socket.IO, and deployment-related workflows.",
+    title: "Touched the full delivery pipeline",
+    text: "From React Hook Form + Zod product surfaces, to FastAPI services and MongoDB models, to Dockerized deployment toward Azure Container Registry.",
   },
 ];
 
 const features = [
   {
     eyebrow: "01",
-    title: "Editing Tools",
+    title: "Recording Studio",
     detail:
-      "Podcast editing surfaces for media workflows, waveform-style interactions, previews, and episode processing logic.",
+      "Multi-participant WebRTC sessions with WebSocket sync, separate-track recording, screen share, and live chat during sessions.",
   },
   {
     eyebrow: "02",
-    title: "Recording Studio",
+    title: "Episode Editing",
     detail:
-      "Product areas connected to real-time recording, participants, controls, studio sessions, and media handling.",
+      "Waveform-driven audio editing, AI enhancement, transcription, speaker diarization, video trim, and chapter identification.",
   },
   {
     eyebrow: "03",
     title: "AI Workflows",
     detail:
-      "AI-supported podcast tooling such as transcription, translation, enhancement, speaker logic, and smart content processing.",
+      "Voice isolation, multi-language transcription and translation, speaker diarization, smart cuts, and notes generation.",
   },
   {
     eyebrow: "04",
     title: "Platform Modules",
     detail:
-      "Broader product areas for episodes, guests, marketplace, publishing workflows, billing, and team collaboration.",
+      "Guest management, ad store, freelancer marketplace, proposal flows, and the publishing workflow that ties everything together.",
   },
-];
-
-const process = [
-  "Create podcast",
-  "Record episode",
-  "Edit media",
-  "Apply AI tools",
-  "Publish workflow",
 ];
 
 const sections = [
   {
     number: "01",
-    title: "Real Product Work",
-    text: "PodManager.ai gave me experience working inside a larger production-style platform, not just a small isolated project. I contributed to features across podcast creation, editing, recording, and publishing workflows.",
+    title: "Reading code before writing it",
+    text: "First time joining a real production codebase. I learned to navigate existing patterns, follow the team’s conventions, and contribute without breaking things — a different skill from building from scratch.",
   },
   {
     number: "02",
-    title: "Media Engineering",
-    text: "The work involved audio and video interfaces, media previews, waveform-style controls, and backend processing logic. It helped me grow in frontend detail work while understanding how media features depend on stable backend flows.",
+    title: "Shipping into a moving system",
+    text: "Features had to integrate with what was already there: shared types, shared services, shared deploy. I learned to think about how my changes affected other people’s work, not just my branch.",
   },
   {
     number: "03",
-    title: "Team Delivery",
-    text: "I worked with an existing codebase, product requirements, Git workflows, debugging, and implementation feedback. This strengthened my ability to contribute in a real software team environment.",
+    title: "Real-time and media problems",
+    text: "Recording studios depend on timing, sync, and async UI feedback. Working on WebRTC, Socket.IO, and waveform tooling pushed me deeper into the browser than typical CRUD work ever does.",
+  },
+];
+
+const platformStats = [
+  { num: "8+",         label: "Product modules touched" },
+  { num: "Real-time",  label: "Recording studio flows" },
+  { num: "AI-powered", label: "Editing surfaces" },
+  { num: "Monorepo",   label: "Frontend + Backend" },
+];
+
+const reflections = [
+  {
+    label: "What was new",
+    text: "Code review. Pull request feedback. Reading conventions instead of inventing them. The team experience is what separates this project from anything I’ve built solo.",
+  },
+  {
+    label: "What I got better at",
+    text: "Asking the right questions early, reading unfamiliar code without panicking, and shipping incremental changes that integrate cleanly with what’s already there.",
+  },
+  {
+    label: "What I’m taking forward",
+    text: "An intuition for how production teams actually move — small PRs, clear commits, conventions before cleverness. PodManager turned me from someone who can build, into someone who can join.",
   },
 ];
 
 const stack = [
-  "Next.js",
+  "Next.js 16",
   "TypeScript",
   "Tailwind CSS",
   "FastAPI",
   "MongoDB",
   "Socket.IO",
+  "WebRTC",
   "WaveSurfer.js",
   "FFmpeg",
   "Docker",
-  "Azure",
+  "Azure Container Registry",
 ];
 
 export default function PodManagerCaseStudyPage() {
@@ -104,16 +119,21 @@ export default function PodManagerCaseStudyPage() {
         </Link>
 
         <div className="flex items-center gap-5 text-xs font-black uppercase tracking-[0.18em]">
-          <Link href="/#projects" className="hover:text-[#e8613a]">
-            Projects
-          </Link>
           <Link
             href="https://www.podmanager.ai/"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-[#e8613a]"
           >
-            Website
+            Visit Site
+          </Link>
+          <Link
+            href="https://github.com/Julieanna97"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-[#e8613a]"
+          >
+            GitHub
           </Link>
         </div>
       </nav>
@@ -133,23 +153,19 @@ export default function PodManagerCaseStudyPage() {
             </Link>
 
             <p className="mb-6 text-xs font-black uppercase tracking-[0.26em] text-[#e8613a]">
-              Internship Case Study
+              Internship · 2025 — 2026
             </p>
 
-            <h1 className="max-w-4xl font-black uppercase leading-[0.78] tracking-[-0.06em]">
-              <span className="block text-[clamp(4rem,9vw,9rem)]">
-                PodManager
-              </span>
-              <span className="block text-[clamp(4rem,9vw,9rem)] text-[#f5a0c8]">
-                .ai
-              </span>
+            {/* FIXED: smaller clamp so PodManager.ai fits inside the column */}
+            <h1 className="max-w-4xl text-[clamp(2.5rem,7vw,7rem)] font-black uppercase leading-[0.82] tracking-[-0.05em]">
+              Pod<span className="text-[#f5a0c8]">Manager</span><span className="text-[#e8613a]">.ai</span>
             </h1>
 
             <p className="mt-8 max-w-2xl text-sm font-medium uppercase leading-8 tracking-[0.08em] text-[#3a1818] md:text-base">
-              A podcast management platform with AI-powered editing, real-time
-              recording studio features, guest management, marketplace modules,
-              and publishing workflows. I contributed as a fullstack developer
-              intern across media and platform features.
+              I joined the PodManager team and shipped features inside a real
+              production codebase — recording studio, editing tools, AI
+              workflows. This is the project where I learned to build inside
+              a team, not just by myself.
             </p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -159,14 +175,16 @@ export default function PodManagerCaseStudyPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-full border border-[#1a0808] bg-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] text-[#f0ece4] transition hover:bg-transparent hover:text-[#1a0808]"
               >
-                Visit Website
+                See It Live
               </Link>
 
               <Link
-                href="/#projects"
+                href="https://github.com/Julieanna97"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-full border border-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] transition hover:bg-[#1a0808] hover:text-[#f0ece4]"
               >
-                Back to Projects
+                GitHub Profile
               </Link>
             </div>
           </div>
@@ -178,22 +196,18 @@ export default function PodManagerCaseStudyPage() {
                 0%, 100% { transform: translateY(0) rotate(-1deg); }
                 50% { transform: translateY(-14px) rotate(1deg); }
               }
-
               @keyframes pulseDot {
                 0%, 100% { opacity: 0.55; transform: scale(1); }
                 50% { opacity: 1; transform: scale(1.25); }
               }
-
               @keyframes waveMove {
                 0%, 100% { transform: scaleY(0.72); opacity: 0.65; }
                 50% { transform: scaleY(1); opacity: 1; }
               }
-
               @keyframes processingGlow {
                 0%, 100% { box-shadow: 0 0 0 rgba(245,160,200,0); }
                 50% { box-shadow: 0 0 34px rgba(245,160,200,0.26); }
               }
-
               @keyframes slideProgress {
                 0% { transform: translateX(-100%); }
                 100% { transform: translateX(260%); }
@@ -345,14 +359,14 @@ export default function PodManagerCaseStudyPage() {
         ))}
       </section>
 
-      {/* OVERVIEW */}
+      {/* WHAT I BUILT */}
       <section className="grid gap-12 px-6 py-20 md:px-12 lg:grid-cols-[0.85fr_1.15fr]">
         <div>
           <p className="mb-5 text-xs font-black uppercase tracking-[0.24em] text-[#e8613a]">
-            Overview
+            What I Shipped
           </p>
-          <h2 className="text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.86] tracking-[-0.05em]">
-            Built inside a real product team.
+          <h2 className="text-[clamp(2.5rem,6vw,6rem)] font-black uppercase leading-[0.86] tracking-[-0.04em]">
+            Real features. Real codebase.
           </h2>
         </div>
 
@@ -373,13 +387,33 @@ export default function PodManagerCaseStudyPage() {
         </div>
       </section>
 
-      {/* BREAKDOWN */}
+      {/* PLATFORM SCALE */}
+      <section className="border-y border-[#1a0808]/10 bg-[#f5a0c8] px-6 py-20 md:px-12">
+        <p className="mb-10 text-xs font-black uppercase tracking-[0.24em] text-[#1a0808]">
+          Scope of Platform
+        </p>
+
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+          {platformStats.map((stat) => (
+            <div key={stat.label} className="border-l-2 border-[#1a0808] pl-5">
+              <p className="text-[clamp(2rem,4vw,3.5rem)] font-black uppercase leading-none tracking-[-0.04em] text-[#1a0808]">
+                {stat.num}
+              </p>
+              <p className="mt-3 text-xs font-black uppercase leading-tight tracking-[0.16em] text-[#1a0808]/70">
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* WHAT CHANGED FOR ME */}
       <section className="relative overflow-hidden bg-[#1a0808] px-6 py-24 text-[#f5a0c8] md:px-12">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(245,160,200,0.12),transparent_35%),radial-gradient(circle_at_80%_70%,rgba(232,97,58,0.12),transparent_35%)]" />
 
         <div className="relative">
           <p className="mb-10 text-xs font-black uppercase tracking-[0.24em]">
-            Project Breakdown
+            What Changed for Me
           </p>
 
           <div className="grid gap-5 lg:grid-cols-3">
@@ -391,7 +425,7 @@ export default function PodManagerCaseStudyPage() {
                 <p className="mb-14 text-xs font-black text-[#f5a0c8]/50">
                   {item.number}
                 </p>
-                <h2 className="text-4xl font-black uppercase leading-none">
+                <h2 className="text-3xl font-black uppercase leading-tight md:text-4xl">
                   {item.title}
                 </h2>
                 <p className="mt-6 text-sm font-medium leading-7 text-[#f0ece4]/65">
@@ -403,22 +437,22 @@ export default function PodManagerCaseStudyPage() {
         </div>
       </section>
 
-      {/* FEATURES */}
+      {/* PRODUCT MODULES */}
       <section className="px-6 py-24 md:px-12">
         <div className="mb-14 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
             <p className="mb-5 text-xs font-black uppercase tracking-[0.24em] text-[#e8613a]">
-              Product Areas
+              Product Modules
             </p>
-            <h2 className="text-[clamp(3rem,8vw,8rem)] font-black uppercase leading-[0.82] tracking-[-0.05em]">
-              What I worked around.
+            <h2 className="text-[clamp(2.5rem,6vw,6rem)] font-black uppercase leading-[0.86] tracking-[-0.04em]">
+              What ships in PodManager.
             </h2>
           </div>
 
           <p className="max-w-3xl self-end text-sm font-medium uppercase leading-8 tracking-[0.08em] text-[#3a1818] md:text-base">
-            The platform combines media editing, AI tooling, recording studio
-            workflows, guest management, marketplace features, and publishing in
-            one product ecosystem.
+            PodManager is a full podcast platform — recording studio, editing
+            suite, AI workflows, and a marketplace. I touched modules across
+            most of the surface, not just one corner.
           </p>
         </div>
 
@@ -442,64 +476,37 @@ export default function PodManagerCaseStudyPage() {
         </div>
       </section>
 
-      {/* PROCESS */}
-      <section className="bg-[#f5a0c8] px-6 py-24 text-[#1a0808] md:px-12">
-        <p className="mb-8 text-xs font-black uppercase tracking-[0.24em]">
-          Product Flow
-        </p>
+      {/* REFLECTION */}
+      <section className="bg-[#2e0e0e] px-6 py-24 text-[#f0ece4] md:px-12">
+        <div className="mb-14 grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+          <div>
+            <p className="mb-5 text-xs font-black uppercase tracking-[0.24em] text-[#f5a0c8]">
+              Reflection
+            </p>
+            <h2 className="text-[clamp(2.5rem,6vw,6rem)] font-black uppercase leading-[0.86] tracking-[-0.04em] text-[#f5a0c8]">
+              From building to joining.
+            </h2>
+          </div>
+          <p className="max-w-2xl text-sm font-medium uppercase leading-8 tracking-[0.08em] text-[#f0ece4]/60 md:text-base">
+            The biggest shift wasn’t technical. It was learning how
+            production teams actually work — and how my code fits inside
+            other people’s.
+          </p>
+        </div>
 
-        <div className="grid gap-4 md:grid-cols-5">
-          {process.map((step, index) => (
+        <div className="grid gap-5 md:grid-cols-3">
+          {reflections.map((item) => (
             <article
-              key={step}
-              className="min-h-[230px] rounded-[1.75rem] border border-[#1a0808]/20 bg-[#f0ece4]/45 p-6 transition hover:bg-[#f0ece4]"
+              key={item.label}
+              className="rounded-[2rem] border border-[#f5a0c8]/20 bg-[#f5a0c8]/5 p-7 transition hover:bg-[#f5a0c8]/10"
             >
-              <p className="mb-14 text-xs font-black text-[#1a0808]/45">
-                0{index + 1}
+              <p className="mb-10 text-xs font-black uppercase tracking-[0.22em] text-[#f5a0c8]">
+                {item.label}
               </p>
-              <h3 className="text-2xl font-black uppercase leading-none">
-                {step}
-              </h3>
+              <p className="text-sm font-medium leading-8 text-[#f0ece4]/75">
+                {item.text}
+              </p>
             </article>
-          ))}
-        </div>
-      </section>
-
-      {/* ARCHITECTURE */}
-      <section className="grid gap-12 px-6 py-24 md:px-12 lg:grid-cols-[0.95fr_1.05fr]">
-        <div>
-          <p className="mb-5 text-xs font-black uppercase tracking-[0.24em] text-[#e8613a]">
-            Architecture
-          </p>
-          <h2 className="text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.86] tracking-[-0.05em]">
-            Media platform logic.
-          </h2>
-          <p className="mt-8 max-w-2xl text-sm font-medium uppercase leading-8 tracking-[0.08em] text-[#3a1818]">
-            PodManager.ai helped me understand how product features connect
-            across frontend screens, backend APIs, real-time updates, database
-            models, media processing, and cloud workflows.
-          </p>
-        </div>
-
-        <div className="rounded-[2rem] border border-[#1a0808]/10 bg-white/35 p-6">
-          {[
-            ["User", "Creates podcasts, episodes, guests, and recording sessions"],
-            ["Studio", "Handles recording, participants, controls, and live flows"],
-            ["Editor", "Supports media editing, previews, waveform views, and tools"],
-            ["Backend", "Connects FastAPI services, MongoDB data, and processing jobs"],
-            ["Publishing", "Moves edited episodes through final publishing workflows"],
-          ].map(([label, text], index) => (
-            <div
-              key={label}
-              className="grid gap-4 border-b border-[#1a0808]/10 py-5 last:border-b-0 md:grid-cols-[120px_1fr]"
-            >
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-[#e8613a]">
-                0{index + 1} · {label}
-              </p>
-              <p className="text-sm font-medium uppercase leading-7 tracking-[0.06em] text-[#3a1818]">
-                {text}
-              </p>
-            </div>
           ))}
         </div>
       </section>
@@ -511,8 +518,8 @@ export default function PodManagerCaseStudyPage() {
             <p className="mb-5 text-xs font-black uppercase tracking-[0.24em] text-[#f5a0c8]">
               Technical Stack
             </p>
-            <h2 className="text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.86] tracking-[-0.05em]">
-              Built in a modern monorepo.
+            <h2 className="text-[clamp(2.5rem,6vw,6rem)] font-black uppercase leading-[0.86] tracking-[-0.04em]">
+              The tools I worked across.
             </h2>
           </div>
 
@@ -536,11 +543,16 @@ export default function PodManagerCaseStudyPage() {
         <div className="relative flex flex-col justify-between gap-8 md:flex-row md:items-end">
           <div>
             <p className="mb-6 text-xs font-black uppercase tracking-[0.24em] text-[#1a0808]">
-              Internship Work
+              Live Product
             </p>
-            <h2 className="max-w-5xl text-[clamp(3.5rem,9vw,9rem)] font-black uppercase leading-[0.78] tracking-[-0.06em] text-[#1a0808]">
-              Product work across media, AI, and publishing.
+            <h2 className="max-w-5xl text-[clamp(3rem,8vw,8rem)] font-black uppercase leading-[0.82] tracking-[-0.05em] text-[#1a0808]">
+              See it live.
             </h2>
+            <p className="mt-6 max-w-xl text-sm font-medium uppercase leading-7 tracking-[0.08em] text-[#1a0808]/75 md:text-base">
+              PodManager.ai is in production. Visit the site to see the
+              platform I worked on — recording, editing, AI tools, and
+              marketplace.
+            </p>
           </div>
 
           <div className="flex shrink-0 flex-col gap-4 sm:flex-row">
@@ -550,14 +562,14 @@ export default function PodManagerCaseStudyPage() {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-full border border-[#1a0808] bg-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] text-[#f0ece4] transition hover:bg-transparent hover:text-[#1a0808]"
             >
-              Visit Website
+              Visit PodManager.ai
             </Link>
 
             <Link
-              href="/#contact"
+              href="/#projects"
               className="inline-flex items-center justify-center rounded-full border border-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] text-[#1a0808] transition hover:bg-[#1a0808] hover:text-[#f0ece4]"
             >
-              Contact Me
+              All Projects
             </Link>
           </div>
         </div>

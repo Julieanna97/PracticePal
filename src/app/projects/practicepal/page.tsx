@@ -2,27 +2,27 @@ import Link from "next/link";
 
 const metrics = [
   { label: "Product Type", value: "SaaS" },
-  { label: "Role", value: "Fullstack" },
-  { label: "Core Stack", value: "Next.js" },
-  { label: "Focus", value: "Musicians" },
+  { label: "Role",         value: "Solo Build" },
+  { label: "Stack Size",   value: "6 Tools" },
+  { label: "Focus",        value: "Musicians" },
 ];
 
 const wins = [
   {
-    title: "End-to-end product flow",
-    text: "Built the journey from authentication to planning, session logging, analytics, and subscription access.",
+    title: "Built end-to-end product flow",
+    text: "Designed and shipped the journey from sign-up to practice planning, session logging, analytics, and paid subscription access — solo.",
   },
   {
-    title: "Structured database design",
-    text: "Created MongoDB models for users, practice plans, sessions, and subscription-related state.",
+    title: "Modeled the data myself",
+    text: "Created MongoDB collections for users, plans, sessions, and subscription state, then connected them through NextAuth and a typed API layer.",
   },
   {
-    title: "Stripe subscription logic",
-    text: "Integrated billing flows and webhook syncing to keep user access and account state reliable.",
+    title: "Integrated real billing logic",
+    text: "Wired Stripe checkout, customer portal, and webhook syncing so subscription state actually drives access — not just a dummy paywall.",
   },
   {
-    title: "Responsive product UI",
-    text: "Designed dashboard, onboarding, forms, and progress views that work across screen sizes.",
+    title: "Designed every screen",
+    text: "Crafted dashboard, onboarding, plan editor, and progress views in Tailwind that hold up across breakpoints without an off-the-shelf UI kit.",
   },
 ];
 
@@ -31,25 +31,25 @@ const features = [
     eyebrow: "01",
     title: "Authentication",
     detail:
-      "Secure account flows for returning users, protected pages, and user-specific practice data.",
+      "NextAuth-powered sign-up and sign-in flows, with protected routes and per-user data scoping baked into the App Router.",
   },
   {
     eyebrow: "02",
     title: "Practice Planning",
     detail:
-      "Users can create structured practice plans, organize goals, and prepare focused sessions.",
+      "Users build structured practice plans with goals and focus areas, edit them over time, and reuse them across sessions.",
   },
   {
     eyebrow: "03",
     title: "Session Logging",
     detail:
-      "Practice sessions can be saved with duration, notes, focus areas, and progress context.",
+      "Sessions capture duration, notes, focus, and mood — feeding into the dashboard for streaks and weekly progress views.",
   },
   {
     eyebrow: "04",
     title: "Subscriptions",
     detail:
-      "Stripe-powered subscription flows with webhook syncing for account and billing state.",
+      "Stripe checkout, customer portal, and webhook sync keep account state in lockstep with payment events.",
   },
 ];
 
@@ -64,18 +64,33 @@ const process = [
 const sections = [
   {
     number: "01",
-    title: "Product Thinking",
-    text: "PracticePal started as a real product idea: helping musicians practice more consistently with plans, sessions, and progress visibility. I focused on user flow, structure, and long-term usefulness.",
+    title: "Started with a real problem",
+    text: "Built around a concrete pain point — musicians struggling to practice consistently. I focused on user flow and progression rather than scope creep, which kept the product useful instead of bloated.",
   },
   {
     number: "02",
-    title: "Fullstack Build",
-    text: "The project connects frontend screens with backend logic, authentication, database models, and subscription handling. It shows that I can work across the full product stack.",
+    title: "Built across the whole stack",
+    text: "Connected frontend screens to backend logic, auth, database models, and subscription handling. Owning every layer forced me to think about how data flows — not just how a component renders.",
   },
   {
     number: "03",
-    title: "Business Logic",
-    text: "Stripe billing, account state, protected routes, and saved user data made the project more realistic and taught me how product features depend on reliable backend design.",
+    title: "Wired in real business logic",
+    text: "Treated Stripe billing, account state, and protected routes as core features. Shipping a paywall that actually controls access taught me how product features depend on backend consistency.",
+  },
+];
+
+const reflections = [
+  {
+    label: "What worked",
+    text: "Treating PracticePal as a real product, not a class assignment, changed how I made decisions. Every feature had to earn its place — easier to cut than to ship.",
+  },
+  {
+    label: "What I’d do differently",
+    text: "Next time I’d write the data model on paper before any code. I refactored MongoDB schemas twice mid-build because I underestimated how plans, sessions, and billing would relate.",
+  },
+  {
+    label: "Biggest takeaway",
+    text: "Owning the full SaaS loop — auth, data, billing, dashboard — gave me an intuition for product flow you can’t get from tutorials or single-feature exercises.",
   },
 ];
 
@@ -125,23 +140,19 @@ export default function PracticePalCaseStudyPage() {
             </Link>
 
             <p className="mb-6 text-xs font-black uppercase tracking-[0.26em] text-[#e8613a]">
-              Full Product Case Study
+              Solo Product · 2025
             </p>
 
-            <h1 className="max-w-4xl font-black uppercase leading-[0.78] tracking-[-0.06em]">
-              <span className="block text-[clamp(4.5rem,10vw,10rem)]">
-                Practice
-              </span>
-              <span className="block text-[clamp(4.5rem,10vw,10rem)] text-[#f5a0c8]">
-                Pal
-              </span>
+            {/* FIXED: smaller clamp so the title fits inside the column */}
+            <h1 className="max-w-4xl text-[clamp(3rem,8vw,8rem)] font-black uppercase leading-[0.82] tracking-[-0.05em]">
+              Practice<span className="text-[#f5a0c8]">Pal</span>
             </h1>
 
             <p className="mt-8 max-w-2xl text-sm font-medium uppercase leading-8 tracking-[0.08em] text-[#3a1818] md:text-base">
-              A fullstack practice planning and analytics app for musicians. I
-              built it to show product thinking, frontend execution, backend
-              structure, authentication, database design, and subscription logic
-              in one complete software product.
+              I built PracticePal solo from idea to paid subscription — auth,
+              data models, dashboard, and Stripe billing. It’s the project
+              where I learned how a SaaS actually fits together, not just how
+              individual features render.
             </p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -149,7 +160,7 @@ export default function PracticePalCaseStudyPage() {
                 href="/auth/login?callbackUrl=%2Fdashboard"
                 className="inline-flex items-center justify-center rounded-full border border-[#1a0808] bg-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] text-[#f0ece4] transition hover:bg-transparent hover:text-[#1a0808]"
               >
-                View Demo
+                Try the Demo
               </Link>
 
               <Link
@@ -170,22 +181,18 @@ export default function PracticePalCaseStudyPage() {
                 0%, 100% { transform: translateY(0) rotate(-1deg); }
                 50% { transform: translateY(-14px) rotate(1deg); }
               }
-
               @keyframes pulseDot {
                 0%, 100% { opacity: 0.55; transform: scale(1); }
                 50% { opacity: 1; transform: scale(1.25); }
               }
-
               @keyframes barGrow {
                 0%, 100% { transform: scaleY(0.78); opacity: 0.72; }
                 50% { transform: scaleY(1); opacity: 1; }
               }
-
               @keyframes planGlow {
                 0%, 100% { box-shadow: 0 0 0 rgba(245,160,200,0); }
                 50% { box-shadow: 0 0 34px rgba(245,160,200,0.28); }
               }
-
               @keyframes scanProgress {
                 0% { transform: translateX(-100%); }
                 100% { transform: translateX(260%); }
@@ -208,7 +215,7 @@ export default function PracticePalCaseStudyPage() {
                       Dashboard
                     </p>
                     <h2 className="mt-2 text-3xl font-black uppercase leading-none">
-                      Today&apos;s Practice
+                      Today’s Practice
                     </h2>
                   </div>
 
@@ -231,11 +238,9 @@ export default function PracticePalCaseStudyPage() {
                       </p>
                       <span className="h-2.5 w-2.5 rounded-full bg-[#e8613a] motion-safe:animate-[pulseDot_1.6s_ease-in-out_infinite]" />
                     </div>
-
                     <p className="mt-10 text-3xl font-black uppercase leading-none">
                       Scales
                     </p>
-
                     <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-[#1a0808]/10 group-hover/card:bg-[#f0ece4]/20">
                       <span className="block h-full w-2/3 rounded-full bg-[#e8613a] transition group-hover/card:w-full" />
                     </div>
@@ -248,11 +253,9 @@ export default function PracticePalCaseStudyPage() {
                     <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1a0808]/60 transition group-hover/card:text-[#f0ece4]/70">
                       Streak
                     </p>
-
                     <p className="mt-10 text-5xl font-black uppercase leading-none transition group-hover/card:scale-110">
                       12
                     </p>
-
                     <p className="mt-4 text-xs font-black uppercase tracking-[0.14em] opacity-60">
                       Days in a row
                     </p>
@@ -265,11 +268,9 @@ export default function PracticePalCaseStudyPage() {
                     <p className="text-xs font-black uppercase tracking-[0.16em] text-[#7a5050] transition group-hover/card:text-[#f5a0c8]">
                       Time
                     </p>
-
                     <p className="mt-10 text-3xl font-black uppercase leading-none">
                       45m
                     </p>
-
                     <div className="mt-5 flex gap-1.5">
                       <span className="h-2 flex-1 rounded-full bg-[#f5a0c8]" />
                       <span className="h-2 flex-1 rounded-full bg-[#e8613a]" />
@@ -345,10 +346,10 @@ export default function PracticePalCaseStudyPage() {
       <section className="grid gap-12 px-6 py-20 md:px-12 lg:grid-cols-[0.85fr_1.15fr]">
         <div>
           <p className="mb-5 text-xs font-black uppercase tracking-[0.24em] text-[#e8613a]">
-            Overview
+            What I Built
           </p>
-          <h2 className="text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.86] tracking-[-0.05em]">
-            Built beyond a simple landing page.
+          <h2 className="text-[clamp(2.5rem,6vw,6rem)] font-black uppercase leading-[0.86] tracking-[-0.04em]">
+            A complete SaaS, owned end-to-end.
           </h2>
         </div>
 
@@ -375,7 +376,7 @@ export default function PracticePalCaseStudyPage() {
 
         <div className="relative">
           <p className="mb-10 text-xs font-black uppercase tracking-[0.24em]">
-            Project Breakdown
+            How It Came Together
           </p>
 
           <div className="grid gap-5 lg:grid-cols-3">
@@ -387,7 +388,7 @@ export default function PracticePalCaseStudyPage() {
                 <p className="mb-14 text-xs font-black text-[#f5a0c8]/50">
                   {item.number}
                 </p>
-                <h2 className="text-4xl font-black uppercase leading-none">
+                <h2 className="text-3xl font-black uppercase leading-tight md:text-4xl">
                   {item.title}
                 </h2>
                 <p className="mt-6 text-sm font-medium leading-7 text-[#f0ece4]/65">
@@ -404,16 +405,17 @@ export default function PracticePalCaseStudyPage() {
         <div className="mb-14 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
             <p className="mb-5 text-xs font-black uppercase tracking-[0.24em] text-[#e8613a]">
-              Product Features
+              Inside the Product
             </p>
-            <h2 className="text-[clamp(3rem,8vw,8rem)] font-black uppercase leading-[0.82] tracking-[-0.05em]">
-              What ships inside PracticePal.
+            <h2 className="text-[clamp(2.5rem,6vw,6rem)] font-black uppercase leading-[0.86] tracking-[-0.04em]">
+              What ships in PracticePal.
             </h2>
           </div>
 
           <p className="max-w-3xl self-end text-sm font-medium uppercase leading-8 tracking-[0.08em] text-[#3a1818] md:text-base">
-            The case study now combines the previous demo page and the technical
-            breakdown in one stronger product story.
+            Four core features doing real work — not screen-deep mockups.
+            Auth gates the data, plans drive the sessions, sessions feed the
+            dashboard, and Stripe controls who sees what.
           </p>
         </div>
 
@@ -440,7 +442,7 @@ export default function PracticePalCaseStudyPage() {
       {/* PROCESS */}
       <section className="bg-[#f5a0c8] px-6 py-24 text-[#1a0808] md:px-12">
         <p className="mb-8 text-xs font-black uppercase tracking-[0.24em]">
-          Product Flow
+          How I Built It
         </p>
 
         <div className="grid gap-4 md:grid-cols-5">
@@ -466,23 +468,23 @@ export default function PracticePalCaseStudyPage() {
           <p className="mb-5 text-xs font-black uppercase tracking-[0.24em] text-[#e8613a]">
             Architecture
           </p>
-          <h2 className="text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.86] tracking-[-0.05em]">
-            Connected product logic.
+          <h2 className="text-[clamp(2.5rem,6vw,6rem)] font-black uppercase leading-[0.86] tracking-[-0.04em]">
+            How the pieces connect.
           </h2>
           <p className="mt-8 max-w-2xl text-sm font-medium uppercase leading-8 tracking-[0.08em] text-[#3a1818]">
-            PracticePal helped me understand how user experience depends on
-            stable backend logic, database structure, protected routes, and
-            subscription-aware account state.
+            User experience depends on stable backend logic. PracticePal taught
+            me how database structure, protected routes, and subscription state
+            all need to agree — or the dashboard lies to the user.
           </p>
         </div>
 
         <div className="rounded-[2rem] border border-[#1a0808]/10 bg-white/35 p-6">
           {[
-            ["User", "Signs in with OAuth / account flow"],
-            ["App", "Creates plans and logs practice sessions"],
-            ["Database", "Stores user data, plans, sessions, and progress"],
-            ["Stripe", "Handles subscription and billing state"],
-            ["Dashboard", "Shows practice progress and product value"],
+            ["User",      "Signs in with NextAuth, account scoped per user"],
+            ["App",       "Creates plans, logs sessions, viewable from dashboard"],
+            ["Database",  "MongoDB collections for users, plans, sessions, billing"],
+            ["Stripe",    "Drives subscription state via checkout + webhooks"],
+            ["Dashboard", "Surfaces streaks, weekly progress, and active plan"],
           ].map(([label, text], index) => (
             <div
               key={label}
@@ -499,6 +501,40 @@ export default function PracticePalCaseStudyPage() {
         </div>
       </section>
 
+      {/* REFLECTION */}
+      <section className="bg-[#2e0e0e] px-6 py-24 text-[#f0ece4] md:px-12">
+        <div className="mb-14 grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+          <div>
+            <p className="mb-5 text-xs font-black uppercase tracking-[0.24em] text-[#f5a0c8]">
+              Reflection
+            </p>
+            <h2 className="text-[clamp(2.5rem,6vw,6rem)] font-black uppercase leading-[0.86] tracking-[-0.04em] text-[#f5a0c8]">
+              What this project taught me.
+            </h2>
+          </div>
+          <p className="max-w-2xl text-sm font-medium uppercase leading-8 tracking-[0.08em] text-[#f0ece4]/60 md:text-base">
+            A case study without reflection is just a feature list. Here’s
+            what I’d carry into the next product I build.
+          </p>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-3">
+          {reflections.map((item) => (
+            <article
+              key={item.label}
+              className="rounded-[2rem] border border-[#f5a0c8]/20 bg-[#f5a0c8]/5 p-7 transition hover:bg-[#f5a0c8]/10"
+            >
+              <p className="mb-10 text-xs font-black uppercase tracking-[0.22em] text-[#f5a0c8]">
+                {item.label}
+              </p>
+              <p className="text-sm font-medium leading-8 text-[#f0ece4]/75">
+                {item.text}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       {/* STACK */}
       <section className="bg-[#1a0808] px-6 py-20 text-[#f0ece4] md:px-12">
         <div className="flex flex-col justify-between gap-10 lg:flex-row lg:items-end">
@@ -506,8 +542,8 @@ export default function PracticePalCaseStudyPage() {
             <p className="mb-5 text-xs font-black uppercase tracking-[0.24em] text-[#f5a0c8]">
               Technical Stack
             </p>
-            <h2 className="text-[clamp(3rem,7vw,7rem)] font-black uppercase leading-[0.86] tracking-[-0.05em]">
-              Built like a product.
+            <h2 className="text-[clamp(2.5rem,6vw,6rem)] font-black uppercase leading-[0.86] tracking-[-0.04em]">
+              Built like a real product.
             </h2>
           </div>
 
@@ -533,9 +569,13 @@ export default function PracticePalCaseStudyPage() {
             <p className="mb-6 text-xs font-black uppercase tracking-[0.24em] text-[#1a0808]">
               Live Demo
             </p>
-            <h2 className="max-w-5xl text-[clamp(3.5rem,9vw,9rem)] font-black uppercase leading-[0.78] tracking-[-0.06em] text-[#1a0808]">
-              Explore the product flow.
+            <h2 className="max-w-5xl text-[clamp(3rem,8vw,8rem)] font-black uppercase leading-[0.82] tracking-[-0.05em] text-[#1a0808]">
+              Try the demo.
             </h2>
+            <p className="mt-6 max-w-xl text-sm font-medium uppercase leading-7 tracking-[0.08em] text-[#1a0808]/75 md:text-base">
+              Sign in with the demo account and explore plans, sessions,
+              dashboard, and the Stripe upgrade flow.
+            </p>
           </div>
 
           <div className="flex shrink-0 flex-col gap-4 sm:flex-row">
@@ -543,7 +583,7 @@ export default function PracticePalCaseStudyPage() {
               href="/auth/login?callbackUrl=%2Fdashboard"
               className="inline-flex items-center justify-center rounded-full border border-[#1a0808] bg-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] text-[#f0ece4] transition hover:bg-transparent hover:text-[#1a0808]"
             >
-              View Demo
+              Try the Demo
             </Link>
 
             <Link
