@@ -928,7 +928,8 @@ export default function PortfolioShowcase() {
             src="/profile.jpg"
             alt="Julie Anne Cantillep"
             fill
-            priority
+            loading="eager"
+            sizes="100vw"
             style={{
               objectFit: "cover",
               objectPosition: "center 20%",
@@ -978,6 +979,7 @@ export default function PortfolioShowcase() {
               src="/intro-img-1.png"
               alt="Julie Anne Cantillep"
               fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
               style={{
                 objectFit: "cover",
                 objectPosition: "center",
@@ -992,6 +994,7 @@ export default function PortfolioShowcase() {
             src="/intro-img.png"
             alt="Julie Anne Cantillep"
             fill
+            sizes="(max-width: 1024px) 100vw, 45vw"
             style={{
               objectFit: "cover",
               objectPosition: "center top",
@@ -1018,6 +1021,8 @@ export default function PortfolioShowcase() {
             src="/profile.jpg"
             alt="Julie Anne Cantillep"
             fill
+            loading="eager"
+            sizes="(max-width: 1024px) 100vw, 50vw"
             style={{ objectFit: "cover", objectPosition: "center top", filter: "brightness(0.6) saturate(0.7)" }}
           />
         </div>

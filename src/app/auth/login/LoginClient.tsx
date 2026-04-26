@@ -5,10 +5,25 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 
+function toInternalCallbackUrl(raw: string | null): string {
+  if (!raw) return "/dashboard";
+
+  const value = raw.trim();
+  if (value.startsWith("/")) return value;
+
+  try {
+    const parsed = new URL(value);
+    const relative = `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    return relative.startsWith("/") ? relative : "/dashboard";
+  } catch {
+    return "/dashboard";
+  }
+}
+
 export default function LoginClient() {
   const params = useSearchParams();
   const router = useRouter();
-  const callbackUrl = params.get("callbackUrl") ?? "/dashboard";
+  const callbackUrl = toInternalCallbackUrl(params.get("callbackUrl"));
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
