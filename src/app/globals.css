@@ -2,11 +2,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafafa;
-  --foreground: #171717;
+  --background: #f7f1ea;
+  --foreground: #1f2430;
   --surface: #ffffff;
-  --surface-muted: #f8fafc;
-  --ring: #e9d5ff;
+  --surface-muted: #f5f7fb;
+  --ring: rgba(109, 40, 217, 0.16);
 }
 
 @theme inline {
@@ -16,28 +16,23 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #fafafa; /* Keep light theme for consistency */
-    --foreground: #171717;
-  }
-}
-
-html, body {
-  min-height: 100vh;
-  width: 100%;
-  background: #f9f7f4;
-  cursor: url("https://media.tumblr.com/tumblr_m98z134kHu1qid2nw.gif"), auto;
+html {
+  min-height: 100%;
+  scroll-behavior: smooth;
+  background: var(--background);
 }
 
 body {
-  background: #f9f7f4;
-  color: #6b5d4f;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
   font-family: var(--font-geist-sans), "Segoe UI", sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   scrollbar-width: thin;
-  scrollbar-color: rgba(212, 165, 116, 0.5) rgba(249, 247, 244, 0.3);
+  scrollbar-color: rgba(109, 40, 217, 0.42) rgba(255, 255, 255, 0.36);
 }
 
 /* Webkit scrollbar styling */
@@ -46,21 +41,21 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(249, 247, 244, 0.3);
+  background: rgba(255, 255, 255, 0.36);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(212, 165, 116, 0.6), rgba(199, 125, 77, 0.6));
+  background: linear-gradient(180deg, rgba(109, 40, 217, 0.55), rgba(56, 189, 248, 0.55));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(199, 125, 77, 0.9), rgba(184, 101, 74, 0.9));
-  box-shadow: 0 0 8px rgba(199, 125, 77, 0.3);
+  background: linear-gradient(180deg, rgba(109, 40, 217, 0.9), rgba(56, 189, 248, 0.9));
+  box-shadow: 0 0 8px rgba(109, 40, 217, 0.26);
 }
 
 ::selection {
-  background: #d4a574;
+  background: rgba(109, 40, 217, 0.82);
   color: white;
 }
 
@@ -68,40 +63,33 @@ a,
 button,
 input,
 [role="button"] {
-  cursor: url("https://media.tumblr.com/tumblr_m98z134kHu1qid2nw.gif"), pointer;
-}
-
-a:hover,
-button:hover,
-input:hover,
-[role="button"]:hover {
-  cursor: url("https://static.tumblr.com/xjqjg7j/Mhcmxtzxp/84.gif"), pointer;
+  cursor: pointer;
 }
 
 .app-canvas {
   background:
-    radial-gradient(circle at 8% 8%, #ede9fe 0%, transparent 34%),
-    radial-gradient(circle at 92% 0%, #dbeafe 0%, transparent 34%),
+    radial-gradient(circle at 8% 8%, rgba(109, 40, 217, 0.08) 0%, transparent 34%),
+    radial-gradient(circle at 92% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 34%),
     linear-gradient(180deg, #f8fafc 0%, #ffffff 45%, #f8fafc 100%);
 }
 
 .glass-surface {
-  background: color-mix(in oklab, #ffffff 88%, #f5f3ff 12%);
-  border: 1px solid color-mix(in oklab, #ddd6fe 65%, #e2e8f0 35%);
-  box-shadow: 0 20px 55px -35px rgba(15, 23, 42, 0.45);
-  backdrop-filter: blur(6px);
+  background: color-mix(in oklab, #ffffff 86%, #eef2ff 14%);
+  border: 1px solid color-mix(in oklab, #ddd6fe 52%, #e2e8f0 48%);
+  box-shadow: 0 20px 55px -35px rgba(15, 23, 42, 0.22);
+  backdrop-filter: blur(10px);
 }
 
 .soft-card {
   border: 1px solid #e2e8f0;
   background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
-  box-shadow: 0 16px 36px -28px rgba(15, 23, 42, 0.35);
+  box-shadow: 0 16px 36px -28px rgba(15, 23, 42, 0.2);
 }
 
 .accent-chip {
   border: 1px solid #ddd6fe;
-  background: linear-gradient(135deg, #faf5ff 0%, #eef2ff 100%);
-  color: #6d28d9;
+  background: linear-gradient(135deg, #f5f3ff 0%, #ecfeff 100%);
+  color: #5b21b6;
 }
 
 .interactive-lift {
@@ -110,6 +98,6 @@ input:hover,
 
 .interactive-lift:hover {
   transform: translateY(-2px);
-  box-shadow: 0 20px 40px -26px rgba(79, 70, 229, 0.35);
+  box-shadow: 0 20px 40px -26px rgba(79, 70, 229, 0.24);
   border-color: #c4b5fd;
 }

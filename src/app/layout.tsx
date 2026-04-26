@@ -16,11 +16,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Julieanna | Product Design and Web Portfolio",
-  description: "Portfolio featuring web products, themed demos, and internship projects including PodManager.ai work.",
+  title: "Julie Anne Cantillep | Fullstack Portfolio",
+  description: "A creative portfolio showcasing fullstack engineering, embedded systems work, and AI-focused experience.",
   icons: {
-    icon: '/favicon.svg',
-    apple: '/apple-touch-icon.png',
+    icon: "/favicon.svg",
   },
 };
 
@@ -33,7 +32,6 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
       <body className="antialiased">
         <Providers>
