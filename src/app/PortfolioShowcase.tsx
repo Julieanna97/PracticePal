@@ -185,59 +185,55 @@ export default function PortfolioShowcase() {
 
     /* ── HERO ── */
     .hero {
-      background: var(--burg);
-      position: relative;
-      overflow: hidden;
-    }
+    background: var(--burg);
+    padding: 36px 3vw 0;
+    overflow: hidden;
+  }
 
-    /* The photo fills the hero area with a dark overlay */
-    .hero-photo {
-      width: 100%;
-      height: 82vh;
-      min-height: 560px;
-      position: relative;
-      overflow: hidden;
-    }
+  .hero-photo {
+    position: relative;
+    width: 100%;
+    height: 72vh;
+    min-height: 520px;
+    overflow: hidden;
+  }
 
-    /* Dark overlay on top of the photo */
-    .hero-photo-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(26,8,8,0.1) 0%, rgba(26,8,8,0.55) 75%, rgba(26,8,8,0.85) 100%);
-      z-index: 1;
-    }
+  .hero-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    display: block;
+  }
 
-    /* The actual <img> sits behind the overlay */
-    .hero-photo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center top;
-      display: block;
-    }
+  .hero-photo-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(26,8,8,0.08) 0%,
+      rgba(26,8,8,0.22) 100%
+    );
+    z-index: 1;
+  }
 
-    /* Giant pink name bleeds off the bottom of the photo */
-    .hero-name-wrap {
-      position: absolute;
-      bottom: -8px;
-      left: 0;
-      right: 0;
-      z-index: 2;
-      overflow: hidden;
-      line-height: 0.8;
-    }
-    .hero-name-giant {
-      font-family: var(--cond);
-      font-size: clamp(8rem, 20vw, 24rem);
-      font-weight: 900;
-      color: var(--pink);
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-      line-height: 0.85;
-      display: block;
-      text-align: center;
-      white-space: nowrap;
-    }
+  .hero-name-wrap {
+    padding: 18px 2vw 0;
+    line-height: 0.8;
+    overflow: hidden;
+  }
+
+  .hero-name-giant {
+    display: block;
+    font-family: var(--cond);
+    font-size: clamp(7rem, 21vw, 26rem);
+    font-weight: 900;
+    color: var(--pink);
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    line-height: 0.82;
+    white-space: nowrap;
+  }
 
     /* ── INTRO ── */
     .intro {
@@ -912,22 +908,24 @@ export default function PortfolioShowcase() {
       {/* ── HERO — real photo with giant pink name bleeding off bottom ── */}
       <section className="hero">
         <div className="hero-photo">
-          {/* Dark gradient overlay */}
           <div className="hero-photo-overlay" />
 
-          {/* ↓↓↓ YOUR REAL PHOTO — place this file in your /public folder ↓↓↓ */}
           <Image
             src="/profile.jpg"
             alt="Julie Anne Cantillep"
             fill
-            style={{ objectFit: "cover", objectPosition: "center 40%" }}
             priority
+            style={{
+              objectFit: "cover",
+              objectPosition: "center 20%",
+            }}
           />
+        </div>
 
-          {/* Giant pink name floating over the photo */}
-          <div className="hero-name-wrap">
-            <span className="hero-name-giant">JULIE ANNE</span>
-          </div>
+        <div className="hero-name-wrap">
+          <span className="hero-name-giant">
+            JULIE ANNE
+          </span>
         </div>
       </section>
 
