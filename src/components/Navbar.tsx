@@ -21,8 +21,7 @@ export default function Navbar() {
   // Keep portfolio and PracticePal showcase pages clean (no shared navbar)
   if (
     pathname === "/" ||
-    pathname === "/projects/practicepal" ||
-    pathname === "/projects/practicepal/landing"
+    pathname === "/projects/practicepal"
   ) {
     return null;
   }

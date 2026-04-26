@@ -47,7 +47,7 @@ const projectItems: ProjectItem[] = [
     },
     {
       label: "View Demo",
-      href: "/projects/practicepal/landing",
+      href: "/auth/login?callbackUrl=%2Fdashboard",
     },
     {
       label: "GitHub",
