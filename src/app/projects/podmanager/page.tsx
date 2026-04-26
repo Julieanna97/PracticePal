@@ -127,14 +127,6 @@ export default function PodManagerCaseStudyPage() {
           >
             Visit Site
           </Link>
-          <Link
-            href="https://github.com/Julieanna97"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-[#e8613a]"
-          >
-            GitHub
-          </Link>
         </div>
       </nav>
 
@@ -176,15 +168,6 @@ export default function PodManagerCaseStudyPage() {
                 className="inline-flex items-center justify-center rounded-full border border-[#1a0808] bg-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] text-[#f0ece4] transition hover:bg-transparent hover:text-[#1a0808]"
               >
                 See It Live
-              </Link>
-
-              <Link
-                href="https://github.com/Julieanna97"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] transition hover:bg-[#1a0808] hover:text-[#f0ece4]"
-              >
-                GitHub Profile
               </Link>
             </div>
           </div>
