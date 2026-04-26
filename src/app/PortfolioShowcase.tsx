@@ -1119,6 +1119,7 @@ export default function PortfolioShowcase() {
               src="/intro-img-1.png"
               alt="Julie Anne Cantillep"
               fill
+              unoptimized
               sizes="(max-width: 1024px) 100vw, 50vw"
               style={{ objectFit: "cover", objectPosition: "center" }}
             />
@@ -1129,6 +1130,7 @@ export default function PortfolioShowcase() {
             src="/intro-img.png"
             alt="Julie Anne Cantillep"
             fill
+            unoptimized
             sizes="(max-width: 1024px) 100vw, 45vw"
             style={{ objectFit: "cover", objectPosition: "center top" }}
           />
@@ -1167,7 +1169,7 @@ export default function PortfolioShowcase() {
         </div>
         <div className="dark-panel-photo fade-up d3">
           <Image
-            src="/profile.jpg"
+            src="/intro-img.jpg"
             alt="Julie Anne Cantillep"
             fill
             loading="eager"
