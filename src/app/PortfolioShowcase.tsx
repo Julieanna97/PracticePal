@@ -57,7 +57,7 @@ const timelineItems: TimelineItem[] = [
   { year: "2025–26", category: "product", title: "Fullstack Developer", subtitle: "PodManager.ai", detail: "Shipped features across a Next.js + TypeScript frontend and FastAPI backend for podcast editing, recording studio workflows, guest management, and marketplace modules." },
   { year: "2026", category: "ai", title: "Quality Assurance Analyst", subtitle: "OneForma.com", detail: "Reviewed and improved multilingual AI content applying QA guidelines, natural language quality checks, and workflow consistency." },
   { year: "2026", category: "ai", title: "AI Data Specialist", subtitle: "Appen.com", detail: "Worked on AI training projects involving text, audio, and multilingual data — transcription, labeling, and content evaluation." },
-  { year: "2026", category: "education", title: "Fullstack Developer", subtitle: "The Media Institute", detail: "Graduating 2026 after training in frontend, backend, databases, APIs, agile development, and e-commerce." },
+  { year: "2026", category: "education", title: "Fullstack Developer", subtitle: "The Media Institute", detail: "Recently graduated after training in frontend, backend, databases, APIs, agile development, and e-commerce." },
   { year: "2024", category: "education", title: "Embedded Software Development", subtitle: "Movant University of Applied Science", detail: "Completed studies in embedded software and contributed to an autonomous car project." },
 ];
 

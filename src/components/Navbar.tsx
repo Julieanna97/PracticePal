@@ -30,19 +30,19 @@ export default function Navbar() {
   const isAuthed = !!session?.user;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-purple-100 bg-white/80 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+    <header className="sticky top-0 z-50 border-b border-[#0d3b3a]/10 bg-[#faf6f0]/85 backdrop-blur-md">
+      <div className="mx-auto max-w-6xl px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-600 to-indigo-700 shadow-md">
-              <span className="text-white font-bold text-sm">P</span>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0d3b3a] shadow-md shadow-[#0d3b3a]/20">
+              <span className="text-sm font-bold text-[#f4a261]">P</span>
             </div>
-            <span className="text-xl font-black tracking-tight text-slate-800">PracticePal</span>
+            <span className="font-black tracking-tight text-[#0d3b3a] text-xl">PracticePal</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-6">
+          <nav className="hidden items-center space-x-6 lg:flex">
             {nav
               .filter((item) => (item.protected ? isAuthed : true))
               .map((item) => (
@@ -51,8 +51,8 @@ export default function Navbar() {
                   href={item.href}
                   className={`text-sm font-semibold transition-colors ${
                     pathname === item.href
-                        ? "text-purple-700"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "text-[#0d3b3a]"
+                      : "text-[#1a2e2c]/70 hover:text-[#0d3b3a]"
                   }`}
                 >
                   {item.label}
@@ -65,12 +65,12 @@ export default function Navbar() {
                 <div className="text-sm text-slate-500">Loading...</div>
               ) : isAuthed ? (
                 <>
-                  <span className="hidden text-sm text-slate-600 xl:inline">
+                  <span className="hidden text-sm text-[#1a2e2c]/70 xl:inline">
                     {session.user?.name ?? session.user?.email}
                   </span>
                   <button
                     onClick={() => signOut({ callbackUrl: "/" })}
-                    className="rounded-full border border-slate-300 px-4 py-2 text-sm text-slate-700 transition hover:bg-slate-100"
+                    className="rounded-full border border-[#0d3b3a]/15 px-4 py-2 text-sm text-[#0d3b3a] transition hover:bg-[#0d3b3a] hover:text-[#faf6f0]"
                   >
                     Logout
                   </button>
@@ -79,13 +79,13 @@ export default function Navbar() {
                 <>
                   <Link
                     href="/auth/login"
-                    className="rounded-full border border-slate-300 px-4 py-2 text-sm text-slate-700 transition hover:bg-slate-100"
+                    className="rounded-full border border-[#0d3b3a]/15 px-4 py-2 text-sm text-[#0d3b3a] transition hover:bg-[#0d3b3a]/5"
                   >
                     Login
                   </Link>
                   <Link
                     href="/auth/register"
-                    className="rounded-full bg-gradient-to-r from-fuchsia-600 to-indigo-600 px-4 py-2 text-sm text-white shadow-md transition hover:opacity-90"
+                    className="rounded-full bg-[#0d3b3a] px-4 py-2 text-sm text-[#faf6f0] shadow-md shadow-[#0d3b3a]/15 transition hover:bg-[#0d3b3a]/90"
                   >
                     Sign Up
                   </Link>
@@ -97,11 +97,11 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="rounded-lg p-2 transition hover:bg-slate-100 lg:hidden"
+            className="rounded-lg p-2 transition hover:bg-[#0d3b3a]/5 lg:hidden"
             aria-label="Toggle menu"
           >
             <svg
-              className="h-6 w-6 text-slate-600"
+              className="h-6 w-6 text-[#0d3b3a]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -127,7 +127,7 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <nav className="mt-4 border-t border-purple-100 pb-4 pt-4 lg:hidden">
+          <nav className="mt-4 border-t border-[#0d3b3a]/10 pb-4 pt-4 lg:hidden">
             <div className="flex flex-col space-y-3">
               {nav
                 .filter((item) => (item.protected ? isAuthed : true))
@@ -138,8 +138,8 @@ export default function Navbar() {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
                       pathname === item.href
-                        ? "bg-purple-50 text-purple-700"
-                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                        ? "bg-[#0d3b3a]/8 text-[#0d3b3a]"
+                        : "text-[#1a2e2c]/70 hover:bg-[#0d3b3a]/5 hover:text-[#0d3b3a]"
                     }`}
                   >
                     {item.label}
@@ -147,12 +147,12 @@ export default function Navbar() {
                 ))}
 
               {/* Mobile Auth Buttons */}
-              <div className="flex flex-col space-y-2 border-t border-slate-200 pt-4">
+              <div className="flex flex-col space-y-2 border-t border-[#0d3b3a]/10 pt-4">
                 {status === "loading" ? (
-                  <div className="px-4 text-sm text-slate-500">Loading...</div>
+                  <div className="px-4 text-sm text-[#1a2e2c]/55">Loading...</div>
                 ) : isAuthed ? (
                   <>
-                    <div className="px-4 py-2 text-sm text-slate-600">
+                    <div className="px-4 py-2 text-sm text-[#1a2e2c]/70">
                       {session.user?.name ?? session.user?.email}
                     </div>
                     <button
@@ -160,7 +160,7 @@ export default function Navbar() {
                         setMobileMenuOpen(false);
                         signOut({ callbackUrl: "/" });
                       }}
-                      className="mx-4 rounded-full border border-slate-300 px-4 py-2 text-center text-sm text-slate-700 transition hover:bg-slate-100"
+                      className="mx-4 rounded-full border border-[#0d3b3a]/15 px-4 py-2 text-center text-sm text-[#0d3b3a] transition hover:bg-[#0d3b3a] hover:text-[#faf6f0]"
                     >
                       Logout
                     </button>
@@ -170,14 +170,14 @@ export default function Navbar() {
                     <Link
                       href="/auth/login"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="mx-4 rounded-full border border-slate-300 px-4 py-2 text-center text-sm text-slate-700 transition hover:bg-slate-100"
+                      className="mx-4 rounded-full border border-[#0d3b3a]/15 px-4 py-2 text-center text-sm text-[#0d3b3a] transition hover:bg-[#0d3b3a]/5"
                     >
                       Login
                     </Link>
                     <Link
                       href="/auth/register"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="mx-4 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-2 text-center text-sm text-white transition hover:opacity-90"
+                      className="mx-4 rounded-full bg-[#0d3b3a] px-4 py-2 text-center text-sm text-[#faf6f0] transition hover:bg-[#0d3b3a]/90"
                     >
                       Sign Up
                     </Link>

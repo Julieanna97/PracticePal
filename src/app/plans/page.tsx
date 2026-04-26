@@ -16,20 +16,20 @@ export default async function PlansPage() {
   const plans = await PracticePlan.find({ userId }).sort({ createdAt: -1 }).lean();
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_10%_8%,#ede9fe_0%,transparent_34%),radial-gradient(circle_at_90%_0%,#dbeafe_0%,transparent_34%),#f8fafc]">
+    <div className="app-canvas min-h-screen">
       <main className="mx-auto max-w-6xl px-6 py-12">
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
           <div>
-            <h1 className="mb-2 text-4xl font-black tracking-tight text-slate-950 md:text-5xl">
+            <h1 className="mb-2 text-4xl font-black tracking-tight text-[#0d3b3a] md:text-5xl">
               Practice Plans 🎯
             </h1>
-            <p className="text-lg text-slate-600">Create and manage your practice goals</p>
+            <p className="text-lg text-[#1a2e2c]/70">Create and manage your practice goals</p>
           </div>
 
           <Link
             href="/plans/new"
-            className="flex items-center space-x-2 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-700 px-6 py-3 font-bold text-white transition-all hover:-translate-y-1 hover:shadow-xl"
+            className="flex items-center space-x-2 rounded-2xl bg-[#0d3b3a] px-6 py-3 font-bold text-[#faf6f0] transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-[#0d3b3a]/20"
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"/>
@@ -47,11 +47,11 @@ export default async function PlansPage() {
               return (
                 <div
                   key={id}
-                  className="bg-white rounded-3xl shadow-xl border-2 border-purple-100 p-8 hover:shadow-2xl transform hover:-translate-y-1 transition-all"
+                  className="soft-card interactive-lift rounded-3xl p-8"
                 >
                   {/* Icon header */}
                   <div className="flex items-start justify-between mb-4">
-                    <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-indigo-700 rounded-2xl flex items-center justify-center shadow-lg">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#0d3b3a] shadow-lg shadow-[#0d3b3a]/15">
                       <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                       </svg>
@@ -59,10 +59,10 @@ export default async function PlansPage() {
                     <div className="flex items-center gap-2">
                       <Link
                         href={`/plans/${id}/edit`}
-                        className="p-2 rounded-xl hover:bg-purple-50 transition-colors"
+                        className="rounded-xl p-2 transition-colors hover:bg-[#0d3b3a]/5"
                         title="Edit plan"
                       >
-                        <svg className="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="h-5 w-5 text-[#0d3b3a]" fill="currentColor" viewBox="0 0 20 20">
                           <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
                         </svg>
                       </Link>
@@ -73,15 +73,15 @@ export default async function PlansPage() {
                   {/* Content */}
                   <div className="space-y-4">
                     <div>
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2">{p.title}</h3>
+                      <h3 className="mb-2 text-2xl font-bold text-[#0d3b3a]">{p.title}</h3>
                       <div className="flex flex-wrap items-center gap-3 text-sm">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full bg-purple-100 text-purple-700 font-semibold">
+                        <span className="inline-flex items-center rounded-full bg-[#0d3b3a]/8 px-3 py-1 font-semibold text-[#0d3b3a]">
                           <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                           </svg>
                           {p.instrumentOrSkill}
                         </span>
-                        <span className="inline-flex items-center px-3 py-1 rounded-full bg-purple-100 text-purple-700 font-semibold">
+                        <span className="inline-flex items-center rounded-full bg-[#f4a261]/15 px-3 py-1 font-semibold text-[#8b4c16]">
                           <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"/>
                           </svg>
@@ -91,9 +91,9 @@ export default async function PlansPage() {
                     </div>
 
                     {p.goalDescription && (
-                      <div className="bg-purple-50 rounded-xl p-4 border-2 border-purple-100">
-                        <p className="text-sm font-semibold text-purple-700 mb-1">Goal</p>
-                        <p className="text-gray-700">{p.goalDescription}</p>
+                      <div className="rounded-xl border border-[#c9d8c5] bg-white/70 p-4">
+                        <p className="mb-1 text-sm font-semibold text-[#0d3b3a]">Goal</p>
+                        <p className="text-[#1a2e2c]/75">{p.goalDescription}</p>
                       </div>
                     )}
 
@@ -101,7 +101,7 @@ export default async function PlansPage() {
                     <div className="pt-4 border-t-2 border-purple-100">
                       <Link
                         href="/sessions/new"
-                        className="flex items-center justify-center space-x-2 w-full bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-xl px-4 py-3 font-bold hover:shadow-lg transition-all"
+                        className="flex w-full items-center justify-center space-x-2 rounded-xl bg-[#0d3b3a] px-4 py-3 font-bold text-[#faf6f0] transition-all hover:shadow-lg hover:shadow-[#0d3b3a]/20"
                       >
                         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"/>
@@ -115,20 +115,20 @@ export default async function PlansPage() {
             })}
           </div>
         ) : (
-          <div className="bg-white rounded-3xl shadow-xl border-2 border-purple-100 p-12 text-center">
-            <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-indigo-700 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="soft-card rounded-3xl p-12 text-center">
+            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-[#0d3b3a] shadow-lg shadow-[#0d3b3a]/15">
               <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
                 <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
               </svg>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">No practice plans yet</h3>
-            <p className="text-gray-600 mb-8 max-w-md mx-auto">
+            <h3 className="mb-3 text-2xl font-bold text-[#0d3b3a]">No practice plans yet</h3>
+            <p className="mx-auto mb-8 max-w-md text-[#1a2e2c]/70">
               Create your first practice plan to set goals and track your progress toward musical mastery!
             </p>
             <Link
               href="/plans/new"
-              className="inline-flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-700 text-white px-8 py-4 rounded-full font-bold hover:shadow-xl transform hover:-translate-y-1 transition-all"
+              className="inline-flex items-center space-x-2 rounded-full bg-[#0d3b3a] px-8 py-4 font-bold text-[#faf6f0] transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-[#0d3b3a]/20"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"/>
@@ -140,16 +140,16 @@ export default async function PlansPage() {
 
         {/* Quick tip */}
         {plans.length > 0 && (
-          <div className="mt-8 bg-gradient-to-r from-purple-100 to-indigo-50 rounded-3xl p-6 border-2 border-purple-200">
+          <div className="glass-surface mt-8 rounded-3xl p-6">
             <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-700 rounded-xl flex items-center justify-center flex-shrink-0">
+              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-[#f4a261]">
                 <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
                 </svg>
               </div>
               <div>
-                <h4 className="font-bold text-purple-900 mb-1">💡 Pro Tip</h4>
-                <p className="text-purple-800">
+                <h4 className="mb-1 font-bold text-[#0d3b3a]">💡 Pro Tip</h4>
+                <p className="text-[#1a2e2c]/75">
                   Set realistic weekly targets! It's better to practice 15 minutes daily than cram 2 hours once a week. Consistency is key to improvement.
                 </p>
               </div>

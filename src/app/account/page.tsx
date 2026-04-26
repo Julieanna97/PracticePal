@@ -126,20 +126,20 @@ export default function AccountPage() {
   }, [me?.stripeCancelAtPeriodEnd]);
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_10%_8%,#ede9fe_0%,transparent_34%),radial-gradient(circle_at_90%_0%,#dbeafe_0%,transparent_34%),#f8fafc]">
+    <div className="app-canvas min-h-screen">
       <main className="mx-auto max-w-6xl px-6 py-12">
         <div className="mb-8">
-          <h1 className="text-4xl font-black tracking-tight text-slate-950">
+          <h1 className="text-4xl font-black tracking-tight text-[#0d3b3a]">
             Account Settings
           </h1>
-          <p className="mt-2 text-slate-600">Manage your profile, settings, and account actions</p>
+          <p className="mt-2 text-[#1a2e2c]/70">Manage your profile, settings, and account actions</p>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Profile Card */}
-          <div className="bg-white rounded-3xl shadow-xl border-2 border-purple-100 p-8 hover:shadow-2xl transition-shadow">
+          <div className="soft-card rounded-3xl p-8 transition-shadow hover:shadow-2xl">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-700 rounded-2xl flex items-center justify-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0d3b3a]">
                 <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"
@@ -148,27 +148,27 @@ export default function AccountPage() {
                   />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900">Profile</h2>
+              <h2 className="text-2xl font-bold text-[#0d3b3a]">Profile</h2>
             </div>
 
             <div className="space-y-4">
               <div className="pb-4 border-b border-gray-100">
-                <label className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Name</label>
-                <p className="mt-1 text-lg font-medium text-gray-900">{user?.name || "Not set"}</p>
+                <label className="text-sm font-semibold uppercase tracking-wide text-[#1a2e2c]/55">Name</label>
+                <p className="mt-1 text-lg font-medium text-[#0d3b3a]">{user?.name || "Not set"}</p>
               </div>
 
               <div className="pb-4 border-b border-gray-100">
-                <label className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Email</label>
-                <p className="mt-1 text-lg font-medium text-gray-900">{user?.email}</p>
+                <label className="text-sm font-semibold uppercase tracking-wide text-[#1a2e2c]/55">Email</label>
+                <p className="mt-1 text-lg font-medium text-[#0d3b3a]">{user?.email}</p>
               </div>
 
               <div className="pb-4 border-b border-gray-100">
-                <label className="text-sm font-semibold text-gray-500 uppercase tracking-wide">User ID</label>
-                <p className="mt-1 text-sm font-mono text-gray-600 break-all">{user?.id}</p>
+                <label className="text-sm font-semibold uppercase tracking-wide text-[#1a2e2c]/55">User ID</label>
+                <p className="mt-1 break-all font-mono text-sm text-[#1a2e2c]/70">{user?.id}</p>
               </div>
 
               <div className="pt-2">
-                <label className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Account Type</label>
+                <label className="text-sm font-semibold uppercase tracking-wide text-[#1a2e2c]/55">Account Type</label>
 
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <div
@@ -177,7 +177,7 @@ export default function AccountPage() {
                         ? "bg-gray-200 text-gray-700"
                         : isPro
                         ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white"
-                        : "bg-gradient-to-r from-purple-500 to-indigo-700 text-white"
+                        : "bg-[#0d3b3a] text-[#faf6f0]"
                     }`}
                   >
                     {loadingMe ? "..." : isPro ? "PRO" : "FREE"}
@@ -191,7 +191,7 @@ export default function AccountPage() {
                 </div>
 
                 {!loadingMe && prettyStatus && (
-                  <p className="mt-2 text-sm text-gray-600">
+                  <p className="mt-2 text-sm text-[#1a2e2c]/70">
                     Subscription status: <span className="font-semibold">{prettyStatus}</span>
                   </p>
                 )}

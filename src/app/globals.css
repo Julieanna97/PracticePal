@@ -2,11 +2,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f1ea;
-  --foreground: #1f2430;
+  --background: #faf6f0;
+  --foreground: #1a2e2c;
   --surface: #ffffff;
-  --surface-muted: #f5f7fb;
-  --ring: rgba(109, 40, 217, 0.16);
+  --surface-muted: #f3efe8;
+  --ring: rgba(13, 59, 58, 0.14);
 }
 
 @theme inline {
@@ -32,7 +32,7 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   scrollbar-width: thin;
-  scrollbar-color: rgba(109, 40, 217, 0.42) rgba(255, 255, 255, 0.36);
+  scrollbar-color: rgba(13, 59, 58, 0.42) rgba(255, 255, 255, 0.36);
 }
 
 /* Webkit scrollbar styling */
@@ -45,17 +45,17 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(109, 40, 217, 0.55), rgba(56, 189, 248, 0.55));
+  background: linear-gradient(180deg, rgba(13, 59, 58, 0.55), rgba(244, 162, 97, 0.55));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(109, 40, 217, 0.9), rgba(56, 189, 248, 0.9));
-  box-shadow: 0 0 8px rgba(109, 40, 217, 0.26);
+  background: linear-gradient(180deg, rgba(13, 59, 58, 0.9), rgba(244, 162, 97, 0.9));
+  box-shadow: 0 0 8px rgba(13, 59, 58, 0.26);
 }
 
 ::selection {
-  background: rgba(109, 40, 217, 0.82);
+  background: rgba(13, 59, 58, 0.82);
   color: white;
 }
 
@@ -68,28 +68,28 @@ input,
 
 .app-canvas {
   background:
-    radial-gradient(circle at 8% 8%, rgba(109, 40, 217, 0.08) 0%, transparent 34%),
-    radial-gradient(circle at 92% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 34%),
-    linear-gradient(180deg, #f8fafc 0%, #ffffff 45%, #f8fafc 100%);
+    radial-gradient(circle at 8% 8%, rgba(244, 162, 97, 0.12) 0%, transparent 34%),
+    radial-gradient(circle at 92% 0%, rgba(13, 59, 58, 0.1) 0%, transparent 34%),
+    linear-gradient(180deg, #faf6f0 0%, #fffdf8 45%, #faf6f0 100%);
 }
 
 .glass-surface {
-  background: color-mix(in oklab, #ffffff 86%, #eef2ff 14%);
-  border: 1px solid color-mix(in oklab, #ddd6fe 52%, #e2e8f0 48%);
-  box-shadow: 0 20px 55px -35px rgba(15, 23, 42, 0.22);
+  background: color-mix(in oklab, #ffffff 88%, #f0ece4 12%);
+  border: 1px solid color-mix(in oklab, #c9d8c5 42%, #e6ddd0 58%);
+  box-shadow: 0 20px 55px -35px rgba(26, 46, 44, 0.18);
   backdrop-filter: blur(10px);
 }
 
 .soft-card {
-  border: 1px solid #e2e8f0;
-  background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
-  box-shadow: 0 16px 36px -28px rgba(15, 23, 42, 0.2);
+  border: 1px solid #e6ddd0;
+  background: linear-gradient(180deg, #ffffff 0%, #fffdf8 100%);
+  box-shadow: 0 16px 36px -28px rgba(26, 46, 44, 0.18);
 }
 
 .accent-chip {
-  border: 1px solid #ddd6fe;
-  background: linear-gradient(135deg, #f5f3ff 0%, #ecfeff 100%);
-  color: #5b21b6;
+  border: 1px solid #c9d8c5;
+  background: linear-gradient(135deg, #f3efe8 0%, #ecf4ef 100%);
+  color: #0d3b3a;
 }
 
 .interactive-lift {
@@ -98,6 +98,6 @@ input,
 
 .interactive-lift:hover {
   transform: translateY(-2px);
-  box-shadow: 0 20px 40px -26px rgba(79, 70, 229, 0.24);
-  border-color: #c4b5fd;
+  box-shadow: 0 20px 40px -26px rgba(13, 59, 58, 0.2);
+  border-color: #c9d8c5;
 }
