@@ -5,6 +5,11 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 
+type LoginClientProps = {
+  callbackUrl?: string;
+  error?: string;
+};
+
 function toInternalCallbackUrl(raw: string | null): string {
   if (!raw) return "/dashboard";
 
@@ -20,11 +25,11 @@ function toInternalCallbackUrl(raw: string | null): string {
   }
 }
 
-export default function LoginClient() {
+export default function LoginClient({ callbackUrl: initialCallbackUrl, error: initialError }: LoginClientProps) {
   const params = useSearchParams();
   const router = useRouter();
-  const callbackUrl = toInternalCallbackUrl(params.get("callbackUrl"));
-  const oauthError = params.get("error");
+  const callbackUrl = toInternalCallbackUrl(initialCallbackUrl ?? params.get("callbackUrl"));
+  const oauthError = initialError ?? params.get("error");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
