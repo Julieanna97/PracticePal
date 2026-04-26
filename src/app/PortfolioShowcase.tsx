@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 type TimelineFilter = "all" | "work" | "product" | "ai" | "education";
-type SkillCategory = "frontend" | "backend" | "systems" | "tooling";
+type SkillCategory = "frontend" | "backend" | "databases" | "cloud" | "tools" | "systems";
 
 type TimelineItem = {
   year: string;
@@ -76,36 +76,41 @@ const projectItems: ProjectItem[] = [
   },
 ];
 
-const skillMap: Record<SkillCategory, Array<{ name: string; level: number; note: string }>> = {
-  frontend: [
-    { name: "React", level: 92, note: "Component architecture & interfaces" },
-    { name: "Next.js", level: 90, note: "App Router, Turbopack, production features" },
-    { name: "TypeScript", level: 88, note: "Type-safe UI and data logic" },
-    { name: "Tailwind CSS + Radix UI", level: 90, note: "Design systems and scalable UI primitives" },
-  ],
-  backend: [
-    { name: "FastAPI", level: 86, note: "Python services and business logic layers" },
-    { name: "MongoDB", level: 83, note: "Collections, schemas, and repository patterns" },
-    { name: "Socket.IO", level: 82, note: "WebSocket-driven real-time product workflows" },
-    { name: "REST APIs", level: 90, note: "Clear contracts across frontend and backend" },
-  ],
-  systems: [
-    { name: "C / C++", level: 80, note: "Embedded control and firmware" },
-    { name: "Arduino / ESP32", level: 84, note: "Sensor and device logic" },
-    { name: "RTOS / Zephyr", level: 70, note: "Real-time systems mindset" },
-    { name: "Python", level: 86, note: "Testing and automation" },
-  ],
-  tooling: [
-    { name: "Git / GitHub", level: 92, note: "Collaboration and code review" },
-    { name: "Docker / Compose / ACR", level: 82, note: "Containerized builds and deployment pipelines" },
-    { name: "SWR + React Hook Form + Zod", level: 86, note: "Reliable data and validation workflows" },
-    { name: "Framer Motion + Recharts", level: 78, note: "Interactive UX and data visualization" },
-    { name: "ESLint + TypeScript", level: 88, note: "Consistent code quality and type safety" },
-  ],
+const skillMap: Record<SkillCategory, { label: string; description: string; skills: string[] }> = {
+  frontend: {
+    label: "Frontend",
+    description: "UI frameworks, styling, and browser-focused tooling",
+    skills: ["React", "Next.js", "TypeScript", "JavaScript", "HTML", "CSS", "Tailwind CSS", "Bootstrap", "Radix UI", "Vite", "SWR", "React Hook Form", "Zod", "Framer Motion", "WaveSurfer.js", "MediaPipe", "TensorFlow.js"],
+  },
+  backend: {
+    label: "Backend",
+    description: "Server-side runtime, frameworks, and languages",
+    skills: ["Node.js", "Express.js", "FastAPI", "Flask", "Python", "REST APIs", "WebSocket APIs", "Socket.IO", "NextAuth", "Stripe", "Mailchimp", "FFmpeg"],
+  },
+  databases: {
+    label: "Databases & Data",
+    description: "Data persistence, queries, and cloud storage",
+    skills: ["SQL", "NoSQL", "MongoDB", "MySQL", "MariaDB", "phpMyAdmin"],
+  },
+  cloud: {
+    label: "Cloud & DevOps",
+    description: "Infrastructure, containers, and deployment",
+    skills: ["Microsoft Azure", "Docker", "Docker Compose", "Azure Container Registry", "Gunicorn", "Vercel", "Linux / Ubuntu"],
+  },
+  tools: {
+    label: "Development Tools",
+    description: "IDE, version control, testing, and design",
+    skills: ["Git", "GitHub", "Jira", "VS Code", "Figma", "WordPress", "npm", "ESLint", "Prettier", "Postman", "Jupyter Notebook", "Turbopack", "Recharts", "date-fns", "next-themes"],
+  },
+  systems: {
+    label: "Embedded & Systems",
+    description: "Low-level programming, hardware, and real-time workflows",
+    skills: ["C/C++", "Arduino", "ESP32", "LoRa", "RTOS / Zephyr", "Yocto", "UART / SPI / I2C / CAN", "GTest", "CMake"],
+  },
 };
 
 const timelineFilters: TimelineFilter[] = ["all", "work", "product", "ai", "education"];
-const skillCategories: SkillCategory[] = ["frontend", "backend", "systems", "tooling"];
+const skillCategories: SkillCategory[] = ["frontend", "backend", "databases", "cloud", "tools", "systems"];
 
 export default function PortfolioShowcase() {
   const [mounted, setMounted] = useState(false);
@@ -646,17 +651,7 @@ export default function PortfolioShowcase() {
     }
     .skill-tab:hover { color: var(--burg); }
     .skill-tab-on { color: var(--burg); border-bottom-color: var(--burg); }
-    .skill-list { display: flex; flex-direction: column; }
-    .skill-row {
-      display: grid;
-      grid-template-columns: 1fr 52px;
-      gap: 24px;
-      align-items: center;
-      padding: 24px 0;
-      border-bottom: 1px solid rgba(26,8,8,0.1);
-    }
-    .skill-row:first-child { border-top: 1px solid rgba(26,8,8,0.1); }
-    .skill-name {
+    .skill-group-title {
       font-family: var(--cond);
       font-size: clamp(1.1rem, 2vw, 1.5rem);
       font-weight: 800;
@@ -665,29 +660,30 @@ export default function PortfolioShowcase() {
       color: var(--burg);
       margin-bottom: 6px;
     }
-    .skill-note {
+    .skill-group-desc {
       font-family: var(--body-f);
-      font-size: 0.7rem;
-      font-weight: 300;
-      letter-spacing: 0.08em;
+      font-size: 0.76rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 12px;
+      margin-bottom: 20px;
     }
-    .skill-track { height: 3px; background: rgba(26,8,8,0.1); position: relative; }
-    .skill-fill {
-      position: absolute;
-      left: 0; top: 0;
-      height: 100%;
-      background: var(--burg);
-      transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+    .skill-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
     }
-    .skill-pct {
-      font-family: var(--cond);
-      font-size: 1.6rem;
-      font-weight: 900;
-      color: rgba(26,8,8,0.15);
-      text-align: right;
+    .skill-pill {
+      border: 1px solid rgba(26,8,8,0.14);
+      padding: 10px 12px;
+      font-family: var(--body-f);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--body);
+      background: rgba(255,255,255,0.45);
     }
 
     /* ── CONTACT ── */
@@ -895,6 +891,7 @@ export default function PortfolioShowcase() {
       .footer-tagline { padding: 48px 24px 16px; }
       .proj-row { grid-template-columns: 1fr; gap: 16px; }
       .proj-row:hover { margin: 0 -24px; padding: 40px 24px; }
+      .skill-list { grid-template-columns: 1fr 1fr; }
       .statement-text { grid-template-columns: 1fr; font-size: clamp(2rem,8vw,4rem); }
       .tagline-text { grid-template-columns: 1fr; }
       .footer-links { grid-template-columns: 1fr 1fr; }
@@ -1112,24 +1109,19 @@ export default function PortfolioShowcase() {
               className={`skill-tab ${activeSkill === cat ? "skill-tab-on" : ""}`}
               onClick={() => setActiveSkill(cat)}
             >
-              {cat}
+              {skillMap[cat].label}
             </button>
           ))}
         </div>
 
-        <div className="skill-list fade-up d4">
-          {skillMap[activeSkill].map(skill => (
-            <div key={skill.name} className="skill-row">
-              <div>
-                <div className="skill-name">{skill.name}</div>
-                <div className="skill-note">{skill.note}</div>
-                <div className="skill-track">
-                  <div className="skill-fill" style={{ width: `${skill.level}%` }} />
-                </div>
-              </div>
-              <div className="skill-pct">{skill.level}</div>
-            </div>
-          ))}
+        <div className="fade-up d4">
+          <div className="skill-group-title">{skillMap[activeSkill].label}</div>
+          <div className="skill-group-desc">{skillMap[activeSkill].description}</div>
+          <div className="skill-list">
+            {skillMap[activeSkill].skills.map((skill) => (
+              <div key={skill} className="skill-pill">{skill}</div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -1209,9 +1201,9 @@ export default function PortfolioShowcase() {
           </div>
           <div>
             <div className="footer-col-head">Stack</div>
-            <span className="footer-col-link" style={{ textDecoration: "none" }}>React · Next.js</span>
-            <span className="footer-col-link" style={{ textDecoration: "none" }}>TypeScript · Node</span>
-            <span className="footer-col-link" style={{ textDecoration: "none" }}>C/C++ · Arduino</span>
+            <span className="footer-col-link" style={{ textDecoration: "none" }}>Next.js · React</span>
+            <span className="footer-col-link" style={{ textDecoration: "none" }}>TypeScript · Python</span>
+            <span className="footer-col-link" style={{ textDecoration: "none" }}>FastAPI · MongoDB</span>
           </div>
           <div>
             <div className="footer-col-head">Contact</div>
