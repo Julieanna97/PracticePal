@@ -17,11 +17,12 @@ export default function Navbar() {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isProjectCaseStudyRoute = pathname.startsWith("/projects/");
 
-  // Keep portfolio and PracticePal showcase pages clean (no shared navbar)
+  // Keep portfolio and case-study pages clean (no shared navbar)
   if (
     pathname === "/" ||
-    pathname === "/projects/practicepal"
+    isProjectCaseStudyRoute
   ) {
     return null;
   }

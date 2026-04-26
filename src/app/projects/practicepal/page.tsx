@@ -164,18 +164,45 @@ export default function PracticePalCaseStudyPage() {
           </div>
 
           {/* MOCK APP PREVIEW */}
-          <div className="relative">
-            <div className="absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-[#f5a0c8]/30 to-[#e8613a]/20 blur-2xl" />
+          <div className="group relative motion-safe:animate-[floatScreen_6s_ease-in-out_infinite]">
+            <style>{`
+              @keyframes floatScreen {
+                0%, 100% { transform: translateY(0) rotate(-1deg); }
+                50% { transform: translateY(-14px) rotate(1deg); }
+              }
 
-            <div className="relative rounded-[2rem] border border-[#1a0808]/15 bg-[#1a0808] p-4 shadow-2xl shadow-[#1a0808]/25">
+              @keyframes pulseDot {
+                0%, 100% { opacity: 0.55; transform: scale(1); }
+                50% { opacity: 1; transform: scale(1.25); }
+              }
+
+              @keyframes barGrow {
+                0%, 100% { transform: scaleY(0.78); opacity: 0.72; }
+                50% { transform: scaleY(1); opacity: 1; }
+              }
+
+              @keyframes planGlow {
+                0%, 100% { box-shadow: 0 0 0 rgba(245,160,200,0); }
+                50% { box-shadow: 0 0 34px rgba(245,160,200,0.28); }
+              }
+
+              @keyframes scanProgress {
+                0% { transform: translateX(-100%); }
+                100% { transform: translateX(260%); }
+              }
+            `}</style>
+
+            <div className="absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-[#f5a0c8]/30 to-[#e8613a]/20 blur-2xl transition duration-500 group-hover:from-[#f5a0c8]/45 group-hover:to-[#e8613a]/30" />
+
+            <div className="relative rounded-[2rem] border border-[#1a0808]/15 bg-[#1a0808] p-4 shadow-2xl shadow-[#1a0808]/25 transition duration-500 group-hover:-translate-y-2 group-hover:rotate-1">
               <div className="mb-4 flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-[#f5a0c8]" />
-                <span className="h-3 w-3 rounded-full bg-[#e8613a]" />
-                <span className="h-3 w-3 rounded-full bg-[#f0ece4]/50" />
+                <span className="h-3 w-3 rounded-full bg-[#f5a0c8] transition group-hover:scale-125" />
+                <span className="h-3 w-3 rounded-full bg-[#e8613a] transition group-hover:scale-125" />
+                <span className="h-3 w-3 rounded-full bg-[#f0ece4]/50 transition group-hover:scale-125" />
               </div>
 
               <div className="rounded-[1.45rem] bg-[#f0ece4] p-5">
-                <div className="mb-6 flex items-center justify-between">
+                <div className="mb-6 flex items-center justify-between gap-4">
                   <div>
                     <p className="text-xs font-black uppercase tracking-[0.2em] text-[#e8613a]">
                       Dashboard
@@ -185,60 +212,112 @@ export default function PracticePalCaseStudyPage() {
                     </h2>
                   </div>
 
-                  <div className="rounded-full bg-[#f5a0c8] px-4 py-2 text-xs font-black uppercase tracking-[0.14em]">
+                  <button
+                    type="button"
+                    className="rounded-full bg-[#f5a0c8] px-4 py-2 text-xs font-black uppercase tracking-[0.14em] transition duration-300 hover:-translate-y-1 hover:bg-[#e8613a] hover:text-[#f0ece4] motion-safe:animate-[planGlow_2.4s_ease-in-out_infinite]"
+                  >
                     Pro Plan
-                  </div>
+                  </button>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-3">
-                  <div className="rounded-3xl border border-[#1a0808]/10 bg-white/50 p-5">
-                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#7a5050]">
-                      Focus
-                    </p>
+                  <button
+                    type="button"
+                    className="group/card rounded-3xl border border-[#1a0808]/10 bg-white/50 p-5 text-left transition duration-300 hover:-translate-y-2 hover:bg-[#1a0808] hover:text-[#f0ece4]"
+                  >
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-black uppercase tracking-[0.16em] text-[#7a5050] transition group-hover/card:text-[#f5a0c8]">
+                        Focus
+                      </p>
+                      <span className="h-2.5 w-2.5 rounded-full bg-[#e8613a] motion-safe:animate-[pulseDot_1.6s_ease-in-out_infinite]" />
+                    </div>
+
                     <p className="mt-10 text-3xl font-black uppercase leading-none">
                       Scales
                     </p>
-                  </div>
 
-                  <div className="rounded-3xl border border-[#1a0808]/10 bg-[#f5a0c8] p-5">
-                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1a0808]/60">
+                    <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-[#1a0808]/10 group-hover/card:bg-[#f0ece4]/20">
+                      <span className="block h-full w-2/3 rounded-full bg-[#e8613a] transition group-hover/card:w-full" />
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="group/card rounded-3xl border border-[#1a0808]/10 bg-[#f5a0c8] p-5 text-left transition duration-300 hover:-translate-y-3 hover:bg-[#e8613a] hover:text-[#f0ece4]"
+                  >
+                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#1a0808]/60 transition group-hover/card:text-[#f0ece4]/70">
                       Streak
                     </p>
-                    <p className="mt-10 text-5xl font-black uppercase leading-none">
+
+                    <p className="mt-10 text-5xl font-black uppercase leading-none transition group-hover/card:scale-110">
                       12
                     </p>
-                  </div>
 
-                  <div className="rounded-3xl border border-[#1a0808]/10 bg-white/50 p-5">
-                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#7a5050]">
+                    <p className="mt-4 text-xs font-black uppercase tracking-[0.14em] opacity-60">
+                      Days in a row
+                    </p>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="group/card rounded-3xl border border-[#1a0808]/10 bg-white/50 p-5 text-left transition duration-300 hover:-translate-y-2 hover:bg-[#1a0808] hover:text-[#f0ece4]"
+                  >
+                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#7a5050] transition group-hover/card:text-[#f5a0c8]">
                       Time
                     </p>
+
                     <p className="mt-10 text-3xl font-black uppercase leading-none">
                       45m
                     </p>
-                  </div>
+
+                    <div className="mt-5 flex gap-1.5">
+                      <span className="h-2 flex-1 rounded-full bg-[#f5a0c8]" />
+                      <span className="h-2 flex-1 rounded-full bg-[#e8613a]" />
+                      <span className="h-2 flex-1 rounded-full bg-[#1a0808]/20 group-hover/card:bg-[#f0ece4]/30" />
+                    </div>
+                  </button>
                 </div>
 
-                <div className="mt-5 rounded-3xl border border-[#1a0808]/10 bg-[#1a0808] p-5 text-[#f0ece4]">
+                <button
+                  type="button"
+                  className="group/chart mt-5 w-full rounded-3xl border border-[#1a0808]/10 bg-[#1a0808] p-5 text-left text-[#f0ece4] transition duration-300 hover:-translate-y-2 hover:bg-[#2e0e0e]"
+                >
                   <div className="mb-4 flex items-center justify-between">
                     <p className="text-xs font-black uppercase tracking-[0.16em] text-[#f5a0c8]">
                       Weekly Progress
                     </p>
-                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#f0ece4]/45">
+                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#f0ece4]/45 transition group-hover/chart:text-[#e8613a]">
                       Analytics
                     </p>
                   </div>
 
-                  <div className="flex h-36 items-end gap-3">
+                  <div className="relative flex h-36 items-end gap-3 overflow-hidden rounded-2xl">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-[#f5a0c8]/18 to-transparent opacity-0 transition group-hover/chart:opacity-100 motion-safe:group-hover/chart:animate-[scanProgress_1.4s_linear_infinite]" />
+
                     {[38, 62, 48, 82, 58, 94, 72].map((height, index) => (
                       <div
                         key={index}
-                        className="flex-1 rounded-t-2xl bg-gradient-to-t from-[#e8613a] to-[#f5a0c8]"
-                        style={{ height: `${height}%` }}
+                        className="flex-1 origin-bottom rounded-t-2xl bg-gradient-to-t from-[#e8613a] to-[#f5a0c8] transition duration-300 hover:scale-y-110 motion-safe:animate-[barGrow_1.8s_ease-in-out_infinite]"
+                        style={{
+                          height: `${height}%`,
+                          animationDelay: `${index * 0.1}s`,
+                        }}
                       />
                     ))}
                   </div>
-                </div>
+
+                  <div className="mt-4 grid grid-cols-3 gap-2 text-center text-[0.62rem] font-black uppercase tracking-[0.14em] text-[#f0ece4]/45">
+                    <span className="rounded-full border border-[#f0ece4]/10 py-2 transition group-hover/chart:text-[#f5a0c8]">
+                      Plan
+                    </span>
+                    <span className="rounded-full border border-[#f0ece4]/10 py-2 transition group-hover/chart:text-[#f5a0c8]">
+                      Log
+                    </span>
+                    <span className="rounded-full border border-[#f0ece4]/10 py-2 transition group-hover/chart:text-[#f5a0c8]">
+                      Improve
+                    </span>
+                  </div>
+                </button>
               </div>
             </div>
           </div>
