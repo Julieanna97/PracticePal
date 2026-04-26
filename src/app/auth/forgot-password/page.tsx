@@ -2,10 +2,10 @@
 
 export default function ForgotPasswordPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50 flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border-2 border-purple-100 p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Forgot password</h1>
-        <p className="text-gray-600 mb-6">
+    <div className="app-canvas flex min-h-screen items-center justify-center px-6 py-12">
+      <div className="soft-card w-full max-w-md rounded-3xl p-8">
+        <h1 className="mb-2 text-3xl font-bold text-[#0d3b3a]">Forgot password</h1>
+        <p className="mb-6 text-[#1a2e2c]/70">
           Password reset is only available for email/password accounts. Google/Facebook users should log in with the same provider.
         </p>
 
@@ -16,7 +16,7 @@ export default function ForgotPasswordPage() {
 
         <Link
           href="/auth/login"
-          className="inline-flex w-full items-center justify-center rounded-xl bg-purple-600 px-4 py-3 font-bold text-white hover:bg-purple-700"
+          className="inline-flex w-full items-center justify-center rounded-xl bg-[#0d3b3a] px-4 py-3 font-bold text-[#faf6f0] hover:bg-[#0d3b3a]/90"
         >
           Back to login
         </Link>

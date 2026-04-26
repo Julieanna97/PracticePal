@@ -23,7 +23,7 @@ export default function ReturnClient() {
 
     async function sync() {
       setStatus("loading");
-      setMessage("Syncing your subscriptionâ€¦");
+      setMessage("Syncing your subscription...");
 
       try {
         const res = await fetch("/api/stripe/sync-checkout-session", {
@@ -41,7 +41,7 @@ export default function ReturnClient() {
         if (cancelled) return;
 
         setStatus("success");
-        setMessage("âœ… Subscription synced! Redirecting to dashboardâ€¦");
+        setMessage("Subscription synced! Redirecting to dashboard...");
 
         // Refresh + redirect
         router.refresh();
@@ -61,14 +61,14 @@ export default function ReturnClient() {
   }, [sessionId, router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-indigo-50 to-sky-50 relative overflow-hidden p-6">
+    <div className="app-canvas relative flex min-h-screen items-center justify-center overflow-hidden p-6">
       {/* Animated background orbs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-fuchsia-300 to-purple-300 rounded-full blur-3xl opacity-15 animate-pulse"></div>
         <div className="absolute -bottom-20 right-20 w-96 h-96 bg-gradient-to-br from-indigo-300 to-sky-300 rounded-full blur-3xl opacity-15 animate-bounce"></div>
       </div>
 
-      <div className="relative z-10 bg-white rounded-3xl shadow-2xl border-2 border-purple-100 p-8 max-w-md w-full text-center">
+      <div className="soft-card relative z-10 w-full max-w-md rounded-3xl p-8 text-center">
         {/* Status Icon */}
         <div className="mb-4 flex justify-center">
           {status === "success" ? (
@@ -84,7 +84,7 @@ export default function ReturnClient() {
               </svg>
             </div>
           ) : (
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-indigo-600 rounded-full flex items-center justify-center animate-spin" style={{ animationDuration: "3s" }}>
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#0d3b3a] animate-spin" style={{ animationDuration: "3s" }}>
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
@@ -92,27 +92,27 @@ export default function ReturnClient() {
           )}
         </div>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="mb-2 text-3xl font-bold text-[#0d3b3a]">
           {status === "success"
-            ? "All set! 🎉"
+            ? "All set!"
             : status === "error"
             ? "Something Went Wrong"
             : "Processing..."}
         </h1>
 
-        <p className="text-gray-700 mb-6">{message || "Preparing..."}</p>
+          <p className="mb-6 text-[#1a2e2c]/75">{message || "Preparing..."}</p>
 
         {status === "error" && (
           <div className="mt-6 flex flex-col gap-3">
             <button
               onClick={() => router.push("/upgrade")}
-              className="rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-3 font-bold text-white hover:shadow-lg transform hover:-translate-y-0.5 transition-all"
+              className="rounded-xl bg-[#0d3b3a] px-4 py-3 font-bold text-[#faf6f0] transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#0d3b3a]/20"
             >
               Back to Upgrade
             </button>
             <button
               onClick={() => router.push("/dashboard")}
-              className="rounded-xl border-2 border-purple-200 px-4 py-3 font-bold text-purple-700 hover:bg-purple-50 transition-all"
+              className="rounded-xl border border-[#0d3b3a]/20 px-4 py-3 font-bold text-[#0d3b3a] transition-all hover:bg-[#0d3b3a]/5"
             >
               Go to Dashboard
             </button>

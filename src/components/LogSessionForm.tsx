@@ -15,13 +15,12 @@ type SessionItem = {
   difficulty: number;
   mood?: string;
   notes?: string;
-  practicedAt: string; // ISO
+  practicedAt: string;
 };
 
-type FieldErrors = Partial<Record<
-  "planId" | "durationMinutes" | "difficulty" | "practicedAt",
-  string
->>;
+type FieldErrors = Partial<
+  Record<"planId" | "durationMinutes" | "difficulty" | "practicedAt", string>
+>;
 
 export default function LogSessionForm() {
   const router = useRouter();
@@ -34,7 +33,7 @@ export default function LogSessionForm() {
     planId: "",
     durationMinutes: "",
     difficulty: "",
-    practicedAt: "", // yyyy-mm-dd (from <input type="date">)
+    practicedAt: "",
     mood: "",
     notes: "",
   });
@@ -60,7 +59,7 @@ export default function LogSessionForm() {
       if (plansRes.ok) setPlans(await plansRes.json());
       if (sessionsRes.ok) setSessions(await sessionsRes.json());
     } catch {
-      // keep UI usable
+      // Keep UI usable.
     } finally {
       setLoading(false);
     }
@@ -126,7 +125,6 @@ export default function LogSessionForm() {
         return;
       }
 
-      // Reset only inputs you want (keep plan selected if you prefer)
       setForm((p) => ({
         ...p,
         durationMinutes: "",
@@ -137,8 +135,6 @@ export default function LogSessionForm() {
       }));
 
       await loadAll();
-
-      // If your stats page reads from DB, this helps it update if user navigates there
       router.refresh();
     } catch {
       setServerError("Network error. Please try again.");
@@ -153,11 +149,13 @@ export default function LogSessionForm() {
 
     try {
       const res = await fetch(`/api/sessions/${id}`, { method: "DELETE" });
+
       if (!res.ok) {
         const data = await res.json().catch(() => null);
         alert(data?.error ?? "Failed to delete.");
         return;
       }
+
       setSessions((prev) => prev.filter((s) => s._id !== id));
       router.refresh();
     } catch {
@@ -166,19 +164,27 @@ export default function LogSessionForm() {
   }
 
   const fieldClass =
-    "mt-2 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 outline-none transition focus:border-purple-300 focus:ring-4 focus:ring-purple-100";
+    "mt-2 w-full rounded-2xl border border-[#0d3b3a]/10 bg-[#faf6f0]/70 px-4 py-3 font-body text-sm text-[#1a2e2c] outline-none transition placeholder:text-[#1a2e2c]/35 focus:border-[#0d3b3a]/35 focus:bg-white focus:ring-4 focus:ring-[#0d3b3a]/8";
+
+  const labelClass =
+    "block font-body text-sm font-semibold text-[#0d3b3a]";
+
+  const errorClass = "mt-2 font-body text-sm font-medium text-red-600";
 
   return (
-    <div className="space-y-10">
-      <form onSubmit={onSubmit} className="space-y-7 rounded-2xl border border-purple-100 bg-gradient-to-b from-white to-purple-50/30 p-6 md:p-7">
+    <div className="space-y-8">
+      <form
+        onSubmit={onSubmit}
+        className="space-y-7 rounded-3xl border border-[#0d3b3a]/8 bg-[#faf6f0]/45 p-5 md:p-6"
+      >
         {serverError && (
-          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 font-body text-sm font-medium text-red-700">
             {serverError}
           </div>
         )}
 
         <div>
-          <label className="block text-sm font-semibold text-gray-900">Practice plan</label>
+          <label className={labelClass}>Practice plan</label>
           <select
             value={form.planId}
             onChange={(e) => setField("planId", e.target.value)}
@@ -186,7 +192,7 @@ export default function LogSessionForm() {
             disabled={loading}
           >
             <option value="" disabled>
-              Select a plan...
+              {loading ? "Loading plans..." : "Select a plan..."}
             </option>
             {plans.map((p) => (
               <option key={p._id} value={p._id}>
@@ -194,12 +200,12 @@ export default function LogSessionForm() {
               </option>
             ))}
           </select>
-          {errors.planId && <p className="mt-2 text-sm text-red-600">{errors.planId}</p>}
+          {errors.planId && <p className={errorClass}>{errors.planId}</p>}
         </div>
 
         <div className="grid gap-5 md:grid-cols-2">
           <div>
-            <label className="block text-sm font-semibold text-gray-900">Duration (minutes)</label>
+            <label className={labelClass}>Duration in minutes</label>
             <input
               type="number"
               min={1}
@@ -211,13 +217,13 @@ export default function LogSessionForm() {
               placeholder="e.g. 25"
             />
             {errors.durationMinutes && (
-              <p className="mt-2 text-sm text-red-600">{errors.durationMinutes}</p>
+              <p className={errorClass}>{errors.durationMinutes}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-900">
-              Date <span className="font-medium text-gray-400">(optional)</span>
+            <label className={labelClass}>
+              Date <span className="font-medium text-[#1a2e2c]/40">(optional)</span>
             </label>
             <input
               type="date"
@@ -225,24 +231,26 @@ export default function LogSessionForm() {
               onChange={(e) => setField("practicedAt", e.target.value)}
               className={fieldClass}
             />
-            {errors.practicedAt && <p className="mt-2 text-sm text-red-600">{errors.practicedAt}</p>}
+            {errors.practicedAt && <p className={errorClass}>{errors.practicedAt}</p>}
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-900">Difficulty (1–5)</label>
-          <div className="mt-3 flex flex-wrap gap-2">
+          <label className={labelClass}>Difficulty</label>
+
+          <div className="mt-3 grid grid-cols-5 gap-2">
             {[1, 2, 3, 4, 5].map((level) => {
               const active = Number(form.difficulty) === level;
+
               return (
                 <button
                   key={level}
                   type="button"
                   onClick={() => setField("difficulty", String(level))}
-                  className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+                  className={`rounded-2xl px-4 py-3 font-body text-sm font-semibold transition ${
                     active
-                      ? "bg-purple-600 text-white shadow-sm"
-                      : "border border-gray-200 bg-white text-gray-700 hover:border-purple-200 hover:bg-purple-50"
+                      ? "bg-[#0d3b3a] text-[#faf6f0]"
+                      : "border border-[#0d3b3a]/10 bg-white/60 text-[#0d3b3a] hover:border-[#0d3b3a]/25 hover:bg-[#0d3b3a]/5"
                   }`}
                 >
                   {level}
@@ -250,89 +258,125 @@ export default function LogSessionForm() {
               );
             })}
           </div>
-          {errors.difficulty && <p className="mt-2 text-sm text-red-600">{errors.difficulty}</p>}
+
+          <div className="mt-2 flex justify-between font-body text-xs text-[#1a2e2c]/45">
+            <span>Easy</span>
+            <span>Hard</span>
+          </div>
+
+          {errors.difficulty && <p className={errorClass}>{errors.difficulty}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-900">
-            Mood <span className="text-gray-400 font-medium">(optional)</span>
+          <label className={labelClass}>
+            Mood <span className="font-medium text-[#1a2e2c]/40">(optional)</span>
           </label>
+
           <input
             value={form.mood}
             onChange={(e) => setField("mood", e.target.value)}
             className={fieldClass}
             placeholder="How did you feel?"
           />
+
           <div className="mt-3 flex flex-wrap gap-2">
-            {moodPresets.map((mood) => (
-              <button
-                key={mood}
-                type="button"
-                onClick={() => setField("mood", mood)}
-                className="rounded-full border border-purple-200 bg-white px-3 py-1.5 text-xs font-semibold text-purple-700 hover:bg-purple-50"
-              >
-                {mood}
-              </button>
-            ))}
+            {moodPresets.map((mood) => {
+              const active = form.mood === mood;
+
+              return (
+                <button
+                  key={mood}
+                  type="button"
+                  onClick={() => setField("mood", mood)}
+                  className={`rounded-full border px-3 py-1.5 font-body text-xs font-semibold transition ${
+                    active
+                      ? "border-[#0d3b3a] bg-[#0d3b3a] text-[#faf6f0]"
+                      : "border-[#0d3b3a]/12 bg-white/60 text-[#0d3b3a] hover:bg-[#0d3b3a]/5"
+                  }`}
+                >
+                  {mood}
+                </button>
+              );
+            })}
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-900">
-            Notes <span className="text-gray-400 font-medium">(optional)</span>
+          <label className={labelClass}>
+            Notes <span className="font-medium text-[#1a2e2c]/40">(optional)</span>
           </label>
           <textarea
             value={form.notes}
             onChange={(e) => setField("notes", e.target.value)}
-            className={`${fieldClass} min-h-[120px]`}
-            placeholder="Practice notes..."
+            className={`${fieldClass} min-h-[120px] resize-none`}
+            placeholder="What did you practice? What felt better? What should you repeat next time?"
           />
         </div>
 
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-xl bg-gradient-to-r from-purple-600 to-indigo-700 px-6 py-3 font-bold text-white shadow-lg transition hover:from-purple-700 hover:to-indigo-800 disabled:opacity-60"
+          className="w-full rounded-full bg-[#0d3b3a] px-6 py-3.5 font-body text-sm font-semibold text-[#faf6f0] transition hover:bg-[#0d3b3a]/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {submitting ? "Logging..." : "Log session"}
+          {submitting ? "Logging session..." : "Log session"}
         </button>
       </form>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900">Recent sessions</h2>
+      <section className="rounded-3xl border border-[#0d3b3a]/8 bg-white/60 p-5 md:p-6">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="font-body text-xs font-semibold uppercase tracking-[0.18em] text-[#0d3b3a]/45">
+              History
+            </p>
+            <h2 className="mt-1 font-display text-2xl font-medium tracking-tight text-[#0d3b3a]">
+              Recent sessions
+            </h2>
+          </div>
+
           <button
             type="button"
             onClick={loadAll}
-            className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+            className="rounded-full border border-[#0d3b3a]/12 bg-[#faf6f0]/70 px-4 py-2 font-body text-sm font-semibold text-[#0d3b3a] transition hover:bg-[#0d3b3a]/5"
           >
             Refresh
           </button>
         </div>
 
         {loading ? (
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <p className="mt-5 font-body text-sm text-[#1a2e2c]/60">Loading...</p>
         ) : sessions.length === 0 ? (
-          <p className="mt-4 text-gray-600">No sessions yet. Log your first one above 🙂</p>
+          <div className="mt-5 rounded-2xl border border-dashed border-[#0d3b3a]/18 bg-[#faf6f0]/45 p-6 text-center">
+            <p className="font-display text-2xl font-medium text-[#0d3b3a]">
+              No sessions yet.
+            </p>
+            <p className="mt-2 font-body text-sm text-[#1a2e2c]/60">
+              Log your first one above and your history will appear here.
+            </p>
+          </div>
         ) : (
-          <div className="mt-4 space-y-3">
+          <div className="mt-5 space-y-3">
             {sessions.map((s) => (
-              <div
+              <article
                 key={s._id}
-                className="rounded-xl border border-gray-200 bg-gradient-to-r from-gray-50 to-white p-4"
+                className="rounded-2xl border border-[#0d3b3a]/8 bg-[#faf6f0]/50 p-4 transition hover:bg-[#faf6f0]"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
-                    <p className="truncate font-semibold text-gray-900">{s.planTitle}</p>
-                    <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-gray-700">
-                      <span className="rounded-full bg-purple-100 px-2.5 py-1 text-xs font-semibold text-purple-800">
+                    <p className="truncate font-display text-xl font-medium tracking-tight text-[#0d3b3a]">
+                      {s.planTitle}
+                    </p>
+
+                    <div className="mt-3 flex flex-wrap items-center gap-2 font-body text-xs">
+                      <span className="rounded-full bg-[#0d3b3a]/8 px-3 py-1 font-semibold text-[#0d3b3a]">
                         {s.durationMinutes} min
                       </span>
-                      <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-800">
+
+                      <span className="rounded-full bg-[#f4a261]/18 px-3 py-1 font-semibold text-[#0d3b3a]">
                         Difficulty {s.difficulty}
                       </span>
+
                       {s.practicedAt ? (
-                        <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
+                        <span className="rounded-full bg-white/70 px-3 py-1 font-semibold text-[#1a2e2c]/60">
                           {new Date(s.practicedAt).toLocaleDateString(undefined, {
                             year: "numeric",
                             month: "short",
@@ -341,13 +385,22 @@ export default function LogSessionForm() {
                         </span>
                       ) : null}
                     </div>
+
                     {(s.mood || s.notes) && (
-                      <p className="mt-2 text-sm text-gray-600">
-                        {s.mood ? <span className="font-medium">Mood:</span> : null}{" "}
-                        {s.mood}
-                        {s.mood && s.notes ? " • " : null}
-                        {s.notes ? <span className="font-medium">Notes:</span> : null}{" "}
-                        {s.notes}
+                      <p className="mt-3 font-body text-sm leading-relaxed text-[#1a2e2c]/62">
+                        {s.mood ? (
+                          <>
+                            <span className="font-semibold text-[#0d3b3a]">Mood:</span>{" "}
+                            {s.mood}
+                          </>
+                        ) : null}
+                        {s.mood && s.notes ? " · " : null}
+                        {s.notes ? (
+                          <>
+                            <span className="font-semibold text-[#0d3b3a]">Notes:</span>{" "}
+                            {s.notes}
+                          </>
+                        ) : null}
                       </p>
                     )}
                   </div>
@@ -355,17 +408,16 @@ export default function LogSessionForm() {
                   <button
                     type="button"
                     onClick={() => deleteSession(s._id)}
-                    className="shrink-0 rounded-lg px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+                    className="shrink-0 rounded-full px-3 py-2 font-body text-sm font-semibold text-red-600 transition hover:bg-red-50"
                   >
                     Delete
                   </button>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 }
-

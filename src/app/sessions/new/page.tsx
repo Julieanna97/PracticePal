@@ -1,106 +1,228 @@
-﻿import { redirect } from "next/navigation";
+﻿import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
+import { connectToDB } from "@/lib/mongodb";
+import { User } from "@/models/User";
 import LogSessionForm from "@/components/LogSessionForm";
 
 export default async function NewSessionPage() {
   const session = await getServerSession(authOptions);
   const userId = (session?.user as any)?.id;
+
   if (!userId) redirect("/auth/login");
 
+  await connectToDB();
+
+  const dbUser = await User.findById(userId).select({ role: 1 }).lean();
+  const isPro = dbUser?.role === "PRO";
+  const userName = (session?.user as any)?.name || "there";
+  const firstName = userName.split(" ")[0];
+
   return (
-    <div className="app-canvas min-h-screen">
-      <main className="mx-auto max-w-4xl px-6 py-12">
-        <div className="mb-10 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0d3b3a] shadow-lg shadow-[#0d3b3a]/20">
-            <svg className="h-9 w-9 text-white" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
-            </svg>
-          </div>
-          <h1 className="mb-3 text-4xl font-black tracking-tight text-[#0d3b3a] md:text-5xl">
-            Log Practice Session
-          </h1>
-          <p className="mx-auto max-w-2xl text-lg text-[#1a2e2c]/70">
-            Capture your practice while it is fresh and keep your progress dashboard accurate.
-          </p>
-        </div>
+    <div className="min-h-screen bg-[#faf6f0] text-[#1a2e2c]">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
 
-        <div className="soft-card rounded-3xl p-8 md:p-10">
-          <div className="glass-surface mb-8 rounded-2xl p-6">
-            <div className="flex items-start space-x-4">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-indigo-700">
-                <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="mb-2 font-bold text-[#0d3b3a]">Quick tips</h3>
-                <ul className="space-y-1 text-sm text-[#1a2e2c]/75">
-                  <li>• Log your session right after practice while it's fresh</li>
-                  <li>• Be honest about difficulty and mood for better insights</li>
-                  <li>• Add notes about what you worked on for future reference</li>
-                </ul>
-              </div>
+        .font-display { font-family: 'Fraunces', serif; font-optical-sizing: auto; }
+        .font-body { font-family: 'Inter', sans-serif; }
+      `}</style>
+
+      {/* TOP NAV */}
+      <header className="sticky top-0 z-40 border-b border-[#0d3b3a]/10 bg-[#faf6f0]/80 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <Link href="/dashboard" className="group flex items-center gap-2.5">
+            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#0d3b3a] transition group-hover:scale-105">
+              <svg viewBox="0 0 24 24" className="h-4 w-4 text-[#f4a261]" fill="currentColor">
+                <path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z" />
+              </svg>
             </div>
-          </div>
+            <span className="font-display text-lg font-semibold tracking-tight text-[#0d3b3a]">
+              PracticePal
+            </span>
+          </Link>
 
-          <div className="space-y-6">
-            <div className="flex items-center space-x-3 border-b border-[#0d3b3a]/10 pb-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0d3b3a]">
-                <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                  <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-[#0d3b3a]">Session details</h2>
+          <nav className="hidden items-center gap-1 font-body text-sm md:flex">
+            <Link
+              href="/dashboard"
+              className="rounded-md px-3 py-1.5 font-medium text-[#1a2e2c]/65 transition hover:bg-[#0d3b3a]/5 hover:text-[#0d3b3a]"
+            >
+              Dashboard
+            </Link>
+            <Link
+              href="/plans"
+              className="rounded-md px-3 py-1.5 font-medium text-[#1a2e2c]/65 transition hover:bg-[#0d3b3a]/5 hover:text-[#0d3b3a]"
+            >
+              Plans
+            </Link>
+            <Link
+              href="/sessions/new"
+              className="rounded-md bg-[#0d3b3a]/8 px-3 py-1.5 font-medium text-[#0d3b3a]"
+            >
+              Log session
+            </Link>
+            <Link
+              href="/stats"
+              className="rounded-md px-3 py-1.5 font-medium text-[#1a2e2c]/65 transition hover:bg-[#0d3b3a]/5 hover:text-[#0d3b3a]"
+            >
+              Stats
+            </Link>
+          </nav>
+
+          <div className="flex items-center gap-3">
+            {!isPro && (
+              <Link
+                href="/upgrade"
+                className="hidden items-center gap-1.5 rounded-full bg-[#f4a261] px-4 py-1.5 font-body text-sm font-semibold text-[#0d3b3a] transition hover:bg-[#f4a261]/85 sm:inline-flex"
+              >
+                Go Pro
+              </Link>
+            )}
+
+            <Link
+              href="/account"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0d3b3a] font-body text-sm font-semibold text-[#faf6f0] transition hover:scale-105"
+            >
+              {firstName.charAt(0).toUpperCase()}
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-6xl px-6 py-10 md:py-14">
+        {/* PAGE HERO */}
+        <section className="mb-8">
+          <Link
+            href="/dashboard"
+            className="font-body text-sm font-semibold text-[#0d3b3a] transition hover:text-[#f4a261]"
+          >
+            ← Back to dashboard
+          </Link>
+
+          <p className="mt-8 font-body text-sm font-medium tracking-wide text-[#0d3b3a]/55">
+            Practice log
+          </p>
+
+          <h1 className="mt-2 max-w-3xl font-display text-[2.75rem] font-medium leading-[0.95] tracking-tight text-[#0d3b3a] md:text-6xl">
+            Log a practice session.
+          </h1>
+
+          <p className="mt-4 max-w-2xl font-body text-base leading-relaxed text-[#1a2e2c]/70">
+            Capture your practice while it is fresh so your dashboard, streaks, and progress
+            stay accurate.
+          </p>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-[0.72fr_0.28fr]">
+          {/* FORM CARD */}
+          <div className="rounded-3xl border border-[#0d3b3a]/8 bg-white/60 p-6 md:p-8">
+            <div className="mb-7 border-b border-[#0d3b3a]/8 pb-6">
+              <p className="font-body text-xs font-semibold uppercase tracking-[0.18em] text-[#0d3b3a]/55">
+                Session details
+              </p>
+
+              <h2 className="mt-2 font-display text-3xl font-medium tracking-tight text-[#0d3b3a]">
+                What did you work on?
+              </h2>
+
+              <p className="mt-3 max-w-xl font-body text-sm leading-relaxed text-[#1a2e2c]/60">
+                Add the duration, notes, and practice context so you can review your progress later.
+              </p>
             </div>
 
             <LogSessionForm />
           </div>
-        </div>
 
-        <div className="mt-8 text-center">
-          <div className="inline-block rounded-2xl bg-[#0d3b3a] px-8 py-4 shadow-xl shadow-[#0d3b3a]/20">
-            <p className="text-white font-semibold flex items-center space-x-2">
-              <span className="text-2xl">🎯</span>
-              <span>Every session brings you closer to your goals!</span>
-            </p>
-          </div>
-        </div>
+          {/* SIDEBAR */}
+          <aside className="space-y-4">
+            <div className="rounded-3xl bg-[#0d3b3a] p-6 text-[#faf6f0]">
+              <p className="font-body text-xs font-semibold uppercase tracking-[0.18em] text-[#c9d8c5]/80">
+                Quick tips
+              </p>
 
-        <div className="mt-10 grid sm:grid-cols-3 gap-4">
-          <div className="soft-card rounded-2xl p-6 text-center transition hover:shadow-md">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[#0d3b3a]">
-              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"/>
-              </svg>
+              <h3 className="mt-3 font-display text-2xl font-medium tracking-tight">
+                Log it right after practice.
+              </h3>
+
+              <ul className="mt-5 space-y-3 font-body text-sm leading-relaxed text-[#faf6f0]/72">
+                <li className="flex gap-3">
+                  <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#f4a261]" />
+                  Add notes while the session is still fresh.
+                </li>
+                <li className="flex gap-3">
+                  <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#f4a261]" />
+                  Be honest about difficulty and mood for better insights.
+                </li>
+                <li className="flex gap-3">
+                  <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#f4a261]" />
+                  Small logs build a useful progress history over time.
+                </li>
+              </ul>
             </div>
-            <p className="mb-1 text-sm text-[#1a2e2c]/70">After logging</p>
-            <p className="font-bold text-[#0d3b3a]">Track your time</p>
-          </div>
 
-          <div className="soft-card rounded-2xl p-6 text-center transition hover:shadow-md">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[#f4a261]">
-              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd"/>
-              </svg>
-            </div>
-            <p className="mb-1 text-sm text-[#1a2e2c]/70">Keep it up</p>
-            <p className="font-bold text-[#0d3b3a]">Build streaks</p>
-          </div>
+            <div className="grid gap-3">
+              <div className="rounded-2xl border border-[#0d3b3a]/8 bg-white/60 p-5">
+                <p className="font-body text-xs font-semibold uppercase tracking-[0.16em] text-[#0d3b3a]/45">
+                  After logging
+                </p>
+                <p className="mt-2 font-display text-2xl font-medium text-[#0d3b3a]">
+                  Track time
+                </p>
+              </div>
 
-          <div className="soft-card rounded-2xl p-6 text-center transition hover:shadow-md">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[#0d3b3a]">
-              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
-              </svg>
+              <div className="rounded-2xl border border-[#0d3b3a]/8 bg-white/60 p-5">
+                <p className="font-body text-xs font-semibold uppercase tracking-[0.16em] text-[#0d3b3a]/45">
+                  Keep it up
+                </p>
+                <p className="mt-2 font-display text-2xl font-medium text-[#0d3b3a]">
+                  Build streaks
+                </p>
+              </div>
+
+              <Link
+                href="/stats"
+                className="rounded-2xl border border-[#0d3b3a]/8 bg-white/60 p-5 transition hover:-translate-y-1 hover:border-[#0d3b3a]/20"
+              >
+                <p className="font-body text-xs font-semibold uppercase tracking-[0.16em] text-[#0d3b3a]/45">
+                  See your
+                </p>
+                <p className="mt-2 font-display text-2xl font-medium text-[#0d3b3a]">
+                  Progress
+                </p>
+              </Link>
             </div>
-            <p className="mb-1 text-sm text-[#1a2e2c]/70">See your</p>
-            <p className="font-bold text-[#0d3b3a]">Progress grow</p>
-          </div>
-        </div>
+
+            <div className="rounded-3xl bg-[#f4a261] p-6 text-[#0d3b3a]">
+              <p className="font-body text-xs font-semibold uppercase tracking-[0.18em] text-[#0d3b3a]/60">
+                Reminder
+              </p>
+              <p className="mt-3 font-display text-2xl font-medium leading-tight tracking-tight">
+                Every session moves the goal forward.
+              </p>
+            </div>
+          </aside>
+        </section>
       </main>
+
+      <footer className="mt-12 border-t border-[#0d3b3a]/10 bg-[#faf6f0]">
+        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 px-6 py-8 sm:flex-row sm:items-center">
+          <p className="font-body text-xs text-[#1a2e2c]/50">
+            PracticePal · Built by Julie Anne Cantillep · 2026
+          </p>
+
+          <div className="flex gap-5 font-body text-xs text-[#1a2e2c]/50">
+            <Link href="/support/help-center" className="transition hover:text-[#0d3b3a]">
+              Help
+            </Link>
+            <Link href="/legal/privacy" className="transition hover:text-[#0d3b3a]">
+              Privacy
+            </Link>
+            <Link href="/legal/terms" className="transition hover:text-[#0d3b3a]">
+              Terms
+            </Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
-

@@ -4,19 +4,22 @@ import { authOptions } from "@/lib/authOptions";
 import LoginClient from "./LoginClient";
 
 type Props = {
-  searchParams?: Promise<{ callbackUrl?: string }>;
+  searchParams?: Promise<{ callbackUrl?: string; error?: string }>;
 };
 
 export default async function LoginPage({ searchParams }: Props) {
   const session = await getServerSession(authOptions);
 
   const sp = (await searchParams) ?? {};
-  const cb = sp.callbackUrl;
+  const callbackUrl = sp.callbackUrl;
 
   if (session?.user) {
-    if (cb && cb.startsWith("/")) redirect(cb);
+    if (callbackUrl && callbackUrl.startsWith("/")) {
+      redirect(callbackUrl);
+    }
+
     redirect("/dashboard");
   }
 
-  return <LoginClient />;
+  return <LoginClient callbackUrl={callbackUrl ?? "/dashboard"} error={sp.error} />;
 }

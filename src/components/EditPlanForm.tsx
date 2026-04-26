@@ -33,13 +33,17 @@ const planSchema = z
     goalDescription: z.string().max(500, "Description is too long").optional(),
   })
   .superRefine((val, ctx) => {
-    // Require dropdown choice unless they're typing custom
     if (!val.instrumentOrSkill) {
-      ctx.addIssue({ code: "custom", path: ["instrumentOrSkill"], message: "Please choose an instrument or skill" });
+      ctx.addIssue({
+        code: "custom",
+        path: ["instrumentOrSkill"],
+        message: "Please choose an instrument or skill",
+      });
     }
 
     if (val.instrumentOrSkill === "Other") {
       const custom = (val.customInstrumentOrSkill ?? "").trim();
+
       if (custom.length < 2) {
         ctx.addIssue({
           code: "custom",
@@ -62,8 +66,8 @@ type Props = {
 
 type FormState = {
   title: string;
-  instrumentOrSkill: string; // can be option or custom
-  selectInstrumentOrSkill: (typeof INSTRUMENT_OPTIONS)[number] | ""; // dropdown
+  instrumentOrSkill: string;
+  selectInstrumentOrSkill: (typeof INSTRUMENT_OPTIONS)[number] | "";
   customInstrumentOrSkill: string;
   weeklyTargetMinutes: string;
   goalDescription: string;
@@ -73,13 +77,12 @@ type FieldErrors = Partial<Record<keyof FormState, string>>;
 
 export default function EditPlanForm({ planId, initial }: Props) {
   const router = useRouter();
-  const fieldClass =
-    "mt-2 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 outline-none transition focus:border-purple-300 focus:ring-4 focus:ring-purple-100";
 
-  const initialSelect =
-    (INSTRUMENT_OPTIONS as readonly string[]).includes(initial.instrumentOrSkill)
-      ? (initial.instrumentOrSkill as (typeof INSTRUMENT_OPTIONS)[number])
-      : "Other";
+  const initialSelect = (INSTRUMENT_OPTIONS as readonly string[]).includes(
+    initial.instrumentOrSkill,
+  )
+    ? (initial.instrumentOrSkill as (typeof INSTRUMENT_OPTIONS)[number])
+    : "Other";
 
   const [form, setForm] = useState<FormState>({
     title: initial.title,
@@ -113,9 +116,12 @@ export default function EditPlanForm({ planId, initial }: Props) {
     const result = planSchema.safeParse({
       title: form.title.trim(),
       instrumentOrSkill: finalInstrument,
-      customInstrumentOrSkill: dropdown === "Other" ? form.customInstrumentOrSkill.trim() : undefined,
+      customInstrumentOrSkill:
+        dropdown === "Other" ? form.customInstrumentOrSkill.trim() : undefined,
       weeklyTargetMinutes: parsedWeeklyMinutes,
-      goalDescription: form.goalDescription.trim() ? form.goalDescription.trim() : undefined,
+      goalDescription: form.goalDescription.trim()
+        ? form.goalDescription.trim()
+        : undefined,
     });
 
     if (result.success) {
@@ -124,6 +130,7 @@ export default function EditPlanForm({ planId, initial }: Props) {
     }
 
     const next: FieldErrors = {};
+
     for (const issue of result.error.issues) {
       const k = issue.path[0] as keyof FormState | undefined;
       if (!k) continue;
@@ -156,7 +163,9 @@ export default function EditPlanForm({ planId, initial }: Props) {
           title: form.title.trim(),
           instrumentOrSkill: finalInstrument,
           weeklyTargetMinutes: Number(form.weeklyTargetMinutes),
-          goalDescription: form.goalDescription.trim() ? form.goalDescription.trim() : "",
+          goalDescription: form.goalDescription.trim()
+            ? form.goalDescription.trim()
+            : "",
         }),
       });
 
@@ -175,16 +184,25 @@ export default function EditPlanForm({ planId, initial }: Props) {
     }
   }
 
+  const fieldClass =
+    "mt-2 w-full rounded-2xl border border-[#0d3b3a]/10 bg-[#faf6f0]/70 px-4 py-3 font-body text-sm text-[#1a2e2c] outline-none transition placeholder:text-[#1a2e2c]/35 focus:border-[#0d3b3a]/35 focus:bg-white focus:ring-4 focus:ring-[#0d3b3a]/8";
+
+  const labelClass = "block font-body text-sm font-semibold text-[#0d3b3a]";
+  const errorClass = "mt-2 font-body text-sm font-medium text-red-600";
+
   return (
-    <form onSubmit={onSubmit} className="space-y-7 rounded-2xl border border-purple-100 bg-gradient-to-b from-white to-purple-50/30 p-6 md:p-7">
+    <form
+      onSubmit={onSubmit}
+      className="space-y-7 rounded-3xl border border-[#0d3b3a]/8 bg-[#faf6f0]/45 p-5 md:p-7"
+    >
       {serverError && (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 font-body text-sm font-semibold text-red-700">
           {serverError}
         </div>
       )}
 
       <div>
-        <label className="block text-sm font-semibold text-gray-900">Plan title</label>
+        <label className={labelClass}>Plan title</label>
         <input
           value={form.title}
           onChange={(e) => setField("title", e.target.value)}
@@ -192,17 +210,21 @@ export default function EditPlanForm({ planId, initial }: Props) {
           placeholder="e.g. Vocal Belting Routine"
           autoComplete="off"
         />
-        {errors.title && <p className="mt-2 text-sm text-red-600">{errors.title}</p>}
+        {errors.title && <p className={errorClass}>{errors.title}</p>}
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-gray-900">Instrument / skill</label>
+        <label className={labelClass}>Instrument / skill</label>
         <select
           value={form.selectInstrumentOrSkill}
           onChange={(e) => {
             const v = e.target.value as FormState["selectInstrumentOrSkill"];
             setField("selectInstrumentOrSkill", v);
-            if (v !== "Other") setField("customInstrumentOrSkill", "");
+
+            if (v !== "Other") {
+              setField("customInstrumentOrSkill", "");
+              setField("instrumentOrSkill", v);
+            }
           }}
           className={fieldClass}
         >
@@ -215,31 +237,33 @@ export default function EditPlanForm({ planId, initial }: Props) {
             </option>
           ))}
         </select>
+
         {errors.selectInstrumentOrSkill && (
-          <p className="mt-2 text-sm text-red-600">{errors.selectInstrumentOrSkill}</p>
+          <p className={errorClass}>{errors.selectInstrumentOrSkill}</p>
         )}
       </div>
 
       {form.selectInstrumentOrSkill === "Other" && (
         <div>
-          <label className="block text-sm font-semibold text-gray-900">
-            Type your instrument/skill
-          </label>
+          <label className={labelClass}>Type your instrument / skill</label>
           <input
             value={form.customInstrumentOrSkill}
-            onChange={(e) => setField("customInstrumentOrSkill", e.target.value)}
+            onChange={(e) => {
+              setField("customInstrumentOrSkill", e.target.value);
+              setField("instrumentOrSkill", e.target.value);
+            }}
             className={fieldClass}
             placeholder="e.g. Clarinet, Ukulele, Songwriting..."
             autoComplete="off"
           />
           {errors.customInstrumentOrSkill && (
-            <p className="mt-2 text-sm text-red-600">{errors.customInstrumentOrSkill}</p>
+            <p className={errorClass}>{errors.customInstrumentOrSkill}</p>
           )}
         </div>
       )}
 
       <div>
-        <label className="block text-sm font-semibold text-gray-900">Weekly target (minutes)</label>
+        <label className={labelClass}>Weekly target in minutes</label>
         <input
           type="number"
           min={10}
@@ -251,29 +275,30 @@ export default function EditPlanForm({ planId, initial }: Props) {
           placeholder="150"
         />
         {errors.weeklyTargetMinutes && (
-          <p className="mt-2 text-sm text-red-600">{errors.weeklyTargetMinutes}</p>
+          <p className={errorClass}>{errors.weeklyTargetMinutes}</p>
         )}
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-gray-900">
-          Goal description <span className="text-gray-400 font-medium">(optional)</span>
+        <label className={labelClass}>
+          Goal description{" "}
+          <span className="font-normal text-[#1a2e2c]/45">(optional)</span>
         </label>
         <textarea
           value={form.goalDescription}
           onChange={(e) => setField("goalDescription", e.target.value)}
-          className={`${fieldClass} min-h-[120px]`}
+          className={`${fieldClass} min-h-[120px] resize-none`}
           placeholder="What are you focusing on this week?"
         />
         {errors.goalDescription && (
-          <p className="mt-2 text-sm text-red-600">{errors.goalDescription}</p>
+          <p className={errorClass}>{errors.goalDescription}</p>
         )}
       </div>
 
-      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col-reverse gap-3 border-t border-[#0d3b3a]/8 pt-6 sm:flex-row sm:items-center sm:justify-between">
         <Link
           href="/plans"
-          className="inline-flex items-center justify-center rounded-xl border border-gray-200 px-5 py-3 font-semibold text-gray-700 transition hover:bg-gray-50"
+          className="inline-flex items-center justify-center rounded-full border border-[#0d3b3a]/15 bg-white/60 px-6 py-3 font-body text-sm font-semibold text-[#0d3b3a] transition hover:bg-[#0d3b3a]/5"
         >
           Cancel
         </Link>
@@ -281,13 +306,11 @@ export default function EditPlanForm({ planId, initial }: Props) {
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-purple-600 to-indigo-700 px-6 py-3 font-bold text-white shadow-lg transition hover:opacity-90 disabled:opacity-60"
+          className="inline-flex items-center justify-center rounded-full bg-[#0d3b3a] px-6 py-3 font-body text-sm font-semibold text-[#faf6f0] transition hover:bg-[#0d3b3a]/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {submitting ? "Saving..." : "Save changes"}
+          {submitting ? "Saving changes..." : "Save changes"}
         </button>
       </div>
     </form>
   );
 }
-
-

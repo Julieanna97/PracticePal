@@ -1,7 +1,20 @@
 ﻿// src/components/StatsCharts.tsx
 "use client";
 
-import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import {
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 interface Last7DaysData {
   day: string;
@@ -27,191 +40,332 @@ interface StatsChartsProps {
   totalSessions: number;
 }
 
-const COLORS = ["#a855f7", "#c084fc", "#d8b4fe", "#e9d5ff", "#7c3aed"];
+const COLORS = ["#0d3b3a", "#f4a261", "#c9d8c5", "#1a2e2c", "#8b4c16"];
 
-export default function StatsCharts({ last7Days, last30Days, topPlans, totalSessions }: StatsChartsProps) {
-  if (totalSessions === 0) return null;
+const tooltipStyle = {
+  backgroundColor: "#faf6f0",
+  border: "1px solid rgba(13, 59, 58, 0.14)",
+  borderRadius: "16px",
+  padding: "10px 12px",
+  color: "#1a2e2c",
+  boxShadow: "0 18px 45px rgba(13, 59, 58, 0.12)",
+};
 
+function EmptyChartMessage({ text }: { text: string }) {
+  return (
+    <div className="flex h-[260px] items-center justify-center rounded-2xl border border-dashed border-[#0d3b3a]/18 bg-[#faf6f0]/45 p-6 text-center">
+      <div>
+        <p className="font-display text-2xl font-medium text-[#0d3b3a]">
+          No data yet
+        </p>
+        <p className="mx-auto mt-2 max-w-xs font-body text-sm leading-relaxed text-[#1a2e2c]/60">
+          {text}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default function StatsCharts({
+  last7Days,
+  last30Days,
+  topPlans,
+  totalSessions,
+}: StatsChartsProps) {
   const totalMinutes30Days = last30Days.reduce((sum, d) => sum + d.minutes, 0);
   const avgDaily = Math.round(totalMinutes30Days / 30);
 
-  // Prepare pie chart data
-  const pieData = topPlans.slice(0, 5).map(p => ({
+  const hasAnySession = totalSessions > 0;
+  const hasWeeklyData = last7Days.some((d) => d.minutes > 0);
+  const hasMonthlyData = last30Days.some((d) => d.minutes > 0);
+  const hasPlanData = topPlans.length > 0;
+
+  const pieData = topPlans.slice(0, 5).map((p) => ({
     name: p.planTitle,
     value: p.minutes,
-    count: p.count
+    count: p.count,
   }));
 
   return (
     <>
-      {/* Charts Grid */}
-      <div className="grid gap-6 lg:gap-8 lg:grid-cols-2 mb-8">
+      <div className="mb-8 grid gap-6 lg:grid-cols-2">
         {/* Weekly Bar Chart */}
-        <div className="bg-white rounded-3xl shadow-xl border-2 border-purple-100 p-6 sm:p-8">
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-fuchsia-600 rounded-xl flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+        <section className="rounded-3xl border border-[#0d3b3a]/8 bg-white/60 p-5 transition hover:border-[#0d3b3a]/18 md:p-7">
+          <div className="mb-7 flex items-start justify-between gap-4">
+            <div>
+              <p className="font-body text-xs font-semibold uppercase tracking-[0.18em] text-[#0d3b3a]/45">
+                Weekly rhythm
+              </p>
+              <h2 className="mt-2 font-display text-3xl font-medium tracking-tight text-[#0d3b3a]">
+                Last 7 days
+              </h2>
+            </div>
+
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#0d3b3a]/8 text-[#0d3b3a]">
+              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
               </svg>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Last 7 Days</h2>
           </div>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={last7Days}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f3e8ff" />
-              <XAxis dataKey="dayName" stroke="#6b7280" style={{ fontSize: '12px' }} />
-              <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: '#fff', 
-                  border: '2px solid #f3e8ff', 
-                  borderRadius: '12px',
-                  padding: '8px 12px'
-                }}
-                labelStyle={{ fontWeight: 'bold', color: '#a855f7' }}
-              />
-              <Bar dataKey="minutes" fill="url(#colorBlue)" radius={[8, 8, 0, 0]} />
-              <defs>
-                <linearGradient id="colorBlue" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#c084fc" />
-                  <stop offset="100%" stopColor="#7c3aed" />
-                </linearGradient>
-              </defs>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+
+          {hasWeeklyData ? (
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={last7Days}>
+                  <defs>
+                    <linearGradient id="practiceBarGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#f4a261" />
+                      <stop offset="100%" stopColor="#0d3b3a" />
+                    </linearGradient>
+                  </defs>
+
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(13,59,58,0.08)" />
+                  <XAxis
+                    dataKey="dayName"
+                    stroke="rgba(26,46,44,0.45)"
+                    tickLine={false}
+                    axisLine={false}
+                    style={{ fontSize: "12px", fontFamily: "Inter, sans-serif" }}
+                  />
+                  <YAxis
+                    stroke="rgba(26,46,44,0.45)"
+                    tickLine={false}
+                    axisLine={false}
+                    style={{ fontSize: "12px", fontFamily: "Inter, sans-serif" }}
+                  />
+                  <Tooltip
+                    contentStyle={tooltipStyle}
+                    labelStyle={{
+                      fontWeight: 700,
+                      color: "#0d3b3a",
+                      fontFamily: "Inter, sans-serif",
+                    }}
+                    itemStyle={{
+                      color: "#0d3b3a",
+                      fontFamily: "Inter, sans-serif",
+                    }}
+                    formatter={(value) => [`${value} min`, "Practice"]}
+                  />
+                  <Bar
+                    dataKey="minutes"
+                    fill="url(#practiceBarGradient)"
+                    radius={[12, 12, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <EmptyChartMessage text="Log a session this week and your daily bars will show up here." />
+          )}
+        </section>
 
         {/* Monthly Line Chart */}
-        <div className="bg-white rounded-3xl shadow-xl border-2 border-purple-100 p-6 sm:p-8">
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-br from-sky-500 to-indigo-600 rounded-xl flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+        <section className="rounded-3xl border border-[#0d3b3a]/8 bg-white/60 p-5 transition hover:border-[#0d3b3a]/18 md:p-7">
+          <div className="mb-7 flex items-start justify-between gap-4">
+            <div>
+              <p className="font-body text-xs font-semibold uppercase tracking-[0.18em] text-[#0d3b3a]/45">
+                Monthly trend
+              </p>
+              <h2 className="mt-2 font-display text-3xl font-medium tracking-tight text-[#0d3b3a]">
+                Last 30 days
+              </h2>
+            </div>
+
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f4a261]/20 text-[#0d3b3a]">
+              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
               </svg>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Last 30 Days</h2>
           </div>
 
-          {/* Summary stats */}
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="bg-indigo-50 rounded-2xl p-4 border-2 border-indigo-100">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Total</p>
-              <p className="text-2xl font-extrabold text-indigo-700">{totalMinutes30Days}</p>
-              <p className="text-xs text-gray-500 mt-1">minutes</p>
+          <div className="mb-6 grid grid-cols-2 gap-4">
+            <div className="rounded-2xl border border-[#0d3b3a]/8 bg-[#faf6f0]/70 p-4">
+              <p className="font-body text-xs font-semibold uppercase tracking-[0.16em] text-[#0d3b3a]/45">
+                Total
+              </p>
+              <p className="mt-2 font-display text-4xl font-medium leading-none tracking-tight text-[#0d3b3a]">
+                {totalMinutes30Days}
+              </p>
+              <p className="mt-2 font-body text-xs text-[#1a2e2c]/50">minutes</p>
             </div>
-            <div className="bg-fuchsia-50 rounded-2xl p-4 border-2 border-fuchsia-100">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Daily Avg</p>
-              <p className="text-2xl font-extrabold text-fuchsia-700">{avgDaily}</p>
-              <p className="text-xs text-gray-500 mt-1">minutes</p>
+
+            <div className="rounded-2xl border border-[#0d3b3a]/8 bg-[#faf6f0]/70 p-4">
+              <p className="font-body text-xs font-semibold uppercase tracking-[0.16em] text-[#0d3b3a]/45">
+                Daily avg
+              </p>
+              <p className="mt-2 font-display text-4xl font-medium leading-none tracking-tight text-[#0d3b3a]">
+                {avgDaily}
+              </p>
+              <p className="mt-2 font-body text-xs text-[#1a2e2c]/50">minutes</p>
             </div>
           </div>
 
-          <ResponsiveContainer width="100%" height={240}>
-            <LineChart data={last30Days}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f3e8ff" />
-              <XAxis 
-                dataKey="date" 
-                stroke="#6b7280" 
-                style={{ fontSize: '10px' }}
-                interval="preserveStartEnd"
-                tickCount={3}
-              />
-              <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: '#fff', 
-                  border: '2px solid #f3e8ff', 
-                  borderRadius: '12px',
-                  padding: '8px 12px'
-                }}
-                labelStyle={{ fontWeight: 'bold', color: '#a855f7' }}
-              />
-              <Line 
-                type="monotone" 
-                dataKey="minutes" 
-                stroke="#a855f7" 
-                strokeWidth={3}
-                dot={{ fill: '#a855f7', r: 4 }}
-                activeDot={{ r: 6 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+          {hasMonthlyData ? (
+            <div className="h-[240px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={last30Days}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(13,59,58,0.08)" />
+                  <XAxis
+                    dataKey="date"
+                    stroke="rgba(26,46,44,0.45)"
+                    tickLine={false}
+                    axisLine={false}
+                    interval="preserveStartEnd"
+                    tickCount={3}
+                    style={{ fontSize: "11px", fontFamily: "Inter, sans-serif" }}
+                  />
+                  <YAxis
+                    stroke="rgba(26,46,44,0.45)"
+                    tickLine={false}
+                    axisLine={false}
+                    style={{ fontSize: "12px", fontFamily: "Inter, sans-serif" }}
+                  />
+                  <Tooltip
+                    contentStyle={tooltipStyle}
+                    labelStyle={{
+                      fontWeight: 700,
+                      color: "#0d3b3a",
+                      fontFamily: "Inter, sans-serif",
+                    }}
+                    itemStyle={{
+                      color: "#0d3b3a",
+                      fontFamily: "Inter, sans-serif",
+                    }}
+                    formatter={(value) => [`${value} min`, "Practice"]}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="minutes"
+                    stroke="#0d3b3a"
+                    strokeWidth={3}
+                    dot={{ fill: "#f4a261", stroke: "#0d3b3a", strokeWidth: 2, r: 4 }}
+                    activeDot={{
+                      r: 7,
+                      fill: "#f4a261",
+                      stroke: "#0d3b3a",
+                      strokeWidth: 2,
+                    }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <EmptyChartMessage text="Log practice sessions and your 30-day trend will appear here." />
+          )}
+        </section>
       </div>
 
       {/* Practice Plans Distribution */}
-      {topPlans.length > 0 && (
-        <div className="bg-white rounded-3xl shadow-xl border-2 border-purple-100 p-6 sm:p-8 mb-8">
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
-                <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-              </svg>
-            </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Top Practice Plans</h2>
+      <section className="mb-8 rounded-3xl border border-[#0d3b3a]/8 bg-white/60 p-5 transition hover:border-[#0d3b3a]/18 md:p-7">
+        <div className="mb-7 flex items-start justify-between gap-4">
+          <div>
+            <p className="font-body text-xs font-semibold uppercase tracking-[0.18em] text-[#0d3b3a]/45">
+              Plan distribution
+            </p>
+            <h2 className="mt-2 font-display text-3xl font-medium tracking-tight text-[#0d3b3a]">
+              Top practice plans
+            </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 items-center">
-            {/* Pie Chart */}
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#0d3b3a]/8 text-[#0d3b3a]">
+            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+              <path
+                fillRule="evenodd"
+                d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+
+        {hasPlanData ? (
+          <div className="grid gap-8 md:grid-cols-2 md:items-center">
             <div className="flex justify-center">
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={pieData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={100}
-                    innerRadius={60}
-                    fill="#8884d8"
-                    dataKey="value"
-                    strokeWidth={2}
-                    stroke="#fff"
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#fff', 
-                      border: '2px solid #f3e8ff', 
-                      borderRadius: '12px',
-                      padding: '8px 12px'
-                    }}
-                    formatter={(value: any, name: any, props: any) => [
-                      `${value} min (${props.payload.count} sessions)`,
-                      props.payload.name
-                    ]}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={104}
+                      innerRadius={64}
+                      fill="#0d3b3a"
+                      dataKey="value"
+                      strokeWidth={4}
+                      stroke="#faf6f0"
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell key={`cell-${entry.name}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={tooltipStyle}
+                      labelStyle={{
+                        fontWeight: 700,
+                        color: "#0d3b3a",
+                        fontFamily: "Inter, sans-serif",
+                      }}
+                      formatter={(value: any, name: any, props: any) => [
+                        `${value} min (${props.payload.count} sessions)`,
+                        props.payload.name,
+                      ]}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
             </div>
 
-            {/* Legend */}
             <div className="space-y-3">
               {topPlans.slice(0, 5).map((p, i) => {
                 const total = topPlans.reduce((sum, pl) => sum + pl.minutes, 0);
-                const percentage = Math.round((p.minutes / total) * 100);
+                const percentage = total > 0 ? Math.round((p.minutes / total) * 100) : 0;
+
                 return (
-                  <div key={i} className="flex items-center gap-3 p-3 bg-purple-50 rounded-xl border border-purple-100 hover:border-purple-300 transition-all">
-                    <div 
-                      className="w-4 h-4 rounded-full flex-shrink-0" 
-                      style={{ backgroundColor: COLORS[i % COLORS.length] }}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-gray-900 truncate text-sm">{p.planTitle}</p>
-                      <p className="text-xs text-gray-600">{p.minutes} min • {p.count} sessions • {percentage}%</p>
+                  <div
+                    key={`${p.planTitle}-${i}`}
+                    className="rounded-2xl border border-[#0d3b3a]/8 bg-[#faf6f0]/60 p-4 transition hover:bg-[#faf6f0]"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="h-3.5 w-3.5 flex-shrink-0 rounded-full"
+                        style={{ backgroundColor: COLORS[i % COLORS.length] }}
+                      />
+
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate font-display text-xl font-medium tracking-tight text-[#0d3b3a]">
+                          {p.planTitle}
+                        </p>
+                        <p className="mt-1 font-body text-xs text-[#1a2e2c]/55">
+                          {p.minutes} min · {p.count} sessions · {percentage}%
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#0d3b3a]/8">
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${percentage}%`,
+                          backgroundColor: COLORS[i % COLORS.length],
+                        }}
+                      />
                     </div>
                   </div>
                 );
               })}
             </div>
           </div>
-        </div>
-      )}
+        ) : (
+          <EmptyChartMessage text="Once you log sessions connected to plans, your plan distribution will appear here." />
+        )}
+      </section>
     </>
   );
 }
-
