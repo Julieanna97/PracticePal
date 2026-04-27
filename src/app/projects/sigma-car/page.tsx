@@ -461,7 +461,7 @@ export default function SigmaCarCaseStudyPage() {
 
               <div className="relative aspect-[4/3] overflow-hidden rounded-[1.45rem] bg-[#1a0808]">
                 <Image
-                  src="/projects/sigma-car/sigma-office.PNG"
+                  src="/projects/sigma-car/sigma-office.png"
                   alt="Sigma autonomous car — full view"
                   fill
                   sizes="(max-width: 1024px) 100vw, 55vw"
@@ -542,7 +542,7 @@ export default function SigmaCarCaseStudyPage() {
         <div className="grid gap-6 md:grid-cols-12">
           <figure className="group relative overflow-hidden rounded-[1.75rem] border border-[#f5a0c8]/15 bg-[#f5a0c8]/[0.03] md:col-span-7">
             <ProjectImage
-              src="/projects/sigma-car/car-7.jfif"
+              src="/projects/sigma-car/car-7.png"
               alt="Internal wiring and component layout"
               aspect="aspect-[16/11]"
             />
@@ -558,7 +558,7 @@ export default function SigmaCarCaseStudyPage() {
 
           <figure className="group relative overflow-hidden rounded-[1.75rem] border border-[#f5a0c8]/15 bg-[#f5a0c8]/[0.03] md:col-span-5">
             <ProjectImage
-              src="/projects/sigma-car/car-3.jfif"
+              src="/projects/sigma-car/car-3.png"
               alt="Assembly and chassis integration"
               aspect="aspect-[16/11] md:aspect-auto md:h-full"
             />
@@ -594,7 +594,7 @@ export default function SigmaCarCaseStudyPage() {
         <figure className="group relative overflow-hidden rounded-[2rem] border-2 border-[#1a0808]/10 bg-[#1a0808] shadow-2xl shadow-[#1a0808]/20">
           <div className="relative aspect-[16/9] overflow-hidden">
             <Image
-              src="/projects/sigma-car/car-2.jfif"
+              src="/projects/sigma-car/car-2.png"
               alt="System architecture and signal flow"
               fill
               sizes="100vw"
@@ -654,7 +654,7 @@ export default function SigmaCarCaseStudyPage() {
         <div className="grid gap-5 md:grid-cols-2 md:gap-6">
           <figure className="group overflow-hidden rounded-[1.75rem] border border-[#1a0808]/10 bg-[#1a0808]">
             <ProjectImage
-              src="/projects/sigma-car/car-5.jfif"
+              src="/projects/sigma-car/car-5.png"
               alt="Sensor close-up"
               aspect="aspect-[4/3]"
             />
@@ -675,7 +675,7 @@ export default function SigmaCarCaseStudyPage() {
 
           <figure className="group overflow-hidden rounded-[1.75rem] border border-[#1a0808]/10 bg-[#1a0808]">
             <ProjectImage
-              src="/projects/sigma-car/car-6.jfif"
+              src="/projects/sigma-car/car-6.png"
               alt="Microcontroller and board"
               aspect="aspect-[4/3]"
             />
@@ -710,7 +710,7 @@ export default function SigmaCarCaseStudyPage() {
         <figure className="group relative overflow-hidden rounded-[2rem] border-2 border-[#f5a0c8]/20 bg-[#1a0808]">
           <div className="relative aspect-[16/9] overflow-hidden">
             <Image
-              src="/projects/sigma-car/car-1.jfif"
+              src="/projects/sigma-car/car-1.png"
               alt="Completed Sigma autonomous car"
               fill
               sizes="100vw"
@@ -746,7 +746,7 @@ export default function SigmaCarCaseStudyPage() {
 
         <CustomVideoPlayer
           src="/projects/sigma-car/car-demo.mp4"
-          poster="/projects/sigma-car/car-1.jfif"
+          poster="/projects/sigma-car/car-1.png"
         />
       </section>
 
