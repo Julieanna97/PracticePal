@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 
 const SkillsGlobe = dynamic(() => import("@/app/SkillsGlobe"), {
   ssr: false,
@@ -149,6 +149,24 @@ const heroMarqueeItems = [
   "AVAILABLE 2026",
 ];
 
+const chatQA = [
+  { q: "What's your stack?", a: "React, Next.js, TypeScript on the frontend. FastAPI and Node.js on the backend. MongoDB for data. Plus C/C++ and Arduino for embedded work." },
+  { q: "How do you approach projects?", a: "I start by understanding the problem deeply, then build iteratively — ship early, get feedback, refine. I care about clean code and polished UI equally." },
+  { q: "What are you working on?", a: "Right now I am actively maintaining and improving this portfolio while adding new projects and case studies. I am focused on making it more interactive and reflective of my latest work." },
+  { q: "Are you open to work?", a: "Yes! Based in Malmö, Sweden. Open to fullstack, embedded, or product engineering roles." },
+  { q: "What makes you different?", a: "I've shipped across the full spectrum: SaaS products, podcast platforms, autonomous cars, AI data pipelines. I don't just build features — I understand systems." },
+  { q: "How are you?", a: "I am doing great, thanks for asking. I can help you explore Julie's projects, stack, and experience." },
+  { q: "Where are you based?", a: "Julie is based in Malmö, Sweden and open to local or remote opportunities." },
+  { q: "What frontend tools do you use?", a: "Mostly Next.js, React, TypeScript, App Router patterns, and component-driven UI development with a strong focus on UX polish." },
+  { q: "What backend experience do you have?", a: "Backend work includes FastAPI and Node.js APIs, auth flows, data modeling, and production MongoDB integrations." },
+  { q: "Can you build full products end-to-end?", a: "Yes. Julie has shipped products from idea to deployment, covering UI, APIs, database design, payments, and iteration from user feedback." },
+  { q: "What's your embedded background?", a: "Julie has worked on Arduino and ESP32 projects using C/C++, including autonomous car systems and long-range communication with LoRa." },
+  { q: "What did you do at PodManager.ai?", a: "Julie built features in a real production codebase including recording studio workflows, AI editing flows, and fullstack integrations." },
+  { q: "What is PracticePal?", a: "PracticePal is Julie's musician SaaS product for practice planning and analytics, with auth, plans, sessions, and subscription features." },
+  { q: "How quickly can you ramp up?", a: "Fast. Julie adapts quickly by understanding product context first, then shipping small reliable increments early." },
+  { q: "How do I contact you directly?", a: "Use the contact section below for email, LinkedIn, GitHub, or phone." },
+];
+
 export default function PortfolioShowcase() {
   const [mounted, setMounted] = useState(false);
   const [tlFilter, setTlFilter] = useState<TimelineFilter>("all");
@@ -157,6 +175,16 @@ export default function PortfolioShowcase() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [expandedTl, setExpandedTl] = useState<number | null>(null);
   const [visibleTl, setVisibleTl] = useState<Set<number>>(new Set());
+
+  // Chat terminal state
+  const [chatMessages, setChatMessages] = useState<{ role: "user" | "julie"; text: string }[]>([]);
+  const [chatTyping, setChatTyping] = useState(false);
+  const chatBodyRef = useRef<HTMLDivElement>(null);
+  const chatReplyTimeoutRef = useRef<number | null>(null);
+  const chatReplyFailSafeRef = useRef<number | null>(null);
+
+  // Project visibility
+  const [visibleProj, setVisibleProj] = useState<Set<number>>(new Set());
 
   // Cursor refs
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -186,6 +214,23 @@ export default function PortfolioShowcase() {
   }, []);
 
   useEffect(() => { setMounted(true); }, []);
+
+  // Keep initial page load at the top even if the URL has a hash or browser wants to restore scroll.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const prevScrollRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+
+    if (window.location.hash) {
+      const cleanUrl = `${window.location.pathname}${window.location.search}`;
+      window.history.replaceState(null, "", cleanUrl);
+    }
+    window.scrollTo(0, 0);
+
+    return () => {
+      window.history.scrollRestoration = prevScrollRestoration;
+    };
+  }, []);
 
   // SCROLL PROGRESS
   useEffect(() => {
@@ -332,6 +377,95 @@ export default function PortfolioShowcase() {
     return () => observer.disconnect();
   }, [mounted, tlFilter]);
 
+  // INTERSECTION OBSERVER for projects
+  useEffect(() => {
+    if (!mounted) return;
+    const items = document.querySelectorAll("[data-proj-index]");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Number((entry.target as HTMLElement).dataset.projIndex);
+            setTimeout(() => {
+              setVisibleProj(prev => new Set(prev).add(idx));
+            }, idx * 150);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -5% 0px" },
+    );
+    items.forEach(item => observer.observe(item));
+    return () => observer.disconnect();
+  }, [mounted]);
+
+  // Scroll chat body to bottom (container-only, not page)
+  const scrollChatToBottom = useCallback(() => {
+    const el = chatBodyRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, []);
+
+  const clearChatReplyTimeout = useCallback(() => {
+    if (chatReplyTimeoutRef.current !== null) {
+      window.clearTimeout(chatReplyTimeoutRef.current);
+      chatReplyTimeoutRef.current = null;
+    }
+    if (chatReplyFailSafeRef.current !== null) {
+      window.clearTimeout(chatReplyFailSafeRef.current);
+      chatReplyFailSafeRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => clearChatReplyTimeout();
+  }, [clearChatReplyTimeout]);
+
+  const queueJulieReply = useCallback((reply: string, delay = 420) => {
+    clearChatReplyTimeout();
+    setChatTyping(true);
+
+    const safeReply = reply?.trim() || "I got your message. Ask me anything about Julie and I will respond.";
+
+    chatReplyTimeoutRef.current = window.setTimeout(() => {
+      if (chatReplyFailSafeRef.current !== null) {
+        window.clearTimeout(chatReplyFailSafeRef.current);
+        chatReplyFailSafeRef.current = null;
+      }
+      setChatMessages(prev => [...prev, { role: "julie", text: safeReply }]);
+      setChatTyping(false);
+      chatReplyTimeoutRef.current = null;
+    }, delay);
+
+    // Fail-safe: if anything interrupts normal reply timer, recover automatically.
+    chatReplyFailSafeRef.current = window.setTimeout(() => {
+      if (chatReplyTimeoutRef.current !== null) {
+        window.clearTimeout(chatReplyTimeoutRef.current);
+        chatReplyTimeoutRef.current = null;
+      }
+      setChatMessages(prev => [
+        ...prev,
+        {
+          role: "julie",
+          text: "I am here. Something delayed my last response, but I can still answer anything you ask.",
+        },
+      ]);
+      setChatTyping(false);
+      chatReplyFailSafeRef.current = null;
+    }, Math.max(2000, delay + 1200));
+  }, [clearChatReplyTimeout]);
+
+  // CHAT HANDLER
+  const handleChatQuestion = (qa: typeof chatQA[0]) => {
+    if (chatTyping) return;
+    setChatMessages(prev => [...prev, { role: "user", text: qa.q }]);
+    setTimeout(scrollChatToBottom, 50);
+    queueJulieReply(qa.a);
+  };
+
+  // Auto-scroll chat container only (not page)
+  useEffect(() => {
+    scrollChatToBottom();
+  }, [chatMessages, chatTyping, scrollChatToBottom]);
+
   const filteredTl = useMemo(
     () => timelineItems.filter(i => tlFilter === "all" || i.category === tlFilter),
     [tlFilter]
@@ -435,6 +569,29 @@ export default function PortfolioShowcase() {
       z-index: 300;
       transition: width 0.08s linear;
       pointer-events: none;
+    }
+
+    /* Right-side page scrollbar theme */
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--pink) rgba(26,8,8,0.18);
+    }
+    html::-webkit-scrollbar {
+      width: 11px;
+    }
+    html::-webkit-scrollbar-track {
+      background: linear-gradient(180deg, rgba(26,8,8,0.08) 0%, rgba(46,14,14,0.2) 100%);
+    }
+    .scroll-progress {
+      height: 3px;
+    }
+    html::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, var(--pink) 0%, var(--orange) 100%);
+      border-radius: 999px;
+      border: 2px solid var(--cream);
+    }
+    html::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #f7b3d3 0%, #ef7a57 100%);
     }
 
     /* NAV */
@@ -1048,28 +1205,163 @@ export default function PortfolioShowcase() {
     }
 
     /* DARK PANEL */
-    .dark-panel { background: var(--burg); display: grid; grid-template-columns: 1fr 1fr; min-height: 600px; }
-    .dark-panel-text { padding: 72px 5vw; display: flex; flex-direction: column; justify-content: center; }
+    .dark-panel { background: var(--burg); display: grid; grid-template-columns: 1fr 1fr; height: 600px; }
+    .dark-panel-text { padding: 72px 5vw; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
     .dark-label { font-family: var(--cond); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pink); margin-bottom: 24px; }
     .dark-heading { font-family: var(--cond); font-size: clamp(1.4rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: white; line-height: 1.2; margin-bottom: 28px; }
     .dark-body { font-family: var(--body-f); font-size: 0.78rem; font-weight: 300; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.55); line-height: 1.85; max-width: 52ch; }
-    .dark-panel-photo { position: relative; overflow: hidden; min-height: 400px; }
-    .dark-panel-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; filter: brightness(0.75) saturate(0.8); transition: transform 0.9s ease, filter 0.6s ease; }
-    .dark-panel-photo:hover img { transform: scale(1.04); filter: brightness(0.9) saturate(1); }
+    /* CHAT TERMINAL */
+    .dark-panel-chat {
+      background: var(--burg2);
+      border-left: 1px solid rgba(245,160,200,0.12);
+      display: flex; flex-direction: column;
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .chat-bar {
+      display: flex; align-items: center; gap: 8px;
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(245,160,200,0.1);
+      flex-shrink: 0;
+    }
+    .chat-bar-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .chat-bar-title {
+      margin-left: 12px; font-family: var(--mono);
+      font-size: 0.68rem; color: rgba(245,160,200,0.5);
+      letter-spacing: 0.05em;
+    }
+    .chat-body {
+      flex: 1; overflow-y: auto; padding: 24px 20px;
+      display: flex; flex-direction: column; gap: 14px;
+      min-height: 0;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(245,160,200,0.2) transparent;
+    }
+    .chat-bubble {
+      max-width: 88%; padding: 12px 16px;
+      font-family: var(--body-f); font-size: 0.78rem;
+      line-height: 1.7; letter-spacing: 0.03em;
+      border-radius: 16px;
+      animation: chatPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .chat-bubble-user {
+      align-self: flex-end;
+      background: var(--pink); color: var(--burg);
+      border-bottom-right-radius: 4px;
+      font-weight: 500;
+    }
+    .chat-bubble-julie {
+      align-self: flex-start;
+      background: rgba(245,160,200,0.08);
+      border: 1px solid rgba(245,160,200,0.15);
+      color: rgba(255,255,255,0.8);
+      border-bottom-left-radius: 4px;
+    }
+    .chat-bubble-julie .chat-sender {
+      display: block; font-family: var(--cond);
+      font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--pink); margin-bottom: 6px;
+    }
+    .chat-typing-indicator {
+      align-self: flex-start;
+      display: flex; gap: 5px; padding: 14px 18px;
+      background: rgba(245,160,200,0.08);
+      border: 1px solid rgba(245,160,200,0.15);
+      border-radius: 16px; border-bottom-left-radius: 4px;
+    }
+    .chat-typing-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--pink); opacity: 0.4;
+      animation: typingBounce 1.2s ease-in-out infinite;
+    }
+    .chat-typing-dot:nth-child(2) { animation-delay: 0.15s; }
+    .chat-typing-dot:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes typingBounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-6px); opacity: 1; }
+    }
+    @keyframes chatPop {
+      from { opacity: 0; transform: translateY(8px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .chat-typing-text {
+      align-self: flex-start; max-width: 88%; padding: 12px 16px;
+      background: rgba(245,160,200,0.08);
+      border: 1px solid rgba(245,160,200,0.15);
+      color: rgba(255,255,255,0.8);
+      border-radius: 16px; border-bottom-left-radius: 4px;
+      font-family: var(--body-f); font-size: 0.78rem;
+      line-height: 1.7; letter-spacing: 0.03em;
+    }
+    .chat-typing-text .chat-sender {
+      display: block; font-family: var(--cond);
+      font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--pink); margin-bottom: 6px;
+    }
+    .chat-chips {
+      flex-shrink: 0; padding: 16px 20px;
+      border-top: 1px solid rgba(245,160,200,0.1);
+      display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .chat-chip {
+      font-family: var(--cond); font-size: 0.68rem;
+      font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--pink);
+      border: 1px solid rgba(245,160,200,0.25);
+      padding: 8px 14px; border-radius: 999px;
+      transition: all 0.28s ease;
+      background: transparent;
+    }
+    .chat-chip:hover {
+      background: var(--pink); color: var(--burg);
+      border-color: var(--pink);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px -6px rgba(245,160,200,0.4);
+    }
+    .chat-chip:disabled { opacity: 0.35; pointer-events: none; }
+    .chat-welcome {
+      font-family: var(--mono); font-size: 0.72rem;
+      color: rgba(245,160,200,0.45); line-height: 1.8;
+      letter-spacing: 0.03em;
+    }
+    .chat-welcome strong { color: var(--pink); font-weight: 600; }
+    .chat-cursor-blink {
+      display: inline-block; width: 6px; height: 1em;
+      background: var(--pink); vertical-align: text-bottom;
+      margin-left: 2px;
+      animation: blink 1s infinite;
+    }
 
     /* PROJECTS */
     .projects-section { background: var(--cream); padding: 80px 5vw; }
     .sec-super { font-family: var(--cond); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
     .sec-title { font-family: var(--cond); font-size: clamp(3rem, 7vw, 8rem); font-weight: 900; letter-spacing: 0.01em; text-transform: uppercase; color: var(--burg); line-height: 0.9; margin-bottom: 56px; }
     .proj-list { display: flex; flex-direction: column; gap: 0; }
-    .proj-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 1px solid rgba(26,8,8,0.12); padding: 40px 0; align-items: start; position: relative; transition: padding 0.3s ease; }
-    .proj-row::before { content: ""; position: absolute; top: -1px; left: 0; width: 0; height: 2px; background: var(--pink); transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1); }
+    .proj-row {
+      display: grid; grid-template-columns: 60px 1fr 1fr; gap: 0;
+      border-top: 1px solid rgba(26,8,8,0.12);
+      padding: 40px 0; align-items: start; position: relative;
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s cubic-bezier(0.22,0.61,0.36,1), transform 0.7s cubic-bezier(0.22,0.61,0.36,1), background 0.4s ease, padding 0.4s ease;
+    }
+    .proj-row-visible { opacity: 1; transform: translateY(0); }
+    .proj-row::before { content: ""; position: absolute; top: -1px; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, var(--pink), var(--orange)); transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1); }
     .proj-row:hover::before { width: 100%; }
     .proj-row:last-child { border-bottom: 1px solid rgba(26,8,8,0.12); }
-    .proj-row:hover { background: rgba(26,8,8,0.03); margin: 0 -5vw; padding: 40px 5vw; }
+    .proj-row:hover { background: rgba(26,8,8,0.03); padding: 40px 20px; }
+    .proj-num {
+      font-family: var(--cond); font-size: 2.8rem; font-weight: 900;
+      color: rgba(26,8,8,0.06); line-height: 1;
+      transition: color 0.4s ease;
+      user-select: none;
+    }
+    .proj-row:hover .proj-num { color: rgba(245,160,200,0.25); }
     .proj-cat { font-family: var(--cond); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; transition: color 0.3s ease; }
     .proj-row:hover .proj-cat { color: var(--orange); }
-    .proj-name { font-family: var(--cond); font-size: clamp(1.8rem, 3.5vw, 3rem); font-weight: 900; letter-spacing: 0.02em; text-transform: uppercase; color: var(--burg); line-height: 1; margin-bottom: 16px; transition: transform 0.3s ease; }
+    .proj-name { font-family: var(--cond); font-size: clamp(1.8rem, 3.5vw, 3rem); font-weight: 900; letter-spacing: 0.02em; text-transform: uppercase; color: var(--burg); line-height: 1; margin-bottom: 16px; transition: transform 0.4s cubic-bezier(0.22,0.61,0.36,1), color 0.3s ease; }
     .proj-row:hover .proj-name { transform: translateX(6px); }
     .proj-tags-row { display: flex; flex-wrap: wrap; gap: 8px; }
     .proj-tag { font-family: var(--body-f); font-size: 0.68rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border: 1px solid rgba(26,8,8,0.2); padding: 4px 12px; border-radius: 999px; transition: all 0.25s ease; }
@@ -1077,8 +1369,20 @@ export default function PortfolioShowcase() {
     .proj-right { padding-top: 4px; }
     .proj-summary { font-family: var(--body-f); font-size: 0.82rem; font-weight: 300; color: var(--body); line-height: 1.8; letter-spacing: 0.04em; text-transform: uppercase; max-width: 54ch; margin-bottom: 24px; }
     .proj-links-row { display: flex; gap: 16px; flex-wrap: wrap; }
-    .proj-link { font-family: var(--cond); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--burg); position: relative; padding: 6px 0; transition: color 0.25s ease; }
-    .proj-link::after { content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 1.5px; background: var(--burg); transform: scaleX(1); transform-origin: right; transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1); }
+    .proj-link {
+      font-family: var(--cond); font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--burg); position: relative; padding: 6px 0;
+      transition: color 0.25s ease;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .proj-link-arrow {
+      display: inline-block; transition: transform 0.35s cubic-bezier(0.22,0.61,0.36,1), opacity 0.3s ease;
+      transform: translateX(-4px); opacity: 0;
+      font-size: 0.85rem;
+    }
+    .proj-link:hover .proj-link-arrow { transform: translateX(0); opacity: 1; }
+    .proj-link::after { content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 1.5px; background: var(--burg); transform: scaleX(1); transform-origin: right; transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1), background 0.3s ease; }
     .proj-link:hover { color: var(--orange); }
     .proj-link:hover::after { background: var(--orange); transform-origin: left; }
 
@@ -1148,6 +1452,7 @@ export default function PortfolioShowcase() {
     .cl-arrow { color: rgba(245,160,200,0.35); font-size: 1rem; transition: color 0.3s, transform 0.3s; }
     .contact-link-row:hover .cl-arrow { color: var(--pink); transform: translateX(6px); }
 
+
     /* FOOTER */
     .footer-tagline { background: var(--cream); padding: 60px 5vw 20px; }
     .tagline-text { font-family: var(--cond); font-size: clamp(1.4rem, 3.5vw, 4rem); font-weight: 900; letter-spacing: 0.04em; text-transform: uppercase; color: var(--burg); line-height: 1.1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0 32px; margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid rgba(26,8,8,0.12); }
@@ -1197,7 +1502,8 @@ export default function PortfolioShowcase() {
       .contact-left, .contact-right { padding: 60px 24px; }
       .footer-tagline { padding: 48px 24px 16px; }
       .proj-row { grid-template-columns: 1fr; gap: 16px; }
-      .proj-row:hover { margin: 0 -24px; padding: 40px 24px; }
+      .proj-row:hover { padding: 40px 24px; }
+      .proj-num { display: none; }
       .statement-text { grid-template-columns: 1fr; font-size: clamp(2rem,8vw,4rem); }
       .tagline-text { grid-template-columns: 1fr; }
       .footer-links { grid-template-columns: 1fr 1fr; }
@@ -1326,14 +1632,6 @@ export default function PortfolioShowcase() {
         </div>
       </section>
 
-      {/* HERO MARQUEE — under the name */}
-      <div className="hero-marquee">
-        <div className="hero-marquee-inner">
-          {[...heroMarqueeItems, ...heroMarqueeItems].map((item, i) => (
-            <span key={i} className="hero-marquee-item">{item}</span>
-          ))}
-        </div>
-      </div>
 
       {/* INTRO */}
       <section className="intro" id="about">
@@ -1523,15 +1821,50 @@ export default function PortfolioShowcase() {
             I work closely with teams I join, immersing myself in the product's vision. I ship working code quickly and refine based on feedback. I care about the interface as much as the logic — clean, accessible, and polished UIs are part of my standard.
           </p>
         </div>
-        <div className="dark-panel-photo fade-up d3">
-          <Image
-            src="/intro-img.jpg"
-            alt="Julie Anne Cantillep"
-            fill
-            loading="eager"
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            style={{ objectFit: "cover", objectPosition: "center top", filter: "brightness(0.6) saturate(0.7)" }}
-          />
+        <div className="dark-panel-chat fade-up d3">
+          <div className="chat-bar">
+            <span className="chat-bar-dot" style={{ background: "#e8613a" }} />
+            <span className="chat-bar-dot" style={{ background: "#f5a0c8" }} />
+            <span className="chat-bar-dot" style={{ background: "rgba(245,160,200,0.4)" }} />
+            <span className="chat-bar-title">ask-julie — chat</span>
+          </div>
+          <div className="chat-body" ref={chatBodyRef}>
+            {chatMessages.length === 0 && !chatTyping && (
+              <div className="chat-welcome">
+                <strong>&gt; julie.init()</strong><br />
+                Hi! I&apos;m Julie&apos;s portfolio bot.<br />
+                Pick a question below to get started.
+                <span className="chat-cursor-blink" />
+              </div>
+            )}
+            {chatMessages.map((msg, i) => (
+              <div key={i} className={`chat-bubble ${msg.role === "user" ? "chat-bubble-user" : "chat-bubble-julie"}`}>
+                {msg.role === "julie" && <span className="chat-sender">Julie</span>}
+                {msg.text}
+              </div>
+            ))}
+            {chatTyping && (
+              <div className="chat-typing-indicator">
+                <span className="chat-typing-dot" />
+                <span className="chat-typing-dot" />
+                <span className="chat-typing-dot" />
+              </div>
+            )}
+          </div>
+          <div className="chat-chips">
+            {chatQA.map((qa) => (
+              <button
+                key={qa.q}
+                type="button"
+                className="chat-chip"
+                disabled={chatTyping}
+                onClick={() => handleChatQuestion(qa)}
+                data-hover
+              >
+                {qa.q}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -1541,9 +1874,14 @@ export default function PortfolioShowcase() {
           <div className="sec-super">Selected Work</div>
           <div className="sec-title">Projects</div>
         </div>
-        <div className="proj-list fade-up d3">
-          {projectItems.map(p => (
-            <article key={p.name} className="proj-row">
+        <div className="proj-list">
+          {projectItems.map((p, idx) => (
+            <article
+              key={p.name}
+              className={`proj-row ${visibleProj.has(idx) ? "proj-row-visible" : ""}`}
+              data-proj-index={idx}
+            >
+              <div className="proj-num">0{idx + 1}</div>
               <div>
                 <div className="proj-cat">{p.category}</div>
                 <h3 className="proj-name">{p.name}</h3>
@@ -1563,6 +1901,7 @@ export default function PortfolioShowcase() {
                       className="proj-link"
                     >
                       {link.label}
+                      <span className="proj-link-arrow">→</span>
                     </Link>
                   ))}
                 </div>

@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+const fontLink = "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&display=swap";
+
 const metrics = [
   { label: "Product Type", value: "SaaS" },
   { label: "Role",         value: "Solo Build" },
@@ -99,18 +101,22 @@ const stack = ["Next.js", "React", "MongoDB", "NextAuth", "Stripe", "Tailwind CS
 export default function PracticePalCaseStudyPage() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#f0ece4] text-[#1a0808]">
-      <nav className="sticky top-0 z-50 flex items-center justify-between border-b border-[#1a0808]/10 bg-[#f0ece4]/90 px-6 py-5 backdrop-blur-xl md:px-12">
+      {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+      <link rel="stylesheet" href={fontLink} />
+      <nav className="sticky top-0 z-50 flex items-center justify-between border-b border-[#1a0808]/10 bg-[#f0ece4]/90 px-6 py-5 backdrop-blur-xl md:px-12" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
         <Link
           href="/"
-          className="text-xs font-black uppercase tracking-[0.2em] transition hover:text-[#e8613a]"
+          className="uppercase transition hover:text-[#e8613a]"
+          style={{ fontSize: '1.15rem', fontWeight: 800, letterSpacing: '0.12em' }}
         >
           Julie Anne Cantillep
         </Link>
 
-        <div className="flex items-center gap-5 text-xs font-black uppercase tracking-[0.18em]">
+        <div className="flex items-center gap-11">
           <Link
             href="/auth/login?callbackUrl=%2Fdashboard"
-            className="hover:text-[#e8613a]"
+            className="uppercase transition hover:text-[#e8613a]"
+            style={{ fontSize: '1.15rem', fontWeight: 800, letterSpacing: '0.12em' }}
           >
             Demo
           </Link>
@@ -118,7 +124,8 @@ export default function PracticePalCaseStudyPage() {
             href="https://github.com/Julieanna97/PracticePal"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#e8613a]"
+            className="uppercase transition hover:text-[#e8613a]"
+            style={{ fontSize: '1.15rem', fontWeight: 800, letterSpacing: '0.12em' }}
           >
             GitHub
           </Link>
