@@ -115,6 +115,8 @@ export default function PracticePalCaseStudyPage() {
         <div className="flex items-center gap-11">
           <Link
             href="/auth/login?callbackUrl=%2Fdashboard"
+            target="_blank"
+            rel="noopener noreferrer"
             className="uppercase transition hover:text-[#e8613a]"
             style={{ fontSize: '1.15rem', fontWeight: 800, letterSpacing: '0.12em' }}
           >
@@ -165,6 +167,8 @@ export default function PracticePalCaseStudyPage() {
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Link
                 href="/auth/login?callbackUrl=%2Fdashboard"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-full border border-[#1a0808] bg-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] text-[#f0ece4] transition hover:bg-transparent hover:text-[#1a0808]"
               >
                 Try the Demo
@@ -588,6 +592,8 @@ export default function PracticePalCaseStudyPage() {
           <div className="flex shrink-0 flex-col gap-4 sm:flex-row">
             <Link
               href="/auth/login?callbackUrl=%2Fdashboard"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-full border border-[#1a0808] bg-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] text-[#f0ece4] transition hover:bg-transparent hover:text-[#1a0808]"
             >
               Try the Demo

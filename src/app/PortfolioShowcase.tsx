@@ -91,7 +91,7 @@ const projectItems: ProjectItem[] = [
     summary: "A practice planning and analytics SaaS for musicians — authentication, session tracking, plans, and subscriptions from zero to launch.",
     links: [
       { label: "View Case Study", href: "/projects/practicepal" },
-      { label: "View Demo", href: "/auth/login?callbackUrl=%2Fdashboard" },
+      { label: "View Demo", href: "/auth/login?callbackUrl=%2Fdashboard", external: true },
       { label: "GitHub", href: "https://github.com/Julieanna97/PracticePal", external: true },
     ],
     tags: ["Next.js", "MongoDB", "Stripe", "NextAuth"],
