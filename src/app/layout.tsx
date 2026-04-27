@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import Providers from "./providers";
+import GlobalCursor from "./components/GlobalCursor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <Providers>
+          <GlobalCursor />
           <div className="relative min-h-screen">
             <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
               <div className="absolute -left-24 top-24 h-72 w-72 rounded-full bg-fuchsia-200/35 blur-3xl" />

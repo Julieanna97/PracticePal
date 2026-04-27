@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CaseStudyTopNav from "@/app/components/CaseStudyTopNav";
 
 const fontLink = "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&display=swap";
 
@@ -114,27 +115,7 @@ export default function PodManagerCaseStudyPage() {
     <main className="min-h-screen overflow-hidden bg-[#f0ece4] text-[#1a0808]">
       {/* eslint-disable-next-line @next/next/no-page-custom-font */}
       <link rel="stylesheet" href={fontLink} />
-      <nav className="sticky top-0 z-50 flex items-center justify-between border-b border-[#1a0808]/10 bg-[#f0ece4]/90 px-6 py-5 backdrop-blur-xl md:px-12" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-        <Link
-          href="/"
-          className="uppercase transition hover:text-[#e8613a]"
-          style={{ fontSize: '1.15rem', fontWeight: 800, letterSpacing: '0.12em' }}
-        >
-          Julie Anne Cantillep
-        </Link>
-
-        <div className="flex items-center gap-11">
-          <Link
-            href="https://www.podmanager.ai/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="uppercase transition hover:text-[#e8613a]"
-            style={{ fontSize: '1.15rem', fontWeight: 800, letterSpacing: '0.12em' }}
-          >
-            Visit Site
-          </Link>
-        </div>
-      </nav>
+      <CaseStudyTopNav />
 
       {/* HERO */}
       <section className="relative px-6 py-16 md:px-12 md:py-24">

@@ -110,8 +110,10 @@ const projectItems: ProjectItem[] = [
     name: "Sigma Autonomous Car",
     category: "Embedded Systems",
     summary: "An Arduino-based autonomous car focused on sensor input, control loops, and path reliability.",
-    links: [{ label: "GitHub Profile", href: "https://github.com/Julieanna97", external: true }],
-    tags: ["Arduino", "C/C++", "Python", "RTOS/Zephyr"],
+    links: [
+      { label: "View Case Study", href: "/projects/sigma-car" },
+    ],
+    tags: ["Arduino", "C/C++", "Python", "Sensors"],
   },
 ];
 
@@ -164,7 +166,7 @@ const chatQA = [
   { q: "What did you do at PodManager.ai?", a: "Julie built features in a real production codebase including recording studio workflows, AI editing flows, and fullstack integrations." },
   { q: "What is PracticePal?", a: "PracticePal is Julie's musician SaaS product for practice planning and analytics, with auth, plans, sessions, and subscription features." },
   { q: "How quickly can you ramp up?", a: "Fast. Julie adapts quickly by understanding product context first, then shipping small reliable increments early." },
-  { q: "How do I contact you directly?", a: "Use the contact section below for email, LinkedIn, GitHub, or phone." },
+  { q: "How do I contact you directly?", a: "Use the contact section below for LinkedIn, GitHub, or phone." },
 ];
 
 export default function PortfolioShowcase() {
@@ -185,11 +187,6 @@ export default function PortfolioShowcase() {
 
   // Project visibility
   const [visibleProj, setVisibleProj] = useState<Set<number>>(new Set());
-
-  // Cursor refs
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const cursorRingRef = useRef<HTMLDivElement>(null);
-  const [cursorEnabled, setCursorEnabled] = useState(false);
 
   // Hero parallax
   const heroPhotoRef = useRef<HTMLDivElement>(null);
@@ -255,55 +252,6 @@ export default function PortfolioShowcase() {
     const t = setTimeout(() => setToast(""), 2200);
     return () => clearTimeout(t);
   }, [toast]);
-
-  // CUSTOM CURSOR
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    if (!fine) return;
-    setCursorEnabled(true);
-
-    let mouseX = 0, mouseY = 0;
-    let ringX = 0, ringY = 0;
-
-    const onMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
-      }
-    };
-
-    const animateRing = () => {
-      ringX += (mouseX - ringX) * 0.18;
-      ringY += (mouseY - ringY) * 0.18;
-      if (cursorRingRef.current) {
-        cursorRingRef.current.style.transform = `translate(${ringX}px, ${ringY}px)`;
-      }
-      requestAnimationFrame(animateRing);
-    };
-
-    const onOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const isInteractive =
-        !!target.closest("a, button, [data-hover], input, textarea, label, select");
-      if (cursorRingRef.current) {
-        cursorRingRef.current.classList.toggle("cursor-ring-grow", isInteractive);
-      }
-      if (cursorRef.current) {
-        cursorRef.current.classList.toggle("cursor-dot-hide", isInteractive);
-      }
-    };
-
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseover", onOver);
-    requestAnimationFrame(animateRing);
-
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseover", onOver);
-    };
-  }, []);
 
   // HERO PARALLAX — photo subtly shifts with cursor
   useEffect(() => {
@@ -480,11 +428,6 @@ export default function PortfolioShowcase() {
     return counts;
   }, []);
 
-  const copyEmail = async () => {
-    try { await navigator.clipboard.writeText("kisamae1997@gmail.com"); setToast("EMAIL COPIED"); }
-    catch { setToast("kisamae1997@gmail.com"); }
-  };
-
   const closeMenuAndScroll = (id: string) => {
     setMenuOpen(false);
     setTimeout(() => {
@@ -528,41 +471,6 @@ export default function PortfolioShowcase() {
     ::selection { background: var(--pink); color: var(--burg); }
 
     /* CUSTOM CURSOR */
-    .cursor-enabled, .cursor-enabled * { cursor: none !important; }
-    @media (hover: none) or (pointer: coarse) {
-      .cursor-enabled, .cursor-enabled * { cursor: auto !important; }
-      .cursor-dot, .cursor-ring { display: none !important; }
-    }
-    .cursor-dot {
-      position: fixed; top: 0; left: 0;
-      width: 8px; height: 8px;
-      margin-left: -4px; margin-top: -4px;
-      background: var(--pink);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      mix-blend-mode: difference;
-      transition: opacity 0.2s ease, transform 0.05s linear;
-    }
-    .cursor-dot-hide { opacity: 0; }
-    .cursor-ring {
-      position: fixed; top: 0; left: 0;
-      width: 36px; height: 36px;
-      margin-left: -18px; margin-top: -18px;
-      border: 1.5px solid var(--pink);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transition: width 0.25s ease, height 0.25s ease, margin 0.25s ease, background 0.25s ease, border-color 0.25s ease;
-      will-change: transform;
-    }
-    .cursor-ring.cursor-ring-grow {
-      width: 60px; height: 60px;
-      margin-left: -30px; margin-top: -30px;
-      background: rgba(245, 160, 200, 0.18);
-      border-color: var(--pink);
-    }
-
     .scroll-progress {
       position: fixed; top: 0; left: 0; height: 3px;
       background: linear-gradient(90deg, var(--pink) 0%, var(--orange) 100%);
@@ -1536,15 +1444,8 @@ export default function PortfolioShowcase() {
     : "0%";
 
   return (
-    <div className={`${mounted ? "mounted" : ""} ${cursorEnabled ? "cursor-enabled" : ""}`}>
+    <div className={`${mounted ? "mounted" : ""}`}>
       <style>{css}</style>
-
-      {cursorEnabled && (
-        <>
-          <div ref={cursorRef} className="cursor-dot" />
-          <div ref={cursorRingRef} className="cursor-ring" />
-        </>
-      )}
 
       <div className="scroll-progress" style={{ width: `${scrollPct}%` }} />
 
@@ -1559,7 +1460,7 @@ export default function PortfolioShowcase() {
         <button type="button" className="mobile-drawer-link" onClick={() => closeMenuAndScroll("timeline")}>Timeline</button>
         <button type="button" className="mobile-drawer-link" onClick={() => closeMenuAndScroll("skills")}>Skills</button>
         <button type="button" className="mobile-drawer-link" onClick={() => closeMenuAndScroll("contact")}>Contact</button>
-        <a href="mailto:kisamae1997@gmail.com" className="mobile-drawer-cta" onClick={() => setMenuOpen(false)}>
+        <a href="#contact" className="mobile-drawer-cta" onClick={() => setMenuOpen(false)}>
           Get in Touch
         </a>
       </div>
@@ -1750,10 +1651,8 @@ export default function PortfolioShowcase() {
           </Link>
 
           {/* Polaroid 3 — Sigma Car */}
-          <a
-            href="https://github.com/Julieanna97"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/projects/sigma-car"
             className="polaroid polaroid-3"
             data-hover
           >
@@ -1787,7 +1686,7 @@ export default function PortfolioShowcase() {
               </div>
             </div>
             <div className="polaroid-caption">Sigma Car · 2023</div>
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -2002,29 +1901,31 @@ export default function PortfolioShowcase() {
             Let's<br />work<br />together.
           </h2>
           <p className="contact-sub">
-            Open to SWE, product engineering, and frontend roles. I reply within 24 hours.
+            Open to SWE, product engineering, and frontend roles. Reach me on LinkedIn or GitHub.
           </p>
           <div className="contact-btns">
             <a
-              href="mailto:kisamae1997@gmail.com"
+              href="https://www.linkedin.com/in/julie-anne-cantillep-4ba4ab250/"
               className="pill-btn"
               style={{ background: "var(--pink)", color: "var(--burg)", borderColor: "var(--pink)", maxWidth: "100%" }}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              Send Email
+              LinkedIn
             </a>
-            <button
-              type="button"
+            <a
+              href="https://github.com/Julieanna97"
               className="pill-btn"
               style={{ color: "var(--pink)", borderColor: "rgba(245,160,200,0.4)", maxWidth: "100%" }}
-              onClick={copyEmail}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              Copy Address
-            </button>
+              GitHub
+            </a>
           </div>
         </div>
         <div className="contact-right fade-up d3">
           {[
-            { label: "Email",    val: "kisamae1997@gmail.com",  href: "mailto:kisamae1997@gmail.com" },
             { label: "Phone",   val: "+46 760 393 202",          href: "tel:+46760393202" },
             { label: "LinkedIn",val: "julie-anne-cantillep",     href: "https://www.linkedin.com/in/julie-anne-cantillep-4ba4ab250/" },
             { label: "GitHub",  val: "Julieanna97",              href: "https://github.com/Julieanna97" },
@@ -2074,7 +1975,6 @@ export default function PortfolioShowcase() {
           </div>
           <div>
             <div className="footer-col-head">Contact</div>
-            <a href="mailto:kisamae1997@gmail.com" className="footer-col-link">Email</a>
             <a href="https://www.linkedin.com/in/julie-anne-cantillep-4ba4ab250/" className="footer-col-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             <a href="https://github.com/Julieanna97" className="footer-col-link" target="_blank" rel="noopener noreferrer">GitHub</a>
           </div>

@@ -4,49 +4,47 @@ export default function ContactPage() {
   return (
     <SimplePageShell
       title="Get In Touch"
-      subtitle="Have questions, feedback, or need help? We'd love to hear from you!"
+      subtitle="Need help, want to share feedback, or found a bug? Use one of the options below."
     >
       <div className="grid md:grid-cols-2 gap-8 mb-10">
         {/* Contact Info Cards */}
-        <div className="bg-gradient-to-br from-fuchsia-500 to-purple-700 rounded-2xl p-8 text-white shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
+        <a
+          href="https://www.linkedin.com/in/julie-anne-cantillep-4ba4ab250/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-gradient-to-br from-fuchsia-500 to-purple-700 rounded-2xl p-8 text-white shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group"
+        >
           <div className="absolute inset-0 opacity-0 group-hover:opacity-10 bg-white transition-opacity"></div>
           <div className="relative z-10">
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-sm">
-              <span className="text-4xl animate-bounce">📧</span>
+              <span className="text-4xl animate-bounce">💼</span>
             </div>
-            <h3 className="text-2xl font-bold mb-3">Email Support</h3>
+            <h3 className="text-2xl font-bold mb-3">LinkedIn</h3>
             <p className="text-purple-100 mb-4">
-              Get in touch with our support team for any questions or issues.
+              Connect directly for professional inquiries, collaborations, or portfolio feedback.
             </p>
-            <a 
-              href="mailto:support@practicepal.com" 
-              className="text-white font-bold text-lg hover:text-purple-100 transition-colors underline underline-offset-4"
-            >
-              support@practicepal.com
-            </a>
-            <p className="text-sm text-purple-200 mt-4">We typically respond within 24 hours</p>
+            <p className="text-sm text-purple-200 mt-4">Best for general contact and networking.</p>
           </div>
-        </div>
+        </a>
 
-        <div className="bg-gradient-to-br from-indigo-500 to-sky-600 rounded-2xl p-8 text-white shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
+        <a
+          href="https://github.com/Julieanna97/PracticePal/issues"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-gradient-to-br from-indigo-500 to-sky-600 rounded-2xl p-8 text-white shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group"
+        >
           <div className="absolute inset-0 opacity-0 group-hover:opacity-10 bg-white transition-opacity"></div>
           <div className="relative z-10">
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-sm">
-              <span className="text-4xl animate-pulse">💬</span>
+              <span className="text-4xl animate-pulse">🐛</span>
             </div>
-            <h3 className="text-2xl font-bold mb-3">Share Feedback</h3>
+            <h3 className="text-2xl font-bold mb-3">GitHub Issues</h3>
             <p className="text-sky-100 mb-4">
-              Help us improve! Share your ideas, suggestions, or feature requests.
+              Report bugs, request features, or track improvements in the repo.
             </p>
-            <a 
-              href="mailto:feedback@practicepal.com" 
-              className="text-white font-bold text-lg hover:text-sky-100 transition-colors underline underline-offset-4"
-            >
-              feedback@practicepal.com
-            </a>
-            <p className="text-sm text-sky-200 mt-4">Every voice matters!</p>
+            <p className="text-sm text-sky-200 mt-4">Use this for product feedback and bug reports.</p>
           </div>
-        </div>
+        </a>
       </div>
 
       {/* Quick Links */}
@@ -98,31 +96,31 @@ export default function ContactPage() {
       <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-8">
         <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
           <span className="text-3xl mr-3">📝</span>
-          Contact Form (Coming Soon)
+          More Contact Options
         </h3>
         <p className="text-gray-700 mb-6">
-          We're building a contact form so you can reach us directly from this page. For now, please use the email addresses above or check out our FAQ.
+          There is no email form on this page. Use LinkedIn for direct contact or GitHub Issues for bugs and product feedback.
         </p>
 
         <div className="space-y-4">
           <div className="bg-white rounded-xl p-4 border border-blue-200">
-            <p className="font-semibold text-gray-900 mb-2">Planned form fields:</p>
+            <p className="font-semibold text-gray-900 mb-2">Recommended paths:</p>
             <ul className="space-y-2 text-gray-700">
               <li className="flex items-center">
                 <span className="text-blue-600 mr-2">•</span>
-                Your name and email
+                LinkedIn for professional contact
               </li>
               <li className="flex items-center">
                 <span className="text-blue-600 mr-2">•</span>
-                Subject/topic selection
+                GitHub Issues for bugs and feature requests
               </li>
               <li className="flex items-center">
                 <span className="text-blue-600 mr-2">•</span>
-                Message details
+                FAQ for common questions
               </li>
               <li className="flex items-center">
                 <span className="text-blue-600 mr-2">•</span>
-                Optional: Attach screenshots
+                Phone for urgent direct contact
               </li>
             </ul>
           </div>
@@ -157,10 +155,12 @@ export default function ContactPage() {
           </li>
         </ul>
         <a 
-          href="mailto:bugs@practicepal.com?subject=Bug%20Report" 
+          href="https://github.com/Julieanna97/PracticePal/issues"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-block bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-3 rounded-full font-bold hover:shadow-xl transform hover:-translate-y-1 transition-all"
         >
-          Report a Bug
+          Open GitHub Issues
         </a>
       </div>
 
