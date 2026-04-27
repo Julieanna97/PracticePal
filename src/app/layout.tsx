@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Julie Anne Cantillep | Fullstack Portfolio",
+  title: "Julie Anne Cantillep | Software Developer",
   description: "A creative portfolio showcasing fullstack engineering, embedded systems work, and AI-focused experience.",
   icons: {
     icon: "/favicon.png",
