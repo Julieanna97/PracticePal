@@ -407,94 +407,104 @@ export default function PortfolioShowcase() {
     }
     @keyframes term-glow { 0%,100%{opacity:0.5;} 50%{opacity:1;} }
 
-    /* ABSTRACT ART */
-    .abstract-art-wrap {
-      position: relative;
-      width: 100%;
+    /* PROCESS FLOW CARDS */
+    .process-cards-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 48px 36px;
+      justify-content: center;
       height: 100%;
-      min-height: 400px;
-      background: var(--burg);
+    }
+    .process-card {
+      position: relative;
+      background: rgba(245,160,200,0.04);
+      border: 1px solid rgba(245,160,200,0.12);
+      border-radius: 16px;
+      padding: 28px 28px 24px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.4s cubic-bezier(0.65,0,0.35,1);
       overflow: hidden;
     }
-    .abstract-blob {
+    .process-card::before {
+      content: "";
       position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
+      inset: 0;
+      background: linear-gradient(135deg, rgba(245,160,200,0.06) 0%, transparent 60%);
+      border-radius: 16px;
+      pointer-events: none;
     }
-    .abstract-blob-1 {
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, rgba(245,160,200,0.5) 0%, transparent 70%);
-      top: 10%; left: 20%;
-      animation: blob-float-1 10s ease-in-out infinite;
+    .process-card:hover {
+      border-color: rgba(245,160,200,0.3);
+      background: rgba(245,160,200,0.07);
+      transform: translateX(6px);
+      box-shadow: 0 12px 40px -12px rgba(245,160,200,0.15);
     }
-    .abstract-blob-2 {
-      width: 250px; height: 250px;
-      background: radial-gradient(circle, rgba(232,97,58,0.45) 0%, transparent 70%);
-      bottom: 15%; right: 15%;
-      animation: blob-float-2 12s ease-in-out infinite;
+    .process-card-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
     }
-    .abstract-blob-3 {
-      width: 200px; height: 200px;
-      background: radial-gradient(circle, rgba(122,80,80,0.5) 0%, transparent 70%);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      animation: blob-float-3 8s ease-in-out infinite;
+    .process-card-num {
+      font-family: var(--cond);
+      font-size: 2rem;
+      font-weight: 900;
+      line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(245,160,200,0.25);
+      transition: -webkit-text-stroke-color 0.3s ease;
+      flex-shrink: 0;
     }
-    .abstract-ring {
+    .process-card:hover .process-card-num {
+      -webkit-text-stroke-color: var(--pink);
+    }
+    .process-card-title {
+      font-family: var(--cond);
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: white;
+      line-height: 1.15;
+      transition: color 0.3s ease;
+    }
+    .process-card:hover .process-card-title {
+      color: var(--pink);
+    }
+    .process-card-body {
+      font-family: var(--body-f);
+      font-size: 0.74rem;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.75;
+      padding-left: 0;
+    }
+    .process-card-connector {
+      display: flex;
+      justify-content: flex-start;
+      padding-left: 44px;
+    }
+    .process-card-arrow {
+      width: 1px;
+      height: 20px;
+      background: linear-gradient(180deg, rgba(245,160,200,0.3) 0%, rgba(245,160,200,0.08) 100%);
+      position: relative;
+    }
+    .process-card-arrow::after {
+      content: "";
       position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 180px; height: 180px;
-      border-radius: 50%;
-      border: 1px solid rgba(245,160,200,0.2);
-      animation: ring-rotate 20s linear infinite;
-    }
-    .abstract-ring-2 {
-      width: 260px; height: 260px;
-      border: 1px solid rgba(232,97,58,0.15);
-      animation: ring-rotate 30s linear infinite reverse;
-    }
-    .abstract-ring-3 {
-      width: 100px; height: 100px;
-      border: 1.5px solid rgba(245,160,200,0.12);
-      animation: ring-rotate 14s linear infinite;
-    }
-    .abstract-ring-dot {
-      position: absolute;
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--pink);
-      top: 0; left: 50%;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 8px rgba(245,160,200,0.6);
-    }
-    .abstract-grid-line {
-      position: absolute;
-      background: rgba(245,160,200,0.06);
-    }
-    .abstract-grid-h {
-      width: 100%; height: 1px;
-    }
-    .abstract-grid-v {
-      width: 1px; height: 100%;
-    }
-    @keyframes blob-float-1 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(30px, -20px) scale(1.1); }
-      66% { transform: translate(-20px, 15px) scale(0.9); }
-    }
-    @keyframes blob-float-2 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(-25px, 20px) scale(1.15); }
-      66% { transform: translate(15px, -25px) scale(0.95); }
-    }
-    @keyframes blob-float-3 {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.3); }
-    }
-    @keyframes ring-rotate {
-      from { transform: translate(-50%, -50%) rotate(0deg); }
-      to { transform: translate(-50%, -50%) rotate(360deg); }
+      bottom: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 5px;
+      height: 5px;
+      border-right: 1px solid rgba(245,160,200,0.3);
+      border-bottom: 1px solid rgba(245,160,200,0.3);
+      transform: translateX(-50%) rotate(45deg);
     }
 
     /* PILL BTN */
@@ -963,26 +973,39 @@ export default function PortfolioShowcase() {
           <p className="dark-body">I work closely with teams I join, immersing myself in the product's vision. I ship working code quickly and refine based on feedback. I care about the interface as much as the logic — clean, accessible, and polished UIs are part of my standard.</p>
         </div>
         <div className="dark-panel-photo fade-up d3">
-          <div className="abstract-art-wrap">
-            {/* Grid lines */}
-            <div className="abstract-grid-line abstract-grid-h" style={{ top: "25%" }} />
-            <div className="abstract-grid-line abstract-grid-h" style={{ top: "50%" }} />
-            <div className="abstract-grid-line abstract-grid-h" style={{ top: "75%" }} />
-            <div className="abstract-grid-line abstract-grid-v" style={{ left: "33%" }} />
-            <div className="abstract-grid-line abstract-grid-v" style={{ left: "66%" }} />
-            {/* Blobs */}
-            <div className="abstract-blob abstract-blob-1" />
-            <div className="abstract-blob abstract-blob-2" />
-            <div className="abstract-blob abstract-blob-3" />
-            {/* Rings */}
-            <div className="abstract-ring">
-              <div className="abstract-ring-dot" />
+          <div className="process-cards-wrap">
+            <div className="process-card" data-hover>
+              <div className="process-card-top">
+                <span className="process-card-num">01</span>
+                <div className="process-card-title">Understand</div>
+              </div>
+              <div className="process-card-body">
+                Immerse in the product vision, map the problem space, and align with the team before writing a line of code.
+              </div>
             </div>
-            <div className="abstract-ring abstract-ring-2">
-              <div className="abstract-ring-dot" style={{ background: "var(--orange)", boxShadow: "0 0 8px rgba(232,97,58,0.6)" }} />
+
+            <div className="process-card-connector"><div className="process-card-arrow" /></div>
+
+            <div className="process-card" data-hover>
+              <div className="process-card-top">
+                <span className="process-card-num">02</span>
+                <div className="process-card-title">Build &amp; Ship</div>
+              </div>
+              <div className="process-card-body">
+                Ship working code fast in small increments. Clean architecture, typed interfaces, tested paths — no shortcuts.
+              </div>
             </div>
-            <div className="abstract-ring abstract-ring-3">
-              <div className="abstract-ring-dot" style={{ background: "rgba(245,160,200,0.5)", width: "4px", height: "4px" }} />
+
+            <div className="process-card-connector"><div className="process-card-arrow" /></div>
+
+            <div className="process-card" data-hover>
+              <div className="process-card-top">
+                <span className="process-card-num">03</span>
+                <div className="process-card-title">Refine &amp; Iterate</div>
+              </div>
+              <div className="process-card-body">
+                Gather feedback, tighten the UI, polish edge cases. Every cycle gets closer to the right product.
+              </div>
             </div>
           </div>
         </div>
