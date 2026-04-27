@@ -10,7 +10,7 @@
 
 Personal portfolio and developer showcase for **Julie Anne Cantillep** — fullstack developer based in Malmö, Sweden. Built with Next.js App Router, it features an interactive 3D skills globe, a timeline of work history, a live project showcase (including PracticePal, a full SaaS product), an AI-powered portfolio bot, and a contact form with email delivery via Resend or SMTP.
 
-**Live:** https://julieanne.dev &nbsp;·&nbsp; **GitHub:** [@Julieanna97](https://github.com/Julieanna97) &nbsp;·&nbsp; **LinkedIn:** [julie-anne-cantillep](https://www.linkedin.com/in/julie-anne-cantillep-4ba4ab250/)
+**Live:** https://julieannecantillep.vercel.app &nbsp;·&nbsp; **GitHub:** [@Julieanna97](https://github.com/Julieanna97) &nbsp;·&nbsp; **LinkedIn:** [julie-anne-cantillep](https://www.linkedin.com/in/julie-anne-cantillep-4ba4ab250/)
 
 ---
 
