@@ -461,7 +461,7 @@ export default function SigmaCarCaseStudyPage() {
 
               <div className="relative aspect-[4/3] overflow-hidden rounded-[1.45rem] bg-[#1a0808]">
                 <Image
-                  src="/projects/sigma-car/sigma-office.png"
+                  src="/projects/sigma-car/sigma-office.PNG"
                   alt="Sigma autonomous car — full view"
                   fill
                   sizes="(max-width: 1024px) 100vw, 55vw"
