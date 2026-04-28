@@ -91,8 +91,8 @@ const projectItems: ProjectItem[] = [
     summary: "A practice planning and analytics SaaS for musicians — authentication, session tracking, plans, and subscriptions from zero to launch.",
     links: [
       { label: "View Case Study", href: "/projects/practicepal" },
-      { label: "View Demo", href: "/auth/login?callbackUrl=%2Fdashboard", external: true },
-      { label: "GitHub", href: "https://github.com/Julieanna97/PracticePal", external: true },
+      { label: "View Demo", href: "https://practicepal-beige.vercel.app/", external: true },
+      { label: "GitHub", href: "https://github.com/Julieanna97/practicepal", external: true },
     ],
     tags: ["Next.js", "MongoDB", "Stripe", "NextAuth"],
   },
@@ -142,15 +142,6 @@ const codeLines = [
   { text: "// open to work · 2026", color: "#7a8a7a" },
 ];
 
-const heroMarqueeItems = [
-  "FULLSTACK DEVELOPER",
-  "MALMÖ, SE",
-  "OPEN TO WORK",
-  "REACT · NEXT.JS · FASTAPI",
-  "EMBEDDED · IOT · AI",
-  "AVAILABLE 2026",
-];
-
 const chatQA = [
   { q: "What's your stack?", a: "React, Next.js, TypeScript on the frontend. FastAPI and Node.js on the backend. MongoDB for data. Plus C/C++ and Arduino for embedded work." },
   { q: "How do you approach projects?", a: "I start by understanding the problem deeply, then build iteratively — ship early, get feedback, refine. I care about clean code and polished UI equally." },
@@ -170,7 +161,7 @@ const chatQA = [
 ];
 
 export default function PortfolioShowcase() {
-  const [mounted, setMounted] = useState(false);
+  const mounted = true;
   const [tlFilter, setTlFilter] = useState<TimelineFilter>("all");
   const [toast, setToast] = useState("");
   const [scrollPct, setScrollPct] = useState(0);
@@ -187,6 +178,11 @@ export default function PortfolioShowcase() {
 
   // Project visibility
   const [visibleProj, setVisibleProj] = useState<Set<number>>(new Set());
+
+  // CURSOR refs + state
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const cursorRingRef = useRef<HTMLDivElement>(null);
+  const cursorTrailRef = useRef<HTMLDivElement[]>([]);
 
   // Hero parallax
   const heroPhotoRef = useRef<HTMLDivElement>(null);
@@ -210,9 +206,7 @@ export default function PortfolioShowcase() {
     return () => clearInterval(i);
   }, []);
 
-  useEffect(() => { setMounted(true); }, []);
-
-  // Keep initial page load at the top even if the URL has a hash or browser wants to restore scroll.
+  // Keep initial page load at the top
   useEffect(() => {
     if (typeof window === "undefined") return;
     const prevScrollRestoration = window.history.scrollRestoration;
@@ -226,6 +220,78 @@ export default function PortfolioShowcase() {
 
     return () => {
       window.history.scrollRestoration = prevScrollRestoration;
+    };
+  }, []);
+
+  // CUSTOM CURSOR — only on devices with fine pointers
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (!fine) return;
+ 
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+ 
+    // Trail history — array of past positions, longer = longer trail
+    const TRAIL_LENGTH = 8;
+    const trailHistory: { x: number; y: number }[] = Array.from(
+      { length: TRAIL_LENGTH },
+      () => ({ x: 0, y: 0 })
+    );
+ 
+    const onMove = (e: MouseEvent) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+      }
+    };
+ 
+    const animateRing = () => {
+      // Ring smooth-follows the mouse
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      if (cursorRingRef.current) {
+        cursorRingRef.current.style.transform = `translate(${ringX}px, ${ringY}px)`;
+      }
+ 
+      // Shift trail history — newest position at index 0, oldest at the end
+      for (let i = trailHistory.length - 1; i > 0; i -= 1) {
+        trailHistory[i].x = trailHistory[i - 1].x;
+        trailHistory[i].y = trailHistory[i - 1].y;
+      }
+      trailHistory[0].x = ringX;
+      trailHistory[0].y = ringY;
+ 
+      // Apply each trail dot to its corresponding past position
+      cursorTrailRef.current.forEach((el, i) => {
+        if (!el) return;
+        const past = trailHistory[i];
+        el.style.transform = `translate(${past.x}px, ${past.y}px)`;
+      });
+ 
+      requestAnimationFrame(animateRing);
+    };
+ 
+    const onOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const isInteractive =
+        !!target.closest("a, button, [data-hover], input, textarea, label, select");
+      if (cursorRingRef.current) {
+        cursorRingRef.current.classList.toggle("cursor-ring-grow", isInteractive);
+      }
+      if (cursorRef.current) {
+        cursorRef.current.classList.toggle("cursor-dot-hide", isInteractive);
+      }
+    };
+ 
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseover", onOver);
+    requestAnimationFrame(animateRing);
+ 
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseover", onOver);
     };
   }, []);
 
@@ -253,7 +319,7 @@ export default function PortfolioShowcase() {
     return () => clearTimeout(t);
   }, [toast]);
 
-  // HERO PARALLAX — photo subtly shifts with cursor
+  // HERO PARALLAX
   useEffect(() => {
     if (typeof window === "undefined") return;
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -262,12 +328,10 @@ export default function PortfolioShowcase() {
     const onMove = (e: MouseEvent) => {
       if (!heroPhotoRef.current) return;
       const rect = heroPhotoRef.current.getBoundingClientRect();
-      // Only apply when hero is in viewport
       if (rect.bottom < 0 || rect.top > window.innerHeight) return;
 
       const cx = window.innerWidth / 2;
       const cy = window.innerHeight / 2;
-      // Shift photo by up to 15px each axis based on cursor distance from center
       const dx = ((e.clientX - cx) / cx) * 15;
       const dy = ((e.clientY - cy) / cy) * 15;
       heroPhotoRef.current.style.setProperty("--parallax-x", `${dx}px`);
@@ -346,7 +410,7 @@ export default function PortfolioShowcase() {
     return () => observer.disconnect();
   }, [mounted]);
 
-  // Scroll chat body to bottom (container-only, not page)
+  // Scroll chat body to bottom
   const scrollChatToBottom = useCallback(() => {
     const el = chatBodyRef.current;
     if (el) el.scrollTop = el.scrollHeight;
@@ -383,7 +447,6 @@ export default function PortfolioShowcase() {
       chatReplyTimeoutRef.current = null;
     }, delay);
 
-    // Fail-safe: if anything interrupts normal reply timer, recover automatically.
     chatReplyFailSafeRef.current = window.setTimeout(() => {
       if (chatReplyTimeoutRef.current !== null) {
         window.clearTimeout(chatReplyTimeoutRef.current);
@@ -401,7 +464,6 @@ export default function PortfolioShowcase() {
     }, Math.max(2000, delay + 1200));
   }, [clearChatReplyTimeout]);
 
-  // CHAT HANDLER
   const handleChatQuestion = (qa: typeof chatQA[0]) => {
     if (chatTyping) return;
     setChatMessages(prev => [...prev, { role: "user", text: qa.q }]);
@@ -409,7 +471,6 @@ export default function PortfolioShowcase() {
     queueJulieReply(qa.a);
   };
 
-  // Auto-scroll chat container only (not page)
   useEffect(() => {
     scrollChatToBottom();
   }, [chatMessages, chatTyping, scrollChatToBottom]);
@@ -470,7 +531,73 @@ export default function PortfolioShowcase() {
     button { font: inherit; cursor: pointer; background: none; border: none; }
     ::selection { background: var(--pink); color: var(--burg); }
 
-    /* CUSTOM CURSOR */
+    /* CUSTOM CURSOR — visible on every background */
+    .cursor-enabled, .cursor-enabled * { cursor: none !important; }
+    @media (hover: none) or (pointer: coarse) {
+      .cursor-enabled, .cursor-enabled * { cursor: auto !important; }
+      .cursor-dot, .cursor-ring { display: none !important; }
+    }
+
+    /* Dot — uses difference blend mode so it inverts whatever color sits behind it.
+       Always visible no matter the background. */
+    .cursor-dot {
+      position: fixed; top: 0; left: 0;
+      width: 9px; height: 9px;
+      margin-left: -4.5px; margin-top: -4.5px;
+      background: #ffffff;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
+      transition: opacity 0.2s ease, transform 0.05s linear;
+    }
+    .cursor-dot-hide { opacity: 0; }
+
+    /* Ring — pink stroke + dark "outline" via box-shadow. The shadow gives the
+       ring a darker halo so it's readable on pink/orange/cream/photos alike. */
+    .cursor-ring {
+      position: fixed; top: 0; left: 0;
+      width: 36px; height: 36px;
+      margin-left: -18px; margin-top: -18px;
+      border: 2px solid var(--pink);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      box-shadow:
+        0 0 0 1px rgba(26, 8, 8, 0.55),
+        inset 0 0 0 1px rgba(26, 8, 8, 0.55),
+        0 0 12px rgba(245, 160, 200, 0.45);
+      transition:
+        width 0.25s ease,
+        height 0.25s ease,
+        margin 0.25s ease,
+        background 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+      will-change: transform;
+    }
+    .cursor-ring.cursor-ring-grow {
+      width: 60px; height: 60px;
+      margin-left: -30px; margin-top: -30px;
+      background: rgba(245, 160, 200, 0.22);
+      border-color: var(--pink);
+      box-shadow:
+        0 0 0 1.5px rgba(26, 8, 8, 0.6),
+        inset 0 0 0 1.5px rgba(26, 8, 8, 0.4),
+        0 0 22px rgba(245, 160, 200, 0.55);
+    }
+
+    /* Trail dots — soft pink glow that fades out behind the ring */
+    .cursor-trail {
+      position: fixed; top: 0; left: 0;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9997;
+      background: radial-gradient(circle, rgba(245, 160, 200, 0.55) 0%, rgba(245, 160, 200, 0) 70%);
+      transition: transform 0.05s linear;
+      will-change: transform;
+    }
+
     .scroll-progress {
       position: fixed; top: 0; left: 0; height: 3px;
       background: linear-gradient(90deg, var(--pink) 0%, var(--orange) 100%);
@@ -489,9 +616,6 @@ export default function PortfolioShowcase() {
     }
     html::-webkit-scrollbar-track {
       background: linear-gradient(180deg, rgba(26,8,8,0.08) 0%, rgba(46,14,14,0.2) 100%);
-    }
-    .scroll-progress {
-      height: 3px;
     }
     html::-webkit-scrollbar-thumb {
       background: linear-gradient(180deg, var(--pink) 0%, var(--orange) 100%);
@@ -551,7 +675,7 @@ export default function PortfolioShowcase() {
     .mobile-drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 240; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
     .mobile-drawer-overlay.open { opacity: 1; pointer-events: auto; }
 
-    /* ── HERO — FULLY OVERHAULED ── */
+    /* ── HERO ── */
     .hero {
       background: var(--burg);
       padding: 36px 3vw 0;
@@ -586,7 +710,6 @@ export default function PortfolioShowcase() {
       pointer-events: none;
     }
 
-    /* Floating live status cards */
     .hero-card {
       position: absolute;
       z-index: 5;
@@ -605,120 +728,36 @@ export default function PortfolioShowcase() {
       transform: translateY(-4px) scale(1.02);
       border-color: var(--pink);
     }
-    .hero-card-tl {
-      top: 32px;
-      left: 36px;
-      animation-delay: 0s;
-    }
-    .hero-card-tr {
-      top: 32px;
-      right: 36px;
-      animation-delay: 1s;
-    }
-    .hero-card-bl {
-      bottom: 36px;
-      left: 36px;
-      animation-delay: 2s;
-    }
+    .hero-card-tl { top: 32px; left: 36px; animation-delay: 0s; }
+    .hero-card-tr { top: 32px; right: 36px; animation-delay: 1s; }
+    .hero-card-bl { bottom: 36px; left: 36px; animation-delay: 2s; }
     @keyframes cardFloat {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-8px); }
     }
 
-    .hc-status {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 0.78rem;
-      font-weight: 800;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
+    .hc-status { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
     .hc-pulse-wrap { position: relative; display: inline-flex; }
-    .hc-pulse {
-      width: 10px; height: 10px;
-      background: #4ade80;
-      border-radius: 50%;
-      box-shadow: 0 0 8px rgba(74,222,128,0.6);
-      position: relative;
-      z-index: 2;
-    }
-    .hc-pulse-ring {
-      position: absolute; inset: 0;
-      border-radius: 50%;
-      background: #4ade80;
-      animation: pulseRing 2s ease-out infinite;
-    }
+    .hc-pulse { width: 10px; height: 10px; background: #4ade80; border-radius: 50%; box-shadow: 0 0 8px rgba(74,222,128,0.6); position: relative; z-index: 2; }
+    .hc-pulse-ring { position: absolute; inset: 0; border-radius: 50%; background: #4ade80; animation: pulseRing 2s ease-out infinite; }
     @keyframes pulseRing {
       0% { transform: scale(1); opacity: 0.6; }
       100% { transform: scale(2.6); opacity: 0; }
     }
 
-    .hc-loc {
-      display: flex; align-items: center; gap: 12px;
-    }
-    .hc-loc-flag {
-      width: 26px; height: 26px;
-      background: linear-gradient(135deg, #006aa7 50%, #fecc00 50%);
-      border-radius: 50%;
-      flex-shrink: 0;
-      position: relative;
-    }
-    .hc-loc-flag::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.2);
-    }
+    .hc-loc { display: flex; align-items: center; gap: 12px; }
+    .hc-loc-flag { width: 26px; height: 26px; background: linear-gradient(135deg, #006aa7 50%, #fecc00 50%); border-radius: 50%; flex-shrink: 0; position: relative; }
+    .hc-loc-flag::after { content: ""; position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.2); }
     .hc-loc-text { display: flex; flex-direction: column; }
-    .hc-loc-place {
-      font-size: 0.78rem;
-      font-weight: 800;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-    .hc-loc-time {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      color: rgba(245,160,200,0.7);
-      letter-spacing: 0.08em;
-      margin-top: 2px;
-    }
+    .hc-loc-place { font-size: 0.78rem; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; }
+    .hc-loc-time { font-family: var(--mono); font-size: 0.7rem; color: rgba(245,160,200,0.7); letter-spacing: 0.08em; margin-top: 2px; }
 
-    .hc-project {
-      display: flex; flex-direction: column;
-      max-width: 280px;
-    }
-    .hc-project-label {
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--pink);
-      margin-bottom: 5px;
-    }
-    .hc-project-name {
-      font-size: 0.95rem;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--cream);
-      margin-bottom: 2px;
-    }
-    .hc-project-meta {
-      font-family: var(--body-f);
-      font-size: 0.7rem;
-      font-weight: 400;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: rgba(240,236,228,0.55);
-    }
+    .hc-project { display: flex; flex-direction: column; max-width: 280px; }
+    .hc-project-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--pink); margin-bottom: 5px; }
+    .hc-project-name { font-size: 0.95rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--cream); margin-bottom: 2px; }
+    .hc-project-meta { font-family: var(--body-f); font-size: 0.7rem; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(240,236,228,0.55); }
 
-    /* GIANT NAME — reveal animation */
-    .hero-name-wrap {
-      padding: 18px 2vw 0;
-      line-height: 0.8;
-      overflow: hidden;
-    }
+    .hero-name-wrap { padding: 18px 2vw 0; line-height: 0.8; overflow: hidden; }
     .hero-name-giant {
       display: block;
       font-family: var(--cond);
@@ -737,67 +776,21 @@ export default function PortfolioShowcase() {
       to { transform: translateY(0); opacity: 1; }
     }
 
-    /* Hero Marquee — under the name */
-    .hero-marquee {
-      background: var(--burg);
-      padding: 14px 0;
-      overflow: hidden;
-      white-space: nowrap;
-      border-top: 1px solid rgba(245,160,200,0.12);
-      border-bottom: 1px solid rgba(245,160,200,0.12);
-    }
-    .hero-marquee-inner {
-      display: inline-flex;
-      animation: marqueeMove 32s linear infinite;
-    }
-    .hero-marquee-item {
-      font-family: var(--cond);
-      font-size: 0.95rem;
-      font-weight: 800;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(245,160,200,0.7);
-      padding: 0 28px;
-      display: inline-flex; align-items: center; gap: 28px;
-    }
-    .hero-marquee-item::after {
-      content: "✦";
-      color: var(--orange);
-      font-size: 0.7rem;
-      opacity: 0.7;
-    }
+    .hero-marquee { background: var(--burg); padding: 14px 0; overflow: hidden; white-space: nowrap; border-top: 1px solid rgba(245,160,200,0.12); border-bottom: 1px solid rgba(245,160,200,0.12); }
+    .hero-marquee-inner { display: inline-flex; animation: marqueeMove 32s linear infinite; }
+    .hero-marquee-item { font-family: var(--cond); font-size: 0.95rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,160,200,0.7); padding: 0 28px; display: inline-flex; align-items: center; gap: 28px; }
+    .hero-marquee-item::after { content: "✦"; color: var(--orange); font-size: 0.7rem; opacity: 0.7; }
     @keyframes marqueeMove {
       from { transform: translateX(0); }
       to { transform: translateX(-50%); }
     }
 
     /* INTRO */
-    .intro {
-      background: var(--cream);
-      padding: 72px 5vw;
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 56px;
-      align-items: start;
-    }
+    .intro { background: var(--cream); padding: 72px 5vw; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px; align-items: start; }
     .intro-left { display: flex; flex-direction: column; }
 
-    /* CODE EDITOR */
-    .code-editor {
-      margin-top: 64px;
-      width: 100%; max-width: 640px;
-      border-radius: 14px;
-      background: #0d0506;
-      border: 1px solid rgba(245,160,200,0.2);
-      box-shadow: 0 24px 60px -12px rgba(26,8,8,0.45);
-      overflow: hidden;
-      font-family: var(--mono);
-      transition: transform 0.5s ease, box-shadow 0.5s ease;
-    }
-    .code-editor:hover {
-      transform: translateY(-4px) rotate(-0.4deg);
-      box-shadow: 0 32px 72px -8px rgba(245,160,200,0.18);
-    }
+    .code-editor { margin-top: 64px; width: 100%; max-width: 640px; border-radius: 14px; background: #0d0506; border: 1px solid rgba(245,160,200,0.2); box-shadow: 0 24px 60px -12px rgba(26,8,8,0.45); overflow: hidden; font-family: var(--mono); transition: transform 0.5s ease, box-shadow 0.5s ease; }
+    .code-editor:hover { transform: translateY(-4px) rotate(-0.4deg); box-shadow: 0 32px 72px -8px rgba(245,160,200,0.18); }
     .code-bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: #1a0808; border-bottom: 1px solid rgba(245,160,200,0.1); }
     .code-dot { width: 11px; height: 11px; border-radius: 50%; }
     .code-bar-title { margin-left: 16px; font-family: var(--mono); font-size: 0.72rem; color: rgba(245,160,200,0.55); letter-spacing: 0.05em; }
@@ -811,214 +804,42 @@ export default function PortfolioShowcase() {
       50%, 100% { opacity: 0; }
     }
 
-    .intro-heading {
-      font-family: var(--cond);
-      font-size: clamp(1.6rem, 3.5vw, 2.8rem);
-      font-weight: 800; color: var(--burg);
-      letter-spacing: 0.02em; text-transform: uppercase;
-      line-height: 1.1; margin-bottom: 28px;
-    }
-    .intro-body {
-      font-family: var(--body-f);
-      font-size: 0.82rem; font-weight: 400;
-      color: var(--body);
-      line-height: 1.85; letter-spacing: 0.04em; text-transform: uppercase;
-      max-width: 52ch; margin-bottom: 40px;
-    }
-    .pill-btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 100%; max-width: 480px;
-      padding: 22px 40px;
-      border-radius: 999px;
-      border: 1.5px solid var(--ink);
-      background: transparent;
-      font-family: var(--cond);
-      font-size: 0.88rem; font-weight: 700;
-      letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--ink);
-      transition: all 0.32s cubic-bezier(0.65,0,0.35,1);
-      position: relative; overflow: hidden;
-    }
-    .pill-btn::before {
-      content: ""; position: absolute; inset: 0;
-      background: var(--ink);
-      transform: scaleX(0); transform-origin: left;
-      transition: transform 0.42s cubic-bezier(0.65, 0, 0.35, 1);
-      z-index: -1;
-    }
+    .intro-heading { font-family: var(--cond); font-size: clamp(1.6rem, 3.5vw, 2.8rem); font-weight: 800; color: var(--burg); letter-spacing: 0.02em; text-transform: uppercase; line-height: 1.1; margin-bottom: 28px; }
+    .intro-body { font-family: var(--body-f); font-size: 0.82rem; font-weight: 400; color: var(--body); line-height: 1.85; letter-spacing: 0.04em; text-transform: uppercase; max-width: 52ch; margin-bottom: 40px; }
+    .pill-btn { display: inline-flex; align-items: center; justify-content: center; width: 100%; max-width: 480px; padding: 22px 40px; border-radius: 999px; border: 1.5px solid var(--ink); background: transparent; font-family: var(--cond); font-size: 0.88rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); transition: all 0.32s cubic-bezier(0.65,0,0.35,1); position: relative; overflow: hidden; }
+    .pill-btn::before { content: ""; position: absolute; inset: 0; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform 0.42s cubic-bezier(0.65, 0, 0.35, 1); z-index: -1; }
     .pill-btn:hover { color: var(--cream); }
     .pill-btn:hover::before { transform: scaleX(1); }
 
-    /* ── POLAROID STACK — replaces Now Playing card ── */
-    .polaroid-stack {
-      position: relative;
-      width: 100%;
-      max-width: 540px;
-      margin-left: auto;
-      height: 580px;
-    }
-    .polaroid {
-      position: absolute;
-      width: 320px;
-      background: #faf6ec;
-      padding: 14px 14px 50px;
-      border-radius: 4px;
-      box-shadow:
-        0 1px 1px rgba(0,0,0,0.05),
-        0 12px 28px -10px rgba(26,8,8,0.35),
-        0 0 0 1px rgba(26,8,8,0.04);
-      transition: transform 0.5s cubic-bezier(0.65,0,0.35,1),
-                  z-index 0s linear 0.25s,
-                  box-shadow 0.5s ease;
-      cursor: pointer;
-    }
-    .polaroid:hover {
-      transform: translate(var(--hover-x, 0), var(--hover-y, 0)) rotate(var(--hover-r, 0deg)) scale(1.04) !important;
-      z-index: 30 !important;
-      box-shadow:
-        0 1px 1px rgba(0,0,0,0.05),
-        0 24px 50px -10px rgba(245,160,200,0.35),
-        0 0 0 1px rgba(245,160,200,0.4);
-      transition-delay: 0s !important;
-    }
-    /* Stack positioning */
-    .polaroid-1 {
-      top: 10px;
-      left: 0;
-      transform: rotate(-7deg);
-      z-index: 1;
-      --hover-x: -8px; --hover-y: -8px; --hover-r: -5deg;
-    }
-    .polaroid-2 {
-      top: 60px;
-      right: 0;
-      transform: rotate(5deg);
-      z-index: 2;
-      --hover-x: 6px; --hover-y: -8px; --hover-r: 7deg;
-    }
-    .polaroid-3 {
-      bottom: 30px;
-      left: 50%;
-      margin-left: -160px;
-      transform: rotate(-2deg);
-      z-index: 3;
-      --hover-x: 0; --hover-y: -12px; --hover-r: 0deg;
-    }
-
-    .polaroid-image {
-      width: 100%;
-      aspect-ratio: 4 / 3;
-      border-radius: 2px;
-      overflow: hidden;
-      position: relative;
-      background: var(--burg);
-    }
-    .polaroid-caption {
-      position: absolute;
-      bottom: 14px;
-      left: 18px;
-      right: 18px;
-      font-family: var(--hand);
-      font-size: 1.5rem;
-      color: var(--burg);
-      line-height: 1;
-      text-align: center;
-      transform: rotate(-1.5deg);
-    }
-    .polaroid-tape {
-      position: absolute;
-      top: -12px;
-      left: 50%;
-      margin-left: -36px;
-      width: 72px;
-      height: 22px;
-      background: linear-gradient(180deg, rgba(245,160,200,0.55) 0%, rgba(245,160,200,0.35) 100%);
-      border: 1px solid rgba(245,160,200,0.2);
-      transform: rotate(-3deg);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-    }
+    /* POLAROID STACK */
+    .polaroid-stack { position: relative; width: 100%; max-width: 540px; margin-left: auto; height: 580px; }
+    .polaroid { position: absolute; width: 320px; background: #faf6ec; padding: 14px 14px 50px; border-radius: 4px; box-shadow: 0 1px 1px rgba(0,0,0,0.05), 0 12px 28px -10px rgba(26,8,8,0.35), 0 0 0 1px rgba(26,8,8,0.04); transition: transform 0.5s cubic-bezier(0.65,0,0.35,1), z-index 0s linear 0.25s, box-shadow 0.5s ease; cursor: pointer; }
+    .polaroid:hover { transform: translate(var(--hover-x, 0), var(--hover-y, 0)) rotate(var(--hover-r, 0deg)) scale(1.04) !important; z-index: 30 !important; box-shadow: 0 1px 1px rgba(0,0,0,0.05), 0 24px 50px -10px rgba(245,160,200,0.35), 0 0 0 1px rgba(245,160,200,0.4); transition-delay: 0s !important; }
+    .polaroid-1 { top: 10px; left: 0; transform: rotate(-7deg); z-index: 1; --hover-x: -8px; --hover-y: -8px; --hover-r: -5deg; }
+    .polaroid-2 { top: 60px; right: 0; transform: rotate(5deg); z-index: 2; --hover-x: 6px; --hover-y: -8px; --hover-r: 7deg; }
+    .polaroid-3 { bottom: 30px; left: 50%; margin-left: -160px; transform: rotate(-2deg); z-index: 3; --hover-x: 0; --hover-y: -12px; --hover-r: 0deg; }
+    .polaroid-image { width: 100%; aspect-ratio: 4 / 3; border-radius: 2px; overflow: hidden; position: relative; background: var(--burg); }
+    .polaroid-caption { position: absolute; bottom: 14px; left: 18px; right: 18px; font-family: var(--hand); font-size: 1.5rem; color: var(--burg); line-height: 1; text-align: center; transform: rotate(-1.5deg); }
+    .polaroid-tape { position: absolute; top: -12px; left: 50%; margin-left: -36px; width: 72px; height: 22px; background: linear-gradient(180deg, rgba(245,160,200,0.55) 0%, rgba(245,160,200,0.35) 100%); border: 1px solid rgba(245,160,200,0.2); transform: rotate(-3deg); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
     .polaroid-2 .polaroid-tape { transform: rotate(2deg); margin-left: -36px; }
     .polaroid-3 .polaroid-tape { transform: rotate(-1deg); }
 
-    /* Mock screenshots — SVG-style illustrations inside polaroids */
-    .mock-screen {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      padding: 12px;
-      position: relative;
-    }
-    .mock-bar {
-      display: flex;
-      gap: 4px;
-      margin-bottom: 10px;
-    }
-    .mock-bar-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-    }
-    /* PracticePal mock — pink dashboard */
-    .mock-practicepal {
-      background: linear-gradient(135deg, #1a0808 0%, #2e0e0e 100%);
-    }
-    .mock-pp-header {
-      font-family: var(--cond);
-      font-size: 0.6rem;
-      font-weight: 800;
-      letter-spacing: 0.16em;
-      color: var(--pink);
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-    .mock-pp-title {
-      font-family: var(--cond);
-      font-size: 1rem;
-      font-weight: 900;
-      color: var(--cream);
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-    .mock-pp-bars {
-      display: flex; align-items: flex-end; gap: 3px;
-      height: 38px;
-      margin-top: auto;
-    }
-    .mock-pp-bar {
-      flex: 1;
-      background: linear-gradient(to top, var(--orange), var(--pink));
-      border-radius: 1.5px;
-      animation: barPulse 2s ease-in-out infinite;
-    }
+    .mock-screen { width: 100%; height: 100%; display: flex; flex-direction: column; padding: 12px; position: relative; }
+    .mock-bar { display: flex; gap: 4px; margin-bottom: 10px; }
+    .mock-bar-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .mock-practicepal { background: linear-gradient(135deg, #1a0808 0%, #2e0e0e 100%); }
+    .mock-pp-header { font-family: var(--cond); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.16em; color: var(--pink); text-transform: uppercase; margin-bottom: 4px; }
+    .mock-pp-title { font-family: var(--cond); font-size: 1rem; font-weight: 900; color: var(--cream); text-transform: uppercase; letter-spacing: 0.02em; line-height: 1; margin-bottom: 8px; }
+    .mock-pp-bars { display: flex; align-items: flex-end; gap: 3px; height: 38px; margin-top: auto; }
+    .mock-pp-bar { flex: 1; background: linear-gradient(to top, var(--orange), var(--pink)); border-radius: 1.5px; animation: barPulse 2s ease-in-out infinite; }
     @keyframes barPulse {
       0%, 100% { opacity: 0.85; }
       50% { opacity: 1; }
     }
-    /* PodManager mock — waveform */
-    .mock-podmanager {
-      background: linear-gradient(135deg, #2e0e0e 0%, #1a0808 100%);
-    }
-    .mock-pm-label {
-      font-family: var(--mono);
-      font-size: 0.55rem;
-      color: rgba(245,160,200,0.7);
-      margin-bottom: 6px;
-      letter-spacing: 0.1em;
-    }
-    .mock-pm-wave {
-      flex: 1;
-      display: flex; align-items: center; gap: 2px;
-      padding: 6px 0;
-    }
-    .mock-pm-bar {
-      flex: 1;
-      background: var(--pink);
-      border-radius: 999px;
-      opacity: 0.85;
-      animation: wave 1.6s ease-in-out infinite;
-    }
+    .mock-podmanager { background: linear-gradient(135deg, #2e0e0e 0%, #1a0808 100%); }
+    .mock-pm-label { font-family: var(--mono); font-size: 0.55rem; color: rgba(245,160,200,0.7); margin-bottom: 6px; letter-spacing: 0.1em; }
+    .mock-pm-wave { flex: 1; display: flex; align-items: center; gap: 2px; padding: 6px 0; }
+    .mock-pm-bar { flex: 1; background: var(--pink); border-radius: 999px; opacity: 0.85; animation: wave 1.6s ease-in-out infinite; }
     @keyframes wave {
       0%, 100% { transform: scaleY(0.4); opacity: 0.55; }
       50% { transform: scaleY(1); opacity: 1; }
@@ -1026,79 +847,20 @@ export default function PortfolioShowcase() {
     .mock-pm-bar:nth-child(2n) { animation-delay: 0.1s; }
     .mock-pm-bar:nth-child(3n) { animation-delay: 0.25s; }
     .mock-pm-bar:nth-child(5n) { animation-delay: 0.35s; }
-    .mock-pm-controls {
-      display: flex; align-items: center; gap: 6px;
-      padding: 6px 0;
-    }
-    .mock-pm-play {
-      width: 18px; height: 18px;
-      border-radius: 50%;
-      background: var(--orange);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .mock-pm-line {
-      flex: 1;
-      height: 2px;
-      background: rgba(245,160,200,0.3);
-      border-radius: 1px;
-      position: relative;
-    }
-    .mock-pm-line::after {
-      content: "";
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 35%;
-      background: var(--pink);
-      border-radius: 1px;
-    }
-    /* Sigma Car mock — telemetry */
-    .mock-sigma {
-      background: #0d0506;
-    }
-    .mock-sigma-grid {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-    }
-    .mock-sigma-stat {
-      background: rgba(245,160,200,0.08);
-      border: 1px solid rgba(245,160,200,0.18);
-      border-radius: 4px;
-      padding: 5px 7px;
-      display: flex; flex-direction: column; justify-content: center;
-    }
-    .mock-sigma-stat-label {
-      font-family: var(--mono);
-      font-size: 0.45rem;
-      color: rgba(245,160,200,0.55);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 2px;
-    }
-    .mock-sigma-stat-val {
-      font-family: var(--cond);
-      font-size: 0.8rem;
-      font-weight: 900;
-      color: var(--pink);
-      letter-spacing: 0.02em;
-    }
-    .mock-sigma-stat-val .unit {
-      font-size: 0.55rem;
-      color: rgba(245,160,200,0.5);
-      margin-left: 1px;
-    }
+    .mock-pm-controls { display: flex; align-items: center; gap: 6px; padding: 6px 0; }
+    .mock-pm-play { width: 18px; height: 18px; border-radius: 50%; background: var(--orange); display: flex; align-items: center; justify-content: center; }
+    .mock-pm-line { flex: 1; height: 2px; background: rgba(245,160,200,0.3); border-radius: 1px; position: relative; }
+    .mock-pm-line::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 35%; background: var(--pink); border-radius: 1px; }
+    .mock-sigma { background: #0d0506; }
+    .mock-sigma-grid { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .mock-sigma-stat { background: rgba(245,160,200,0.08); border: 1px solid rgba(245,160,200,0.18); border-radius: 4px; padding: 5px 7px; display: flex; flex-direction: column; justify-content: center; }
+    .mock-sigma-stat-label { font-family: var(--mono); font-size: 0.45rem; color: rgba(245,160,200,0.55); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 2px; }
+    .mock-sigma-stat-val { font-family: var(--cond); font-size: 0.8rem; font-weight: 900; color: var(--pink); letter-spacing: 0.02em; }
+    .mock-sigma-stat-val .unit { font-size: 0.55rem; color: rgba(245,160,200,0.5); margin-left: 1px; }
 
     /* STATEMENT */
     .statement { background: var(--cream); padding: 60px 5vw 72px; }
-    .statement-text {
-      font-family: var(--cond);
-      font-size: clamp(2.2rem, 5.5vw, 7rem);
-      font-weight: 900; color: var(--burg);
-      letter-spacing: 0.04em; text-transform: uppercase;
-      line-height: 1.05;
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0 40px;
-    }
+    .statement-text { font-family: var(--cond); font-size: clamp(2.2rem, 5.5vw, 7rem); font-weight: 900; color: var(--burg); letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.05; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0 40px; }
     .statement-text span { transition: color 0.3s ease, transform 0.3s ease; }
     .statement-text span:hover { color: var(--orange); transform: translateY(-3px); }
 
@@ -1118,72 +880,18 @@ export default function PortfolioShowcase() {
     .dark-label { font-family: var(--cond); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pink); margin-bottom: 24px; }
     .dark-heading { font-family: var(--cond); font-size: clamp(1.4rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: white; line-height: 1.2; margin-bottom: 28px; }
     .dark-body { font-family: var(--body-f); font-size: 0.78rem; font-weight: 300; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.55); line-height: 1.85; max-width: 52ch; }
-    /* CHAT TERMINAL */
-    .dark-panel-chat {
-      background: var(--burg2);
-      border-left: 1px solid rgba(245,160,200,0.12);
-      display: flex; flex-direction: column;
-      height: 100%;
-      min-height: 0;
-      overflow: hidden;
-    }
-    .chat-bar {
-      display: flex; align-items: center; gap: 8px;
-      padding: 14px 20px;
-      border-bottom: 1px solid rgba(245,160,200,0.1);
-      flex-shrink: 0;
-    }
+
+    .dark-panel-chat { background: var(--burg2); border-left: 1px solid rgba(245,160,200,0.12); display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden; }
+    .chat-bar { display: flex; align-items: center; gap: 8px; padding: 14px 20px; border-bottom: 1px solid rgba(245,160,200,0.1); flex-shrink: 0; }
     .chat-bar-dot { width: 9px; height: 9px; border-radius: 50%; }
-    .chat-bar-title {
-      margin-left: 12px; font-family: var(--mono);
-      font-size: 0.68rem; color: rgba(245,160,200,0.5);
-      letter-spacing: 0.05em;
-    }
-    .chat-body {
-      flex: 1; overflow-y: auto; padding: 24px 20px;
-      display: flex; flex-direction: column; gap: 14px;
-      min-height: 0;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(245,160,200,0.2) transparent;
-    }
-    .chat-bubble {
-      max-width: 88%; padding: 12px 16px;
-      font-family: var(--body-f); font-size: 0.78rem;
-      line-height: 1.7; letter-spacing: 0.03em;
-      border-radius: 16px;
-      animation: chatPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .chat-bubble-user {
-      align-self: flex-end;
-      background: var(--pink); color: var(--burg);
-      border-bottom-right-radius: 4px;
-      font-weight: 500;
-    }
-    .chat-bubble-julie {
-      align-self: flex-start;
-      background: rgba(245,160,200,0.08);
-      border: 1px solid rgba(245,160,200,0.15);
-      color: rgba(255,255,255,0.8);
-      border-bottom-left-radius: 4px;
-    }
-    .chat-bubble-julie .chat-sender {
-      display: block; font-family: var(--cond);
-      font-size: 0.62rem; font-weight: 700;
-      letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--pink); margin-bottom: 6px;
-    }
-    .chat-typing-indicator {
-      align-self: flex-start;
-      display: flex; gap: 5px; padding: 14px 18px;
-      background: rgba(245,160,200,0.08);
-      border: 1px solid rgba(245,160,200,0.15);
-      border-radius: 16px; border-bottom-left-radius: 4px;
-    }
-    .chat-typing-dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--pink); opacity: 0.4;
-      animation: typingBounce 1.2s ease-in-out infinite;
-    }
+    .chat-bar-title { margin-left: 12px; font-family: var(--mono); font-size: 0.68rem; color: rgba(245,160,200,0.5); letter-spacing: 0.05em; }
+    .chat-body { flex: 1; overflow-y: auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 14px; min-height: 0; scrollbar-width: thin; scrollbar-color: rgba(245,160,200,0.2) transparent; }
+    .chat-bubble { max-width: 88%; padding: 12px 16px; font-family: var(--body-f); font-size: 0.78rem; line-height: 1.7; letter-spacing: 0.03em; border-radius: 16px; animation: chatPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .chat-bubble-user { align-self: flex-end; background: var(--pink); color: var(--burg); border-bottom-right-radius: 4px; font-weight: 500; }
+    .chat-bubble-julie { align-self: flex-start; background: rgba(245,160,200,0.08); border: 1px solid rgba(245,160,200,0.15); color: rgba(255,255,255,0.8); border-bottom-left-radius: 4px; }
+    .chat-bubble-julie .chat-sender { display: block; font-family: var(--cond); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--pink); margin-bottom: 6px; }
+    .chat-typing-indicator { align-self: flex-start; display: flex; gap: 5px; padding: 14px 18px; background: rgba(245,160,200,0.08); border: 1px solid rgba(245,160,200,0.15); border-radius: 16px; border-bottom-left-radius: 4px; }
+    .chat-typing-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pink); opacity: 0.4; animation: typingBounce 1.2s ease-in-out infinite; }
     .chat-typing-dot:nth-child(2) { animation-delay: 0.15s; }
     .chat-typing-dot:nth-child(3) { animation-delay: 0.3s; }
     @keyframes typingBounce {
@@ -1194,78 +902,26 @@ export default function PortfolioShowcase() {
       from { opacity: 0; transform: translateY(8px) scale(0.95); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
-    .chat-typing-text {
-      align-self: flex-start; max-width: 88%; padding: 12px 16px;
-      background: rgba(245,160,200,0.08);
-      border: 1px solid rgba(245,160,200,0.15);
-      color: rgba(255,255,255,0.8);
-      border-radius: 16px; border-bottom-left-radius: 4px;
-      font-family: var(--body-f); font-size: 0.78rem;
-      line-height: 1.7; letter-spacing: 0.03em;
-    }
-    .chat-typing-text .chat-sender {
-      display: block; font-family: var(--cond);
-      font-size: 0.62rem; font-weight: 700;
-      letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--pink); margin-bottom: 6px;
-    }
-    .chat-chips {
-      flex-shrink: 0; padding: 16px 20px;
-      border-top: 1px solid rgba(245,160,200,0.1);
-      display: flex; flex-wrap: wrap; gap: 8px;
-    }
-    .chat-chip {
-      font-family: var(--cond); font-size: 0.68rem;
-      font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--pink);
-      border: 1px solid rgba(245,160,200,0.25);
-      padding: 8px 14px; border-radius: 999px;
-      transition: all 0.28s ease;
-      background: transparent;
-    }
-    .chat-chip:hover {
-      background: var(--pink); color: var(--burg);
-      border-color: var(--pink);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px -6px rgba(245,160,200,0.4);
-    }
+    .chat-chips { flex-shrink: 0; padding: 16px 20px; border-top: 1px solid rgba(245,160,200,0.1); display: flex; flex-wrap: wrap; gap: 8px; }
+    .chat-chip { font-family: var(--cond); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pink); border: 1px solid rgba(245,160,200,0.25); padding: 8px 14px; border-radius: 999px; transition: all 0.28s ease; background: transparent; }
+    .chat-chip:hover { background: var(--pink); color: var(--burg); border-color: var(--pink); transform: translateY(-2px); box-shadow: 0 6px 18px -6px rgba(245,160,200,0.4); }
     .chat-chip:disabled { opacity: 0.35; pointer-events: none; }
-    .chat-welcome {
-      font-family: var(--mono); font-size: 0.72rem;
-      color: rgba(245,160,200,0.45); line-height: 1.8;
-      letter-spacing: 0.03em;
-    }
+    .chat-welcome { font-family: var(--mono); font-size: 0.72rem; color: rgba(245,160,200,0.45); line-height: 1.8; letter-spacing: 0.03em; }
     .chat-welcome strong { color: var(--pink); font-weight: 600; }
-    .chat-cursor-blink {
-      display: inline-block; width: 6px; height: 1em;
-      background: var(--pink); vertical-align: text-bottom;
-      margin-left: 2px;
-      animation: blink 1s infinite;
-    }
+    .chat-cursor-blink { display: inline-block; width: 6px; height: 1em; background: var(--pink); vertical-align: text-bottom; margin-left: 2px; animation: blink 1s infinite; }
 
     /* PROJECTS */
     .projects-section { background: var(--cream); padding: 80px 5vw; }
     .sec-super { font-family: var(--cond); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
     .sec-title { font-family: var(--cond); font-size: clamp(3rem, 7vw, 8rem); font-weight: 900; letter-spacing: 0.01em; text-transform: uppercase; color: var(--burg); line-height: 0.9; margin-bottom: 56px; }
     .proj-list { display: flex; flex-direction: column; gap: 0; }
-    .proj-row {
-      display: grid; grid-template-columns: 60px 1fr 1fr; gap: 0;
-      border-top: 1px solid rgba(26,8,8,0.12);
-      padding: 40px 0; align-items: start; position: relative;
-      opacity: 0; transform: translateY(30px);
-      transition: opacity 0.7s cubic-bezier(0.22,0.61,0.36,1), transform 0.7s cubic-bezier(0.22,0.61,0.36,1), background 0.4s ease, padding 0.4s ease;
-    }
+    .proj-row { display: grid; grid-template-columns: 60px 1fr 1fr; gap: 0; border-top: 1px solid rgba(26,8,8,0.12); padding: 40px 0; align-items: start; position: relative; opacity: 0; transform: translateY(30px); transition: opacity 0.7s cubic-bezier(0.22,0.61,0.36,1), transform 0.7s cubic-bezier(0.22,0.61,0.36,1), background 0.4s ease, padding 0.4s ease; }
     .proj-row-visible { opacity: 1; transform: translateY(0); }
     .proj-row::before { content: ""; position: absolute; top: -1px; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, var(--pink), var(--orange)); transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1); }
     .proj-row:hover::before { width: 100%; }
     .proj-row:last-child { border-bottom: 1px solid rgba(26,8,8,0.12); }
     .proj-row:hover { background: rgba(26,8,8,0.03); padding: 40px 20px; }
-    .proj-num {
-      font-family: var(--cond); font-size: 2.8rem; font-weight: 900;
-      color: rgba(26,8,8,0.06); line-height: 1;
-      transition: color 0.4s ease;
-      user-select: none;
-    }
+    .proj-num { font-family: var(--cond); font-size: 2.8rem; font-weight: 900; color: rgba(26,8,8,0.06); line-height: 1; transition: color 0.4s ease; user-select: none; }
     .proj-row:hover .proj-num { color: rgba(245,160,200,0.25); }
     .proj-cat { font-family: var(--cond); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; transition: color 0.3s ease; }
     .proj-row:hover .proj-cat { color: var(--orange); }
@@ -1277,18 +933,8 @@ export default function PortfolioShowcase() {
     .proj-right { padding-top: 4px; }
     .proj-summary { font-family: var(--body-f); font-size: 0.82rem; font-weight: 300; color: var(--body); line-height: 1.8; letter-spacing: 0.04em; text-transform: uppercase; max-width: 54ch; margin-bottom: 24px; }
     .proj-links-row { display: flex; gap: 16px; flex-wrap: wrap; }
-    .proj-link {
-      font-family: var(--cond); font-size: 0.75rem; font-weight: 700;
-      letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--burg); position: relative; padding: 6px 0;
-      transition: color 0.25s ease;
-      display: inline-flex; align-items: center; gap: 6px;
-    }
-    .proj-link-arrow {
-      display: inline-block; transition: transform 0.35s cubic-bezier(0.22,0.61,0.36,1), opacity 0.3s ease;
-      transform: translateX(-4px); opacity: 0;
-      font-size: 0.85rem;
-    }
+    .proj-link { font-family: var(--cond); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--burg); position: relative; padding: 6px 0; transition: color 0.25s ease; display: inline-flex; align-items: center; gap: 6px; }
+    .proj-link-arrow { display: inline-block; transition: transform 0.35s cubic-bezier(0.22,0.61,0.36,1), opacity 0.3s ease; transform: translateX(-4px); opacity: 0; font-size: 0.85rem; }
     .proj-link:hover .proj-link-arrow { transform: translateX(0); opacity: 1; }
     .proj-link::after { content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 1.5px; background: var(--burg); transform: scaleX(1); transform-origin: right; transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1), background 0.3s ease; }
     .proj-link:hover { color: var(--orange); }
@@ -1301,7 +947,6 @@ export default function PortfolioShowcase() {
     .filter-chip:hover { border-color: var(--pink); color: var(--pink); transform: translateY(-2px); box-shadow: 0 6px 16px -8px rgba(245,160,200,0.45); }
     .filter-chip-on { background: var(--pink); color: var(--burg); border-color: var(--pink); }
     .filter-count { font-family: var(--body-f); font-size: 0.62rem; font-weight: 500; letter-spacing: 0.05em; opacity: 0.6; }
-
     .tl-wrapper { position: relative; display: grid; grid-template-columns: 110px 1fr; gap: 0; }
     .tl-line-rail { position: relative; width: 100%; }
     .tl-line-rail::before { content: ""; position: absolute; left: 90px; top: 16px; bottom: 16px; width: 2px; background: rgba(245,160,200,0.12); }
@@ -1359,7 +1004,6 @@ export default function PortfolioShowcase() {
     .contact-link-row:hover .cl-val::after { transform: scaleX(1); }
     .cl-arrow { color: rgba(245,160,200,0.35); font-size: 1rem; transition: color 0.3s, transform 0.3s; }
     .contact-link-row:hover .cl-arrow { color: var(--pink); transform: translateX(6px); }
-
 
     /* FOOTER */
     .footer-tagline { background: var(--cream); padding: 60px 5vw 20px; }
@@ -1444,8 +1088,29 @@ export default function PortfolioShowcase() {
     : "0%";
 
   return (
-    <div className={`${mounted ? "mounted" : ""}`}>
+    <div className="mounted cursor-enabled">
       <style>{css}</style>
+
+      {/* CUSTOM CURSOR */}
+      {/* Trail dots — rendered behind the ring, fade out from newest to oldest */}
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div
+          key={`trail-${i}`}
+          ref={(el) => {
+            if (el) cursorTrailRef.current[i] = el;
+          }}
+          className="cursor-trail"
+          style={{
+            opacity: ((8 - i) / 8) * 0.45,
+            width: `${28 - i * 2.5}px`,
+            height: `${28 - i * 2.5}px`,
+            marginLeft: `${-(28 - i * 2.5) / 2}px`,
+            marginTop: `${-(28 - i * 2.5) / 2}px`,
+          }}
+        />
+      ))}
+      <div ref={cursorRef} className="cursor-dot" />
+      <div ref={cursorRingRef} className="cursor-ring" />
 
       <div className="scroll-progress" style={{ width: `${scrollPct}%` }} />
 
@@ -1483,7 +1148,7 @@ export default function PortfolioShowcase() {
         </button>
       </nav>
 
-      {/* HERO — overhauled */}
+      {/* HERO */}
       <section className="hero">
         <div ref={heroPhotoRef} className="hero-photo">
           <div className="hero-photo-overlay" />
@@ -1496,7 +1161,6 @@ export default function PortfolioShowcase() {
             style={{ objectFit: "cover", objectPosition: "center 20%" }}
           />
 
-          {/* FLOATING CARD: AVAILABILITY (top-left) */}
           <div className="hero-card hero-card-tl" data-hover>
             <div className="hc-status">
               <span className="hc-pulse-wrap">
@@ -1507,7 +1171,6 @@ export default function PortfolioShowcase() {
             </div>
           </div>
 
-          {/* FLOATING CARD: LOCATION + TIME (top-right) */}
           <div className="hero-card hero-card-tr" data-hover>
             <div className="hc-loc">
               <div className="hc-loc-flag" />
@@ -1518,7 +1181,6 @@ export default function PortfolioShowcase() {
             </div>
           </div>
 
-          {/* FLOATING CARD: LATEST PROJECT (bottom-left) */}
           <div className="hero-card hero-card-bl" data-hover>
             <div className="hc-project">
               <div className="hc-project-label">Latest project</div>
@@ -1533,12 +1195,11 @@ export default function PortfolioShowcase() {
         </div>
       </section>
 
-
       {/* INTRO */}
       <section className="intro" id="about">
         <div className="intro-left fade-up d2">
           <h1 className="intro-heading">
-            I'm a software<br />developer.<br />Let's build.
+            I&apos;m a software<br />developer.<br />Let&apos;s build.
           </h1>
           <p className="intro-body">
             I build modern software across frontend, backend, and embedded systems — from React and scalable APIs to intelligent IoT devices and hardware-connected products. Based in Malmö, Sweden. Open to software engineering and product development roles.
@@ -1583,10 +1244,8 @@ export default function PortfolioShowcase() {
           </div>
         </div>
 
-        {/* POLAROID STACK — replaces Now Playing */}
         <div className="polaroid-stack fade-up d3">
-          {/* Polaroid 1 — PracticePal */}
-          <Link href="/projects/practicepal" className="polaroid polaroid-1" data-hover>
+          <Link href="https://practicepal-beige.vercel.app/" target="_blank" rel="noopener noreferrer" className="polaroid polaroid-1" data-hover>
             <span className="polaroid-tape" />
             <div className="polaroid-image">
               <div className="mock-screen mock-practicepal">
@@ -1599,14 +1258,7 @@ export default function PortfolioShowcase() {
                 <div className="mock-pp-title">Scales</div>
                 <div className="mock-pp-bars">
                   {[35, 60, 45, 80, 55, 90, 70].map((h, i) => (
-                    <div
-                      key={i}
-                      className="mock-pp-bar"
-                      style={{
-                        height: `${h}%`,
-                        animationDelay: `${i * 0.1}s`,
-                      }}
-                    />
+                    <div key={i} className="mock-pp-bar" style={{ height: `${h}%`, animationDelay: `${i * 0.1}s` }} />
                   ))}
                 </div>
               </div>
@@ -1614,7 +1266,6 @@ export default function PortfolioShowcase() {
             <div className="polaroid-caption">PracticePal · 2025</div>
           </Link>
 
-          {/* Polaroid 2 — PodManager */}
           <Link href="/projects/podmanager" className="polaroid polaroid-2" data-hover>
             <span className="polaroid-tape" />
             <div className="polaroid-image">
@@ -1627,14 +1278,7 @@ export default function PortfolioShowcase() {
                 <div className="mock-pm-label">EP-014.WAV · 24:38</div>
                 <div className="mock-pm-wave">
                   {[60, 30, 80, 45, 90, 50, 70, 35, 85, 55, 75, 40, 65, 50, 80].map((h, i) => (
-                    <div
-                      key={i}
-                      className="mock-pm-bar"
-                      style={{
-                        height: `${h}%`,
-                        animationDelay: `${i * 0.06}s`,
-                      }}
-                    />
+                    <div key={i} className="mock-pm-bar" style={{ height: `${h}%`, animationDelay: `${i * 0.06}s` }} />
                   ))}
                 </div>
                 <div className="mock-pm-controls">
@@ -1650,12 +1294,7 @@ export default function PortfolioShowcase() {
             <div className="polaroid-caption">PodManager · 2026</div>
           </Link>
 
-          {/* Polaroid 3 — Sigma Car */}
-          <Link
-            href="/projects/sigma-car"
-            className="polaroid polaroid-3"
-            data-hover
-          >
+          <Link href="/projects/sigma-car" className="polaroid polaroid-3" data-hover>
             <span className="polaroid-tape" />
             <div className="polaroid-image">
               <div className="mock-screen mock-sigma">
@@ -1717,7 +1356,7 @@ export default function PortfolioShowcase() {
             Collaborative,<br />iterative,<br />design-aware.
           </h2>
           <p className="dark-body">
-            I work closely with teams I join, immersing myself in the product's vision. I ship working code quickly and refine based on feedback. I care about the interface as much as the logic — clean, accessible, and polished UIs are part of my standard.
+            I work closely with teams I join, immersing myself in the product&apos;s vision. I ship working code quickly and refine based on feedback. I care about the interface as much as the logic — clean, accessible, and polished UIs are part of my standard.
           </p>
         </div>
         <div className="dark-panel-chat fade-up d3">
@@ -1868,7 +1507,7 @@ export default function PortfolioShowcase() {
 
                   <div className="tl-expand">
                     <div className="tl-expand-inner">
-                      {item.highlight && <p className="tl-highlight">"{item.highlight}"</p>}
+                      {item.highlight && <p className="tl-highlight">&ldquo;{item.highlight}&rdquo;</p>}
                       {item.tech && item.tech.length > 0 && (
                         <>
                           <div className="tl-tech-label">Stack & Tools</div>
@@ -1898,7 +1537,7 @@ export default function PortfolioShowcase() {
         <div className="contact-left fade-up d2">
           <div className="contact-label">Get in Touch</div>
           <h2 className="contact-heading">
-            Let's<br />work<br />together.
+            Let&apos;s<br />work<br />together.
           </h2>
           <p className="contact-sub">
             Open to SWE, product engineering, and frontend roles. Reach me on LinkedIn or GitHub.

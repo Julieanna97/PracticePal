@@ -113,7 +113,6 @@ const stack = [
 export default function PodManagerCaseStudyPage() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#f0ece4] text-[#1a0808]">
-      {/* eslint-disable-next-line @next/next/no-page-custom-font */}
       <link rel="stylesheet" href={fontLink} />
       <CaseStudyTopNav />
 

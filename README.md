@@ -37,8 +37,10 @@ Personal portfolio and developer showcase for **Julie Anne Cantillep** — fulls
 - **Project Showcase** — Featured projects with links, tags, and case studies
 - **AI Portfolio Bot** — In-page chat assistant that answers questions about Julie's work
 - **Contact Form** — Email delivery via Resend (with SMTP fallback)
-- **PracticePal Demo** — Full SaaS app embedded: auth, session tracking, Stripe subscriptions
-- **Recharts Analytics** — Practice session charts in the PracticePal dashboard
+- **PracticePal Demo** — Live demo hosted separately: https://practicepal-beige.vercel.app/
+- **Project Showcase** — Featured projects with links, tags, and case studies
+- **AI Portfolio Bot** — In-page chat assistant that answers questions about Julie's work
+- **Contact Form** — Email delivery via Resend (with SMTP fallback)
 
 ---
 
@@ -109,13 +111,13 @@ FACEBOOK_CLIENT_ID=
 FACEBOOK_CLIENT_SECRET=
 
 # ── Database ──────────────────────────────────────────────────────────
-MONGODB_URI=mongodb://localhost:27017/practicepal   # required
+MONGODB_URI=mongodb://localhost:27017/portfolio   # required
 
-# ── Stripe ────────────────────────────────────────────────────────────
-STRIPE_SECRET_KEY=sk_test_...              # required for payments
+# ── Stripe (optional) ──────────────────────────────────────────────────
+STRIPE_SECRET_KEY=sk_test_...              # optional — only required if using Stripe features
 STRIPE_PUBLISHABLE_KEY=pk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...           # required for webhook verification
-STRIPE_PRO_PRICE_ID=price_...             # your Stripe Pro plan price ID
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_PRO_PRICE_ID=price_...
 
 # ── Email — Resend (primary) ──────────────────────────────────────────
 RESEND_API_KEY=re_...                      # sign up at resend.com
@@ -147,21 +149,15 @@ src/
 │   ├── globals.css
 │   │
 │   ├── api/                    # Next.js Route Handlers
-│   │   ├── auth/               # NextAuth + register endpoint
+│   │   ├── auth/               # Auth + register endpoint
 │   │   ├── contact/            # Contact form email handler
-│   │   ├── me/                 # Authenticated user info
-│   │   ├── account/            # Account management
-│   │   ├── plans/              # Practice plan CRUD
-│   │   ├── sessions/           # Practice session CRUD
-│   │   └── stripe/             # Checkout, portal, webhooks
+│   │   └── me/                 # Authenticated user info
 │   │
 │   ├── auth/                   # Login, register, forgot-password pages
-│   ├── dashboard/              # PracticePal user dashboard
-│   ├── account/                # Account settings page
 │   └── legal/                  # Privacy policy & terms
-│
+
 public/
-├── projects/practicepal/       # PracticePal screenshots & assets
+├── projects/                   # Project screenshots & assets
 └── *.png / *.jpg / *.svg       # Portfolio images
 ```
 
@@ -174,19 +170,13 @@ All API routes live under `/api`. Authentication is handled by NextAuth; protect
 | Method | Route | Auth | Description |
 |--------|-------|------|-------------|
 | `POST` | `/api/auth/register` | — | Register a new user |
-| `GET/POST` | `/api/auth/[...nextauth]` | — | NextAuth session handlers |
+| `GET/POST` | `/api/auth/[...nextauth]` | — | Auth session handlers |
 | `POST` | `/api/contact` | — | Send a contact form email |
 | `GET` | `/api/me` | ✅ | Get current user profile |
-| `PUT` | `/api/account` | ✅ | Update account details |
-| `GET/POST` | `/api/plans` | ✅ | List / create practice plans |
-| `GET/PUT/DELETE` | `/api/plans/[id]` | ✅ | Read, update, delete a plan |
-| `GET/POST` | `/api/sessions` | ✅ | List / log practice sessions |
-| `DELETE` | `/api/sessions/[id]` | ✅ | Delete a session |
-| `POST` | `/api/stripe/checkout-session` | ✅ | Create a Stripe checkout session |
-| `POST` | `/api/stripe/sync-checkout-session` | ✅ | Sync subscription after checkout |
-| `POST` | `/api/stripe/customer-portal` | ✅ | Open Stripe customer portal |
-| `POST` | `/api/stripe/cancel-subscription` | ✅ | Cancel active subscription |
-| `POST` | `/api/stripe/webhook` | — | Handle Stripe webhook events |
+
+> PracticePal (the full SaaS demo) has been removed from this repository and moved to a separate project. Any routes, pages, or API handlers specific to that demo (plans, sessions, Stripe webhooks) are no longer part of this portfolio repository.
+
+Live demo: https://practicepal-beige.vercel.app/ (hosted from the PracticePal repo)
 
 ---
 

@@ -1,18 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export default function GlobalCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const cursorRingRef = useRef<HTMLDivElement>(null);
-  const [cursorEnabled, setCursorEnabled] = useState(false);
-
   useEffect(() => {
     if (typeof window === "undefined") return;
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
     if (!fine) return;
 
-    setCursorEnabled(true);
     document.body.classList.add("cursor-enabled");
 
     let mouseX = 0;
@@ -61,10 +58,6 @@ export default function GlobalCursor() {
       document.body.classList.remove("cursor-enabled");
     };
   }, []);
-
-  if (!cursorEnabled) {
-    return null;
-  }
 
   return (
     <>

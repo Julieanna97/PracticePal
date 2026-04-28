@@ -1,1 +1,0 @@
-export { connectToDB } from "./mongodb";

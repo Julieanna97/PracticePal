@@ -4,6 +4,11 @@ const projects = [
   {
     name: "PracticePal",
     slug: "practicepal",
+    links: [
+      { label: "View Demo", href: "https://practicepal-beige.vercel.app/", external: true },
+      { label: "View Case Study", href: "/projects/practicepal" },
+      { label: "GitHub", href: "https://github.com/Julieanna97/practicepal", external: true },
+    ],
     type: "Full Product",
     summary:
       "Musician practice tracking app with authentication, plan creation, session logging, analytics, and subscriptions.",
@@ -12,6 +17,7 @@ const projects = [
   {
     name: "PodManager.ai Demos",
     slug: "podmanager",
+    links: [{ label: "View Case Study", href: "/projects/podmanager" }],
     type: "Internship",
     summary:
       "Production internship work across a Next.js + FastAPI podcast platform with real-time studio, editing, AI, and marketplace modules.",
@@ -42,12 +48,19 @@ export default function ProjectsPage() {
                 ))}
               </ul>
 
-              <Link
-                href={`/projects/${project.slug}`}
-                className="mt-8 inline-flex rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 px-6 py-3 text-sm font-bold text-white hover:shadow-lg hover:shadow-cyan-500/50 transition"
-              >
-                Open Case Study →
-              </Link>
+              <div className="mt-8 flex flex-wrap gap-3">
+                {project.links.map((link) => (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    target={link.external ? "_blank" : undefined}
+                    rel={link.external ? "noopener noreferrer" : undefined}
+                    className="inline-flex rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 px-6 py-3 text-sm font-bold text-white hover:shadow-lg hover:shadow-cyan-500/50 transition"
+                  >
+                    {link.label} →
+                  </Link>
+                ))}
+              </div>
             </article>
           ))}
         </div>

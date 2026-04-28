@@ -125,13 +125,10 @@ function CustomVideoPlayer({
 
   // Auto-hide controls during playback
   useEffect(() => {
-    if (!playing || hovering) {
-      setShowControls(true);
-      return;
-    }
+    if (!playing || hovering) return;
     const t = setTimeout(() => setShowControls(false), 2200);
     return () => clearTimeout(t);
-  }, [playing, hovering, currentTime]);
+  }, [playing, hovering]);
 
   const togglePlay = () => {
     const v = videoRef.current;
@@ -203,7 +200,7 @@ function CustomVideoPlayer({
             onClick={togglePlay}
           >
             <source src={src} type="video/mp4" />
-            Your browser doesn't support the video tag.
+            Your browser doesn&apos;t support the video tag.
           </video>
 
           {/* CENTER PLAY BUTTON — visible when paused */}
@@ -822,7 +819,7 @@ export default function SigmaCarCaseStudyPage() {
               See more projects.
             </h2>
             <p className="mt-6 max-w-xl text-sm font-medium uppercase leading-7 tracking-[0.08em] text-[#1a0808]/75 md:text-base">
-              From hardware to fullstack — a tour through what I've built.
+              From hardware to fullstack — a tour through what I&apos;ve built.
             </p>
           </div>
 

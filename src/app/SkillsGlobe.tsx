@@ -15,7 +15,7 @@ import {
   SiJupyter, SiPostman, SiNpm, SiEslint, SiPrettier, SiWordpress,
   SiJira,
 } from "react-icons/si";
-import { FaCode, FaServer, FaMicrochip, FaDatabase, FaCloud } from "react-icons/fa6";
+import { FaCode, FaServer, FaMicrochip } from "react-icons/fa6";
 
 type Skill = {
   name: string;

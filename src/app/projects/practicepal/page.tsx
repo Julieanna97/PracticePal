@@ -102,7 +102,6 @@ const stack = ["Next.js", "React", "MongoDB", "NextAuth", "Stripe", "Tailwind CS
 export default function PracticePalCaseStudyPage() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#f0ece4] text-[#1a0808]">
-      {/* eslint-disable-next-line @next/next/no-page-custom-font */}
       <link rel="stylesheet" href={fontLink} />
       <CaseStudyTopNav />
 
@@ -138,16 +137,16 @@ export default function PracticePalCaseStudyPage() {
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Link
-                href="/auth/login?callbackUrl=%2Fdashboard"
+                href="https://practicepal-beige.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-full border border-[#1a0808] bg-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] text-[#f0ece4] transition hover:bg-transparent hover:text-[#1a0808]"
               >
-                Try the Demo
+                View Demo
               </Link>
 
               <Link
-                href="https://github.com/Julieanna97/PracticePal"
+                href="https://github.com/Julieanna97/practicepal"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-full border border-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] transition hover:bg-[#1a0808] hover:text-[#f0ece4]"
@@ -155,6 +154,7 @@ export default function PracticePalCaseStudyPage() {
                 View on GitHub
               </Link>
             </div>
+
           </div>
 
           {/* MOCK APP PREVIEW */}
@@ -550,25 +550,25 @@ export default function PracticePalCaseStudyPage() {
         <div className="relative flex flex-col justify-between gap-8 md:flex-row md:items-end">
           <div>
             <p className="mb-6 text-xs font-black uppercase tracking-[0.24em] text-[#1a0808]">
-              Live Demo
+              Repository
             </p>
             <h2 className="max-w-5xl text-[clamp(3rem,8vw,8rem)] font-black uppercase leading-[0.82] tracking-[-0.05em] text-[#1a0808]">
-              Try the demo.
+              Explore the code.
             </h2>
             <p className="mt-6 max-w-xl text-sm font-medium uppercase leading-7 tracking-[0.08em] text-[#1a0808]/75 md:text-base">
-              Sign in with the demo account and explore plans, sessions,
-              dashboard, and the Stripe upgrade flow.
+              PracticePal has been extracted into its own bundle so the
+              portfolio repo stays focused and lightweight.
             </p>
           </div>
 
           <div className="flex shrink-0 flex-col gap-4 sm:flex-row">
             <Link
-              href="/auth/login?callbackUrl=%2Fdashboard"
+              href="https://github.com/Julieanna97/PracticePal"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-full border border-[#1a0808] bg-[#1a0808] px-8 py-4 text-xs font-black uppercase tracking-[0.18em] text-[#f0ece4] transition hover:bg-transparent hover:text-[#1a0808]"
             >
-              Try the Demo
+              Open Repository
             </Link>
 
             <Link
