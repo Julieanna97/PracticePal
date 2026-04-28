@@ -1,32 +1,30 @@
 ﻿import Link from "next/link";
+import { PracticePalLogo } from "@/components/PracticePalLogo";
 
 export default function LandingFooter() {
   return (
-    <footer className="mt-16 border-t border-purple-100 bg-gradient-to-b from-white/95 to-purple-50/45 backdrop-blur-sm py-16 px-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-4 gap-10">
+    <footer className="mt-16 border-t border-[#0d3b3a]/10 bg-[#0d3b3a] px-6 py-16 text-[#faf6f0]">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-10 md:grid-cols-4">
           <div>
-            <Link href="/" className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-fuchsia-600 to-indigo-800 rounded-full flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-lg">P</span>
-              </div>
-              <span className="text-2xl font-black tracking-tight text-gray-800">PracticePal</span>
+            <Link href="/" className="mb-4 inline-flex items-center">
+              <PracticePalLogo size="md" />
             </Link>
 
-            <p className="text-gray-600 leading-relaxed">
-              Your personal practice companion for musical progress and consistency.
+            <p className="max-w-sm leading-relaxed text-[#faf6f0]/72">
+              Your practice companion for clear goals, steady progress, and calmer routines.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href="/auth/login"
-                className="inline-flex items-center justify-center px-5 py-2 rounded-full border-2 border-purple-600 text-purple-700 font-bold hover:bg-purple-50 transition-colors"
+                className="inline-flex items-center justify-center rounded-full border border-[#faf6f0]/15 px-5 py-2 font-semibold text-[#faf6f0] transition hover:bg-white/5"
               >
                 Login
               </Link>
               <Link
                 href="/auth/register"
-                className="inline-flex items-center justify-center px-5 py-2 rounded-full bg-gradient-to-r from-fuchsia-600 to-indigo-700 text-white font-bold hover:shadow-lg transition-all"
+                className="inline-flex items-center justify-center rounded-full bg-[#f4a261] px-5 py-2 font-semibold text-[#0d3b3a] transition hover:bg-[#f4a261]/90"
               >
                 Start Free
               </Link>
@@ -34,35 +32,34 @@ export default function LandingFooter() {
           </div>
 
           <div>
-            <h4 className="font-bold text-gray-900 mb-4 text-lg">Product</h4>
-            <ul className="space-y-3">
-              <li><a href="/#about" className="text-gray-600 hover:text-purple-600 hover:underline underline-offset-4">About</a></li>
-              <li><a href="/#benefits" className="text-gray-600 hover:text-purple-600 hover:underline underline-offset-4">Benefits</a></li>
-              <li><a href="/#testimonials" className="text-gray-600 hover:text-purple-600 hover:underline underline-offset-4">Success Stories</a></li>
-              <li><a href="/#pricing" className="text-gray-600 hover:text-purple-600 hover:underline underline-offset-4">Pricing</a></li>
+            <h4 className="mb-4 text-lg font-semibold text-[#faf6f0]">Product</h4>
+            <ul className="space-y-3 text-[#faf6f0]/72">
+              <li><a href="/#features" className="hover:text-white">Features</a></li>
+              <li><a href="/#how-it-works" className="hover:text-white">How it works</a></li>
+              <li><a href="/#pricing" className="hover:text-white">Get started</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-bold text-gray-900 mb-4 text-lg">Support</h4>
-            <ul className="space-y-3">
-              <li><Link href="/support/help-center" className="text-gray-600 hover:text-purple-600 hover:underline underline-offset-4">Help Center</Link></li>
-              <li><Link href="/support/contact" className="text-gray-600 hover:text-purple-600 hover:underline underline-offset-4">Contact</Link></li>
-              <li><Link href="/support/faq" className="text-gray-600 hover:text-purple-600 hover:underline underline-offset-4">FAQ</Link></li>
+            <h4 className="mb-4 text-lg font-semibold text-[#faf6f0]">Support</h4>
+            <ul className="space-y-3 text-[#faf6f0]/72">
+              <li><Link href="/support/help-center" className="hover:text-white">Help Center</Link></li>
+              <li><Link href="/support/contact" className="hover:text-white">Contact</Link></li>
+              <li><Link href="/support/faq" className="hover:text-white">FAQ</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-bold text-gray-900 mb-4 text-lg">Legal</h4>
-            <ul className="space-y-3">
-              <li><Link href="/legal/privacy" className="text-gray-600 hover:text-purple-600 hover:underline underline-offset-4">Privacy Policy</Link></li>
-              <li><Link href="/legal/terms" className="text-gray-600 hover:text-purple-600 hover:underline underline-offset-4">Terms of Service</Link></li>
+            <h4 className="mb-4 text-lg font-semibold text-[#faf6f0]">Legal</h4>
+            <ul className="space-y-3 text-[#faf6f0]/72">
+              <li><Link href="/legal/privacy" className="hover:text-white">Privacy Policy</Link></li>
+              <li><Link href="/legal/terms" className="hover:text-white">Terms of Service</Link></li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-purple-100 mt-12 pt-8 text-center text-gray-600">
-          <p>&copy; 2024 PracticePal. All rights reserved. Made with heart for musicians everywhere.</p>
+        <div className="mt-12 border-t border-white/10 pt-8 text-center text-sm text-[#faf6f0]/55">
+          <p>&copy; 2026 PracticePal. Made for musicians who want a calmer way to stay consistent.</p>
         </div>
       </div>
     </footer>

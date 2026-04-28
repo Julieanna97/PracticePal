@@ -13,10 +13,11 @@ export default function UpgradeReturnPage() {
 
 function ReturnLoading() {
   return (
-   <div className="app-canvas flex min-h-screen items-center justify-center">
-      <div className="soft-card w-full max-w-md rounded-3xl p-8 text-center">
-      <h1 className="mb-2 text-2xl font-bold text-[#0d3b3a]">Finishing up...</h1>
-      <p className="text-[#1a2e2c]/70">Syncing your subscription. Please wait.</p>
+    <div className="app-canvas flex min-h-screen items-center justify-center px-6">
+      <div className="soft-card w-full max-w-md rounded-[2rem] p-8 text-center">
+        <div className="mx-auto mb-5 h-12 w-12 animate-pulse rounded-full bg-[#0d3b3a]/20" />
+        <h1 className="mb-2 text-3xl font-semibold tracking-tight text-[#0d3b3a]">Finishing up...</h1>
+        <p className="text-[#1a2e2c]/70">Syncing your subscription. Please wait.</p>
       </div>
     </div>
   );
