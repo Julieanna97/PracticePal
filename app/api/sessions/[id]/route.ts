@@ -1,0 +1,1 @@
+export * from "@/app/api/sessions/[id]/route";
